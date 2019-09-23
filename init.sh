@@ -17,7 +17,7 @@ source .env
 TEMPWD=$(mktemp -d "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
 
 echo "*** Check instance '$VM_NAME' exists"
-gcloud compute instances describe $VM_NAME > $TEMPWD/vmdescr.yml
+gcloud compute instances describe $VM_NAME > $TEMPWD/vmdescr.yml 2>/dev/null
 
 
 # If instance not exists, create it
@@ -40,7 +40,7 @@ then
     --image-family ubuntu-1604-lts \
     --image-project=ubuntu-os-cloud \
     --machine-type=g1-small \
-    --tags $VM_TAGS \
+    --tags "$VM_TAGS" \
     --restart-on-failure \
     --metadata startup-script-url=${BUCKET}${STARTUP_SCRIPT}
 
@@ -48,9 +48,19 @@ then
 fi
 
 # Get VM's external ip
-echo -n "VM external IP is "
-cat $TEMPWD/vmdescr.yml | grep "natIP: " | awk '{ print $2; }'
+WAN_IP="$(cat $TEMPWD/vmdescr.yml | grep 'natIP: ' | awk '{ print $2; }')"
+echo "VM external IP is $WAN_IP"
 
 # Remove temp file and dir
 rm $TEMPWD/vmdescr.yml
 rm -r $TEMPWD
+
+# Create firewall rule
+echo "*** Create firewall rule, if not exists"
+gcloud compute firewall-rules describe $FW_RULE &>/dev/null || gcloud compute firewall-rules create $FW_RULE \
+  --allow=tcp:$APP_PORT \
+  --target-tags="$VM_TAGS"
+
+echo "Completed. Service will be accessible soon at http://$WAN_IP:$APP_PORT"
+
+# TODO: rediness-probe via curl
