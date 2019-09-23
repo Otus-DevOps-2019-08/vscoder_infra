@@ -79,6 +79,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Установлен ruby
 * Установлен MongoDB 3.2
 * Задеплоено тестовое приложение
+  ```
+  testapp_IP = 104.199.53.238
+  testapp_port = 9292
+  ```
 
 ### Самостоятельная работа
 
@@ -87,14 +91,14 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * `install_mongodb.sh` - для установки MongoDB
 * `deploy.sh` - дял деплоя приложения
 
-### Дополнительное задание
+### Дополнительное задание 1
 
 Создан скрипт `init.sh`, который
 * На основе install_ruby.sh, install_mongodb.sh и deploy.sh, один общий скрипт `startup.sh`
   ```
   cat install_ruby.sh install_mongodb.sh deploy.sh > startup.sh
   ```
-* Выполняет команду gcloud, которая создаёт инстанс ВМ и инициализирует его, запуская `startup.sh`
+* Выполняет команду gcloud, которая создаёт инстанс ВМ и инициализирует его, запуская `startup.sh`, если инстанс с таким именем ещё не был создан
   ```
   gcloud compute instances create reddit-app\
     --boot-disk-size=10GB \
@@ -105,3 +109,40 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     --restart-on-failure \
     --metadata-from-file startup-script=$STARTUP_SCRIPT
   ```
+
+### Дополнительное задание 2
+
+Скрипт `init.sh` изменён таким образом, чтобы:
+* Вместо использования локального startup-скрипта при инициальзации ВМ, загружает `startup.sh` в bucket на File Storage и создаёт ВМ посредством команды
+  ```
+  gcloud compute instances create reddit-app\
+    --boot-disk-size=10GB \
+    --image-family ubuntu-1604-lts \
+    --image-project=ubuntu-os-cloud \
+    --machine-type=g1-small \
+    --tags "puma-server" \
+    --restart-on-failure \
+    --metadata startup-script-url=gs://vscoder-otus-hw4/startup.sh
+  ```
+* Создаёт правило фаервола _default-puma-server_, которое разрешает доступ на инстансы с тэгом _puma-server_ на tcp port 9292
+  ```
+  gcloud compute firewall-rules create default-puma-server \
+  --allow=tcp:9292 \
+  --target-tags="puma-server"
+  ```
+
+### Прочее
+
+* Инициализация переменных перенесена в файл `.env`, который, в свою очередь, импортируется в `init.sh` командой
+  ```
+  source .env
+  ```
+* Добавлен скрипт `clean.sh`, который удаляет созданные объекты GCP
+* При повторном запуске `init.sh`, ресурсы заново не создаются. Только выводится информация о созданном инстансе. Например:
+  ```
+  *** Check instance 'reddit-app' exists
+  VM external IP is 104.199.53.238
+  *** Create firewall rule, if not exists
+  Completed. Service will be accessible soon at http://104.199.53.238:9292
+  ```
+
