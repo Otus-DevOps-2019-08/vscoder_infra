@@ -60,3 +60,48 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Административный интерфейс доступен так же по адресу https://34-89-159-155.sslip.io через sslip.io
 * Создано доменное имя bastion.vscoder.ru, разрешаемое в ip 34.89.159.155
 * При подключении к https://bastion.vscoder.ru используется сертификат от Let's Encrypt
+
+## HomeWork 4: Деплой тестового приложения
+
+### Основное задание
+
+* Установлен и настроен [gcloud](https://cloud.google.com/sdk/gcloud/) для работы с нашим аккаунтом
+* Создан хост с помощью gcloud
+  ```
+  gcloud compute instances create reddit-app\
+    --boot-disk-size=10GB \
+    --image-family ubuntu-1604-lts \
+    --image-project=ubuntu-os-cloud \
+    --machine-type=g1-small \
+    --tags puma-server \
+    --restart-on-failure
+  ```
+* Установлен ruby
+* Установлен MongoDB 3.2
+* Задеплоено тестовое приложение
+
+### Самостоятельная работа
+
+Создано 3 скрипта, реализующие все необходимые действия для развёртывания приложения на вновь созданном хосте: 
+* `install_ruby.sh` - для установки ruby
+* `install_mongodb.sh` - для установки MongoDB
+* `deploy.sh` - дял деплоя приложения
+
+### Дополнительное задание
+
+Создан скрипт `init.sh`, который
+* На основе install_ruby.sh, install_mongodb.sh и deploy.sh, один общий скрипт `startup.sh`
+  ```
+  cat install_ruby.sh install_mongodb.sh deploy.sh > startup.sh
+  ```
+* Выполняет команду gcloud, которая создаёт инстанс ВМ и инициализирует его, запуская `startup.sh`
+  ```
+  gcloud compute instances create reddit-app\
+    --boot-disk-size=10GB \
+    --image-family ubuntu-1604-lts \
+    --image-project=ubuntu-os-cloud \
+    --machine-type=g1-small \
+    --tags puma-server \
+    --restart-on-failure \
+    --metadata-from-file startup-script=$STARTUP_SCRIPT
+  ```
