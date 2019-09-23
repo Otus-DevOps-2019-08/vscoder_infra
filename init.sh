@@ -10,11 +10,8 @@
 # author: Aleksey Koloskov <vsyscoder@gmail.com>
 ###
 
-VM_NAME=reddit-app
-VM_TAGS=puma-server
-STARTUP_SCRIPT=startup.sh
-BUCKET=gs://vscoder-otus-hw4/
-
+# Initialize variables
+source .env
 
 # Create temporary working directory
 TEMPWD=$(mktemp -d "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
