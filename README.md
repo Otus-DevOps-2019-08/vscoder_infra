@@ -107,7 +107,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     --machine-type=g1-small \
     --tags puma-server \
     --restart-on-failure \
-    --metadata-from-file startup-script=$STARTUP_SCRIPT
+    --metadata-from-file startup-script=startup.sh
   ```
 
 ### Дополнительное задание 2
