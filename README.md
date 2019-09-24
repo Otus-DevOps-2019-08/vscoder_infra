@@ -80,7 +80,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Установлен MongoDB 3.2
 * Задеплоено тестовое приложение
   ```
-  testapp_IP = 104.199.53.238
+  testapp_IP = 35.233.91.245
   testapp_port = 9292
   ```
 
@@ -141,8 +141,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * При повторном запуске `init.sh`, ресурсы заново не создаются. Только выводится информация о созданном инстансе. Например:
   ```
   *** Check instance 'reddit-app' exists
-  VM external IP is 104.199.53.238
+  VM external IP is 35.233.91.245
   *** Create firewall rule, if not exists
-  Completed. Service will be accessible soon at http://104.199.53.238:9292
+  Completed. Service will be accessible soon at http://35.233.91.245:9292
   ```
 
