@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eux
 
 ###
 # install_ruby.sh
@@ -17,15 +17,15 @@ echo "*** Start ruby and bundler installation..."
 # Install
 #
 echo "*** Update apt cache"
-apt-get -qq update || { echo "ERROR: Can't add apt repository! Exiting."; exit 13; }
+apt-get -qq update
 
 echo "*** Install package: $PKGS"
-apt-get install -y $PKGS || { echo "ERROR: Can't install package '$PKGS'! Exiting."; exit 14; }
+apt-get install -y $PKGS
 
 #
 # Check
 #
-ruby -v || { echo "ERROR: Can't check ruby version! Exiting."; exit 128; }
-bundler -v || { echo "ERROR: Can't check bundler version! Exiting."; exit 129; }
+ruby -v
+bundler -v
 
 echo "*** Complete. Ruby and bundler installed succefully."

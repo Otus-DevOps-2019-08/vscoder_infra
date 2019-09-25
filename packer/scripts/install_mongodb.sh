@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eux
 
 ###
 # install_mongodb.sh
@@ -19,23 +19,23 @@ echo "*** Start mongodb installation..."
 # Install
 #
 echo "*** Get apt key"
-wget -qO - $KEYURL | apt-key add - || { echo "ERROR: Can't get apt key from '$KEYURL'! Exiting."; exit 21; }
+wget -qO - $KEYURL | apt-key add -
 
 echo "*** Add mongodb reposityry"
-echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/$VER multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${VER}.list || { echo "ERROR: Can't add apt repository! Exiting."; exit 22; }
+echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/$VER multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${VER}.list
 
 echo "*** Update apt cache"
-apt-get -qq update || { echo "ERROR: Can't add apt repository! Exiting."; exit 23; }
+apt-get -qq update
 
 echo "*** Install package: $PKGS"
-apt-get install -y $PKGS || { echo "ERROR: Can't install package '$PKGS'! Exiting."; exit 24; }
+apt-get install -y $PKGS
 
 #
 # Start and check
 #
 echo "*** Enable and run mongod.service"
-systemctl start mongod || { echo "ERROR: Can't start mongod.service! Exiting."; exit 130; }
-systemctl enable mongod || { echo "ERROR: Can't enable mongod.service! Exiting."; exit 131; }
-systemctl --no-pager status mongod || { echo "ERROR: Service mongod is not running! Exiting."; exit 132; }
+systemctl start mongod
+systemctl enable mongod
+systemctl --no-pager status mongod
 
 echo "*** Complete. Service mongod installed and running."
