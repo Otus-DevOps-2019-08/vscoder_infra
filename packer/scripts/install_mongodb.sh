@@ -1,10 +1,13 @@
 #!/bin/bash
+set -e
 
 ###
 # install_mongodb.sh
 # Installs and start mongodb-org on Ubuntu 16.04
 # author: Aleksey Koloskov <vsyscoder@gmail.com>
 ###
+
+[[ $- == *i* ]] || export DEBIAN_FRONTEND="noninteractive"
 
 PKGS="mongodb-org"
 VER="3.2"

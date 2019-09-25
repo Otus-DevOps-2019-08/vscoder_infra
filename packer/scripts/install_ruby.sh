@@ -1,10 +1,13 @@
 #!/bin/bash
+set -e
 
 ###
 # install_ruby.sh
 # Installs latest ruby-full and ruby-bundler on Ubuntu 16.04
 # author: Aleksey Koloskov <vsyscoder@gmail.com>
 ###
+
+[[ $- == *i* ]] || export DEBIAN_FRONTEND="noninteractive"
 
 PKGS="ruby-full ruby-bundler build-essential"
 
