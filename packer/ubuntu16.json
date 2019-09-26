@@ -2,7 +2,13 @@
   "variables": {
     "project_id": null,
     "source_image_family": null,
-    "machine_type": "f1-micro"
+    "machine_type": "f1-micro",
+    "zone": "europe-west1-d",
+    "disk_size": "{{env `DISK_SIZE`}}",
+    "disk_type": "pd-starndart",
+    "network": "default",
+    "subnetwork": "",
+    "tags": ""
   },
   "builders": [
     {
@@ -13,7 +19,12 @@
       "source_image_family": "{{user `source_image_family`}}",
       "zone": "europe-west1-d",
       "ssh_username": "appuser",
-      "machine_type": "{{user `machine_type`}}"
+      "machine_type": "{{user `machine_type`}}",
+      "image_description": "reddit-app base image",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type": "{{user `disk_type`}}",
+      "network": "{{user `network`}}",
+      "subnetwork": "{{user `subnetwork`}}"
     }
   ],
   "provisioners": [
