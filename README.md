@@ -158,3 +158,13 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Успешно собран образ командой `packer build ubuntu16.json`
 * На основе образа _reddit-base_ развёрнут экземпляр ВМ
 * На ВМ развёрнут puma server с тестовым приложением
+
+### Самостоятельные задания
+
+* Параметризованы переменные
+* Добавлен файл-пример с обязательными переменными `variables.json.example`
+  Важно: если задать значение переменной _network_ отличное от **default**, необходимо предварительно создать соответствующую сеть. Необходимо так же задать значение параметру _subnetwork_
+  >  Only required if the network has been created with custom subnetting. Note, the region of the subnetwork must match the region or zone in which the VM is launched. [link](https://www.packer.io/docs/builders/googlecompute.html#subnetwork)
+
+* Создана сеть `testnetwork`
+* Для сети создано **правило брендмауера**, разрешающее доступ к 22 порту (иначе packer не может подключиться к ВМ)
