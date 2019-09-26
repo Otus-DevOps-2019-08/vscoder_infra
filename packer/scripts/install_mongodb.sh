@@ -33,9 +33,7 @@ apt-get install -y $PKGS
 #
 # Start and check
 #
-echo "*** Enable and run mongod.service"
-systemctl start mongod
+echo "*** Enable mongod.service"
 systemctl enable mongod
-systemctl --no-pager status mongod
 
 echo "*** Complete. Service mongod installed and running."
