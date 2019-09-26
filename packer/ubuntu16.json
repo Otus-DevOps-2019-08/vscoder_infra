@@ -4,7 +4,7 @@
     "source_image_family": null,
     "machine_type": "f1-micro",
     "zone": "europe-west1-d",
-    "disk_size": "{{env `DISK_SIZE`}}",
+    "disk_size": "10",
     "disk_type": "pd-starndart",
     "network": "default",
     "subnetwork": "",
@@ -24,7 +24,8 @@
       "disk_size": "{{user `disk_size`}}",
       "disk_type": "{{user `disk_type`}}",
       "network": "{{user `network`}}",
-      "subnetwork": "{{user `subnetwork`}}"
+      "subnetwork": "{{user `subnetwork`}}",
+      "tags": "{{user `tags`}}"
     }
   ],
   "provisioners": [
