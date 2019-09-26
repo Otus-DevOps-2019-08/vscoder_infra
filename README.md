@@ -86,7 +86,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 ### Самостоятельная работа
 
-Создано 3 скрипта, реализующие все необходимые действия для развёртывания приложения на вновь созданном хосте: 
+Создано 3 скрипта, реализующие все необходимые действия для развёртывания приложения на вновь созданном хосте:
 * `install_ruby.sh` - для установки ruby
 * `install_mongodb.sh` - для установки MongoDB
 * `deploy.sh` - дял деплоя приложения
@@ -146,3 +146,15 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   Completed. Service will be accessible soon at http://35.233.91.245:9292
   ```
 
+## HomeWork 5: Сборка образов VM при помощи Paker
+
+### Основное задание
+
+* Установлен [packer](https://www.packer.io/downloads.html)
+* Выполнена авторизация `gcloud auth application-default login`
+* Создан файл `packer/ubuntu16.json` с описанием базового образа _reddit-base_
+* Из [cloud-testapp](https://github.com/Otus-DevOps-2019-08/vscoder_infra/tree/cloud-testapp) скопированы и адаптированы скрипты установки ruby и MongoDB
+* Скрипты добавлены в секцию _provisioning_ описания образа
+* Успешно собран образ командой `packer build ubuntu16.json`
+* На основе образа _reddit-base_ развёрнут экземпляр ВМ
+* На ВМ развёрнут puma server с тестовым приложением
