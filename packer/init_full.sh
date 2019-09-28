@@ -9,9 +9,14 @@
 set -eux
 echo "***Bake backer-base image"
 
+BASEDIR=$(dirname "$0")
+cd $BASEDIR
+
 # Initialize variables
 PACKER_IMAGE_FILE=immutable.json
 
 echo "*** Rebuild $PACKER_IMAGE_FILE"
 packer validate -var-file=variables-immutable.json $PACKER_IMAGE_FILE
 packer build -on-error=ask -var-file=variables-immutable.json $PACKER_IMAGE_FILE
+
+cd -
