@@ -14,7 +14,7 @@ PUMA_BRANCH=monolith
 DEST_DIR=reddit
 SERVICE_NAME=reddit-app
 APPUSER=appuser
-PIDFILE=/run/${SERVICE_NAME}.pid
+PIDFILE=$DEPLOY_ROOT/$DEST_DIR/${SERVICE_NAME}.pid
 
 echo "*** Start puma server deploy as $(whoami)"
 
@@ -43,10 +43,10 @@ Description=Puma HTTP Forking Server with reddit-app
 After=network.target
 
 [Service]
-Type=simple
+Type=forking
 User=${APPUSER}
 WorkingDirectory=$DEPLOY_ROOT/$DEST_DIR
-ExecStart=/usr/local/bin/puma -v --pidfile $PIDFILE
+ExecStart=/usr/local/bin/puma --pidfile $PIDFILE --daemon
 ExecStop=/usr/local/bin/pumactl --pidfile $PIDFILE stop
 PIDFile=${PIDFILE}
 Restart=on-failure
