@@ -27,3 +27,4 @@ resource "google_compute_instance" "app" {
     ssh-keys = "appuser:${file("~/.ssh/appuser.pub")}"
   }
 }
+
