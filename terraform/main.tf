@@ -13,6 +13,16 @@ resource "google_compute_project_metadata_item" "sshkey-appuser1" {
   value = "appuser1:${file(var.public_key_path)}"
 }
 
+resource "google_compute_project_metadata_item" "sshkey-appuser2" {
+  key = "ssh-keys"
+  value = "appuser2:${file(var.public_key_path)}"
+}
+
+resource "google_compute_project_metadata_item" "sshkey-appuser3" {
+  key = "ssh-keys"
+  value = "appuser3:${file(var.public_key_path)}"
+}
+
 resource "google_compute_instance" "app" {
   name         = "reddit-app"
   machine_type = "g1-small"
