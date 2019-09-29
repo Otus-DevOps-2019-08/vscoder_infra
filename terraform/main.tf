@@ -40,3 +40,8 @@ resource "google_compute_firewall" "firewall_puma" {
   target_tags = ["reddit-app"]
 }
 
+provisioner "file" {
+  source = "files/puma.service"
+  destination = "/tmp/puma.service"
+}
+
