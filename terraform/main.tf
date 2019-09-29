@@ -42,7 +42,7 @@ resource "google_compute_instance" "app" {
     host = self.network_interface[0].access_config[0].nat_ip
     user = "appuser"
     agent = false
-    private_key = file("~/.ssh/appuser")
+    private_key = file(var.private_key_path)
   }
 }
 
