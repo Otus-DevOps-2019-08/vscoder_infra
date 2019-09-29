@@ -45,3 +45,7 @@ provisioner "file" {
   destination = "/tmp/puma.service"
 }
 
+provisioner "remote-exec" {
+  script = "files/deploy.sh"
+}
+
