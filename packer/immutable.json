@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "project_id": null,
+    "source_image_family": null,
+    "machine_type": "g1-small",
+    "zone": "europe-west1-d",
+    "disk_size": "12",
+    "disk_type": "pd-standard",
+    "network": "default",
+    "subnetwork": "",
+    "tags": ""
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "image_name": "reddit-full-{{timestamp}}",
+      "image_family": "reddit-full",
+      "source_image_family": "{{user `source_image_family`}}",
+      "zone": "europe-west1-d",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type": "{{user `disk_type`}}",
+      "ssh_username": "appuser",
+      "machine_type": "{{user `machine_type`}}",
+      "image_description": "reddit-app full immutable image version {{timestamp}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/deploy.sh",
+      "execute_command": "sudo {{.Path}}"
+    }
+  ]
+}
