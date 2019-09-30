@@ -8,19 +8,9 @@ provider "google" {
   region  = var.region
 }
 
-resource "google_compute_project_metadata_item" "sshkey-appuser1" {
-  key = "ssh-keys"
-  value = "appuser1:${file(var.public_key_path)}"
-}
-
-resource "google_compute_project_metadata_item" "sshkey-appuser2" {
-  key = "ssh-keys"
-  value = "appuser2:${file(var.public_key_path)}"
-}
-
-resource "google_compute_project_metadata_item" "sshkey-appuser3" {
-  key = "ssh-keys"
-  value = "appuser3:${file(var.public_key_path)}"
+resource "google_compute_project_metadata_item" "ssh-keys" {
+  key   = "ssh-keys"
+  value = join("\n", var.ssh_keys)
 }
 
 resource "google_compute_instance" "app" {
@@ -28,6 +18,10 @@ resource "google_compute_instance" "app" {
   machine_type = "g1-small"
   zone         = var.zone
   tags         = ["reddit-app"]
+  // metadata = {
+  //   block-project-ssh-keys = false
+  // }
+
   boot_disk {
     initialize_params {
       image = var.disk_image
@@ -37,10 +31,6 @@ resource "google_compute_instance" "app" {
   network_interface {
     network = "default"
     access_config {}
-  }
-
-  metadata = {
-    ssh-keys = "appuser:${file(var.public_key_path)}"
   }
 
   provisioner "file" {
@@ -71,4 +61,3 @@ resource "google_compute_firewall" "firewall_puma" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["reddit-app"]
 }
-
