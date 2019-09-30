@@ -204,7 +204,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 * Установлен terraform
 * В `.gitignore` добавлены временные и приватные файлы terraform-проекта
-* Создан файл `main.tf`, в который добавлены секции 
+* Создан файл `main.tf`, в который добавлены секции
   * _terraform_ требованиями к версии `terraform`
   * _provided "google"_ со специфичными для GCP параметрами
 * Проект проинициализирован командой `terraform init`, в процессе чего загружены необходимые для работы с GCP модули
@@ -274,9 +274,75 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 * Добавлен публичный ssh-ключ, общий для всего проекта
   ```
-    resource "google_compute_project_metadata_item" "sshkey-appuser1" {
+  resource "google_compute_project_metadata_item" "sshkey-appuser1" {
     key = "ssh-keys"
     value = "appuser1:${file(var.public_key_path)}"
   }
   ```
   После применения, на ранее созданной ВМ автоматически был создан пользователь _appuser1_ с добавленным к нему указанным ключом. Попытка подключения по ssh под именм данного пользователя прошла успешно.
+* Добавлены публичные ключи для пользователей _appuser2_ и _appuser3_
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys1" {
+    key = "ssh-keys"
+    value = "appuser1:${file(var.public_key_path)}"
+  }
+  resource "google_compute_project_metadata_item" "ssh-keys2" {
+    key = "ssh-keys"
+    value = "appuser2:${file(var.public_key_path)}"
+  }
+  resource "google_compute_project_metadata_item" "ssh-keys3" {
+    key = "ssh-keys"
+    value = "appuser3:${file(var.public_key_path)}"
+  }
+  ```
+  После применения, в метаданные проекта был добавлен только пользователь _appuser1_, а так же определённый для инстанса _appuser_. Подключение под обоими прошло успешно.
+* Дополнительные ключи добавлены в один ресурс
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys" {
+  key = "ssh-keys"
+  value = <<EOF
+    appuser1:${file(var.public_key_path)}
+    appuser2:${file(var.public_key_path)}
+    appuser3:${file(var.public_key_path)}
+  EOF
+  }
+  ```
+  После применения ключи в метаданные проекта добавлены, но на развёрнутый инстанс пользователи не приехали. В веб-интерфейсе в метаданных проекта появилось так же несколько _пустых_ ssh-ключей, с незаполненными значениями.
+* Рабочим оказалось следующее решение:
+  * `main.tf`
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys" {
+    key = "ssh-keys"
+    value = join("\n", var.ssh_keys)
+  }
+  ```
+  * `variables.tf`
+  ```
+  variable ssh_keys {
+    type    = list(string)
+  }
+  ```
+  * `terraform.tfvars`
+  ```
+  ssh_keys = [
+    "appuser:ssh-rsa <key_value_here> appuser",
+    "appuser1:ssh-rsa <key_value_here> appuser",
+    "appuser2:ssh-rsa <key_value_here> appuser",
+    "appuser3:ssh-rsa <key_value_here> appuser"
+  ]
+  ```
+  На инстансе были созданы все 4 пользователя
+  **Примечание:** Экспериментальным путём установлено, что использование параметра метаданных `block-project-ssh-keys = false` необязательно
+  **Примечание:** Использовать функцию `file()` при задании значений переменных в файле `terraform.tfvars` не удалось, так как не поддерживается. TODO: Выяснить как это реализовать
+* Выполнена попытка добавить ключ пользователя _appuser_ с комментарием _appuswer_web_. В результате gcp выдал ошибку
+  ```
+  Supplied fingerprint does not match current metadata fingerprint.
+  ```
+  и дальнейшие попытки изменить состав ключей были неудачными
+* В веб-интерфейса заново открыт список ключей, далее:
+  * Сгенерирован новый ssh-ключ _appuser_web_
+  ```
+  ssh-keygen -t rsa -f ~/.ssh/appuser_web -C appuser_web -P ""
+  ```
+  * Сгенерированный ключ добавлен в метаданные проекта через веб-нитерфейс -- ключ успешно был добавлен, но войти под пользователем _appuser_web_ **не удалось** -- ошибка авторизации
+  * Выполнено применение инфраструктуры `terraform apply` -- terraform созданный вручную ключ удалил
