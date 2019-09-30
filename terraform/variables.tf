@@ -18,3 +18,6 @@ variable private_key_path {
 variable disk_image {
   description = "Disk image"
 }
+variable ssh_keys {
+  type = list(string)
+}
