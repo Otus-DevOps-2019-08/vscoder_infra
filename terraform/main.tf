@@ -14,7 +14,8 @@ resource "google_compute_project_metadata_item" "ssh-keys" {
 }
 
 resource "google_compute_instance" "app" {
-  name         = "reddit-app"
+  for_each     = var.instances
+  name         = each.key
   machine_type = "g1-small"
   zone         = var.zone
   tags         = ["reddit-app"]
