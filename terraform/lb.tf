@@ -14,8 +14,8 @@ resource "google_compute_instance_group" "app_instance_group" {
 resource "google_compute_health_check" "http-health-check" {
   name = "http-health-check"
 
-  timeout_sec        = 60
-  check_interval_sec = 60
+  timeout_sec        = 2
+  check_interval_sec = 2
 
   http_health_check {
     port_name = "http"
