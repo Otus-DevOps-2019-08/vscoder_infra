@@ -1,7 +1,7 @@
 resource "google_compute_instance_group" "app_instance_group" {
   name      = "app-instance-group"
   zone      = var.zone
-  instances = [for s in values(google_compute_instance.app)[*].self_link : s]
+  instances = google_compute_instance.app[*].self_link
   named_port {
     name = "http"
     port = "9292"
