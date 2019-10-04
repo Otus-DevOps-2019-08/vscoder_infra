@@ -5,6 +5,3 @@ disk_image       = "base-image-name"
 ssh_keys = [
   "someuser:ssh-rsa SomeSsHPUblickKey appuser"
 ]
-instances = [
-  "reddit-app"
-]
