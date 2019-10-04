@@ -197,3 +197,201 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Сообщает пользователю URL для подключения к запущенному приложению
 
 Замечание: указанный скрипт проверяет существования экземпляра ВМ и правила фаервола только по имени. В случае если экземпляр ВМ или правило фаервола с соответствующим именем уже существует, но отличается по свойствам, оно пересоздано **не будет**! Необходимо вручную удалить соответствующий объект чтобы скрипт создал его заново с нужными свойствами.
+
+## HomeWork 6: Практика IaC с использованием Terraform
+
+### Основное задание
+
+* Установлен terraform
+* В `.gitignore` добавлены временные и приватные файлы terraform-проекта
+* Создан файл `main.tf`, в который добавлены секции
+  * _terraform_ требованиями к версии `terraform`
+  * _provided "google"_ со специфичными для GCP параметрами
+* Проект проинициализирован командой `terraform init`, в процессе чего загружены необходимые для работы с GCP модули
+* В `main.tf` добавлено базловое описание инстанса ВМ
+  * имя
+  * тип
+  * зона
+  * семейство образов загрузочного диска (будет браться последняя версия)
+  * сетевой интерфейс
+* Создан экземпляр ВМ
+  ```
+  terraform plan
+  terraform apply
+  ```
+  Поле этого создаётся файл `terraform.tfstate` с описанием текущей инфраструктуры
+  **Важно:** Если базовый образ был обновлён после создания инстанса ВМ, это никак не повлияет на уже созданную ВМ. Для использования нового базового образа, инстанс ВМ нужно пересоздать посредством команды `terraform taint google_compute_instance.<resource name>`
+* Добавлены метаданные, оисывающие публичный ключ, который необходимо загрузить на созданный инстанс
+  ```
+  resource ... {
+  ...
+    metadata = {
+      ssh-keys = "user"${file("path_to_key.pub")}"
+    }
+  ...
+  }
+  ```
+  **Примечание:** Работает так же для уже созданной ВМ. После применения изменений, к инстансу удалось подключиться пл ssh
+* Создан файл `outputs.tf` со списком переменных, показываемых после применения изменений. В этот файл добавлен внешний адрес созданного инстанса
+  ```
+  output "app_external_ip" {
+    value = google_compute_instance.<resource_name>.network_interface[0].access_config[0].nat_ip
+  }
+  ```
+* В файл `main.tf` добавлен ресурс _google_compute_firewall_ с описанием правила фаервола, разрешающего доступ к порту сервера приложения. Соответствующий тег добавлен к экземпляру ВМ
+* В проект добавлены файлы `files/puma.service` и `files/deploy.sh`, необходимые для провиженинга создаваемого инстанса
+* В файл `main.tf` в ресурс _google_compute_instance_ добавлены 2 провиженера:
+  * тип _file_ для копирования systemd unit- файла на инстанс
+    ```
+      provisioner "file" {
+      source      = "files/puma.service"
+      destination = "/tmp/puma.service"
+    }
+    ```
+  * тип _remote-exec_ для запуска на инстансе скрипта `files/deploy.sh`
+    ```
+    provisioner "remote-exec" {
+      script = "files/deploy.sh"
+    }
+    ```
+  * Описана секция _connection_ с описанием способа подключения провиженеров к инстансу ВМ
+* С целью выполнения провиженеров, пересоздане экземпляра ВМ форсировано командой `terraform taint google_compute_instance.<resource name>`
+* Посредством использования input-переменных параметризованы следующие параметры:
+  * _project_ имя проекта
+  * _region_ регион
+  * _public_key_path_ путь к публичному ssh-ключу, загружаемому на инстанс ВМ
+  * _disk_image_ имя базового образа для загрузочного диска
+* Обязательные параметры определены в файле `terraform.tfvars`, который игнорируется git-ом
+
+### Самостоятельные задания
+
+* Определена обязательная input-переменная _private_key_path_, значением которой является путь к закрытому ssh-ключу, использующемуся при подключени провиинеров
+* Определена input-переменная _zone_, задающая зону, в которой должен создаваться экземпляр ВМ
+* Все `*.tf` файлы отформатированы командой `terraform fmt`
+* Создан файл ` terraform.tfvars.example` с примерами обязательных переменных
+
+### Задания со *
+
+* Добавлен публичный ssh-ключ, общий для всего проекта
+  ```
+  resource "google_compute_project_metadata_item" "sshkey-appuser1" {
+    key = "ssh-keys"
+    value = "appuser1:${file(var.public_key_path)}"
+  }
+  ```
+  После применения, на ранее созданной ВМ автоматически был создан пользователь _appuser1_ с добавленным к нему указанным ключом. Попытка подключения по ssh под именм данного пользователя прошла успешно.
+* Добавлены публичные ключи для пользователей _appuser2_ и _appuser3_
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys1" {
+    key = "ssh-keys"
+    value = "appuser1:${file(var.public_key_path)}"
+  }
+  resource "google_compute_project_metadata_item" "ssh-keys2" {
+    key = "ssh-keys"
+    value = "appuser2:${file(var.public_key_path)}"
+  }
+  resource "google_compute_project_metadata_item" "ssh-keys3" {
+    key = "ssh-keys"
+    value = "appuser3:${file(var.public_key_path)}"
+  }
+  ```
+  После применения, в метаданные проекта был добавлен только пользователь _appuser1_, а так же определённый для инстанса _appuser_. Подключение под обоими прошло успешно.
+* Дополнительные ключи добавлены в один ресурс
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys" {
+  key = "ssh-keys"
+  value = <<EOF
+    appuser1:${file(var.public_key_path)}
+    appuser2:${file(var.public_key_path)}
+    appuser3:${file(var.public_key_path)}
+  EOF
+  }
+  ```
+  После применения ключи в метаданные проекта добавлены, но на развёрнутый инстанс пользователи не приехали. В веб-интерфейсе в метаданных проекта появилось так же несколько _пустых_ ssh-ключей, с незаполненными значениями.
+* Рабочим оказалось следующее решение:
+  * `main.tf`
+  ```
+  resource "google_compute_project_metadata_item" "ssh-keys" {
+    key = "ssh-keys"
+    value = join("\n", var.ssh_keys)
+  }
+  ```
+  * `variables.tf`
+  ```
+  variable ssh_keys {
+    type    = list(string)
+  }
+  ```
+  * `terraform.tfvars`
+  ```
+  ssh_keys = [
+    "appuser:ssh-rsa <key_value_here> appuser",
+    "appuser1:ssh-rsa <key_value_here> appuser",
+    "appuser2:ssh-rsa <key_value_here> appuser",
+    "appuser3:ssh-rsa <key_value_here> appuser"
+  ]
+  ```
+  На инстансе были созданы все 4 пользователя
+  **Примечание:** Экспериментальным путём установлено, что использование параметра метаданных `block-project-ssh-keys = false` необязательно
+  **Примечание:** Использовать функцию `file()` при задании значений переменных в файле `terraform.tfvars` не удалось, так как не поддерживается. TODO: Выяснить как это реализовать
+* Выполнена попытка добавить ключ пользователя _appuser_ с комментарием _appuswer_web_. В результате gcp выдал ошибку
+  ```
+  Supplied fingerprint does not match current metadata fingerprint.
+  ```
+  и дальнейшие попытки изменить состав ключей были неудачными
+* В веб-интерфейса заново открыт список ключей, далее:
+  * Сгенерирован новый ssh-ключ _appuser_web_
+  ```
+  ssh-keygen -t rsa -f ~/.ssh/appuser_web -C appuser_web -P ""
+  ```
+  * Сгенерированный ключ добавлен в метаданные проекта через веб-нитерфейс -- ключ успешно был добавлен, но войти под пользователем _appuser_web_ **не удалось** -- ошибка авторизации
+  * Выполнено применение инфраструктуры `terraform apply` -- terraform созданный вручную ключ удалил
+
+### Задания с **
+
+При разработке использовались следующие ресурсы:
+* https://cloud.google.com/load-balancing/docs/https/
+
+Что было сделано:
+* Создан файл `lb.tf`, в котором описаны следующие сущности:
+  * google_compute_instance_group со списком инстансов ВМ с запущенным приложением (пока 1 экземпляр)
+  * google_compute_health_check для проверки доступности приложения на экземпляре ВМ
+  * google_compute_backend_service со ссылкой на группы экземпляров ВМ (в данном случае на 1 группу), а так же со ссылкой на google_compute_health_check
+  * google_compute_url_map с описанием запросу к какому url на какой backend_service отправлять (в нашем случае все запросы ко всем url отправляются на 1 сервис)
+  * google_compute_target_http_proxy для проксирования http/https соединений к url_map
+  * google_compute_global_forwarding_rule для перенаправления ip4/ip6 трафика (для каждого типа трафика должно быть своё правило) на target_http_proxy (в нашем случае только ip4)
+  * так же была добавлена output-переменная, выводящая ip балансировщика
+* Изменение количества инстансов было реализовано посредством добавления имени нового инстанса в множество _instances_ в файл `terraform.tfvars`
+* Output-переменная _app_external_ip_ теперь отображает список ip-адресов всех инстансов
+* Добавлен второй инстанс ВМ с приложением. Решены возникшие в процессе настройки проблемы.
+  **Важно:** google compute backend service очень долго стартует, в результате чего приложение через балансировщик становится доступным спустя продолжительное время (возможно более 10 минут)
+* Выполнена остановка приложения на одном из инстансов. Интерфейс приложения остался доступен через балансировщик как и прежде.
+* Код изменён таким образом, чтобы использоать переменную _instance_count_, указывающую количество необходимых инстансов, вместо _instances_, содержащей множество имён необходимых инстансов
+  * _variables.tf_
+    ```
+    variable instance_count {
+      type    = number
+      default = 1
+    }
+    ```
+  * _main.tf_
+    ```
+    resource "google_compute_instance" "app" {
+      name         = "reddit-app${count.index}"
+      count        = var.instance_count
+      ...
+    }
+    ```
+  * _outputs.tf_
+    ```
+    output "app_external_ip" {
+      value = google_compute_instance.app[*].network_interface[0].access_config[0].nat_ip
+    }
+    ```
+  * _lb.tf_
+    ```
+    resource "google_compute_instance_group" "app_instance_group" {
+      instances = google_compute_instance.app[*].self_link
+      ...
+    ```
+* Протестирована отказоустойчивость
