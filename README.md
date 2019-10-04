@@ -366,3 +366,32 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Добавлен второй инстанс ВМ с приложением. Решены возникшие в процессе настройки проблемы.
   **Важно:** google compute backend service очень долго стартует, в результате чего приложение через балансировщик становится доступным спустя продолжительное время (возможно более 10 минут)
 * Выполнена остановка приложения на одном из инстансов. Интерфейс приложения остался доступен через балансировщик как и прежде.
+* Код изменён таким образом, чтобы использоать переменную _instance_count_, указывающую количество необходимых инстансов, вместо _instances_, содержащей множество имён необходимых инстансов
+  * _variables.tf_
+    ```
+    variable instance_count {
+      type    = number
+      default = 1
+    }
+    ```
+  * _main.tf_
+    ```
+    resource "google_compute_instance" "app" {
+      name         = "reddit-app${count.index}"
+      count        = var.instance_count
+      ...
+    }
+    ```
+  * _outputs.tf_
+    ```
+    output "app_external_ip" {
+      value = google_compute_instance.app[*].network_interface[0].access_config[0].nat_ip
+    }
+    ```
+  * _lb.tf_
+    ```
+    resource "google_compute_instance_group" "app_instance_group" {
+      instances = google_compute_instance.app[*].self_link
+      ...
+    ```
+* Протестирована отказоустойчивость
