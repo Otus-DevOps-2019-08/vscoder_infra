@@ -21,6 +21,7 @@ variable disk_image {
 variable ssh_keys {
   type = list(string)
 }
-variable instances {
-  type = set(string)
+variable instance_count {
+  type    = number
+  default = 1
 }
