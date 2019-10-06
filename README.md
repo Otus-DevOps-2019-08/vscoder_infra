@@ -505,3 +505,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     }
   }
   ```
+* Добавлен файл `storage-bucket.tf`, содержащий модуль `SweetOps/storage-bucket/google`
+* Для загрузки недостающих модулей выполнен `terraform init`
+* Для функционирования в секцию `module` понадобилось добавить/изменить передаваемые параметры
+  ```
+  name     = "storage-bucket-test-${var.project}"
+  location = var.region
+  ```
+* Проверена работоспособность `terraform apply`
