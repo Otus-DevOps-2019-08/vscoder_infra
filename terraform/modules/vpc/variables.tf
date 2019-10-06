@@ -1,0 +1,3 @@
+variable zone {
+  description = "Zone"
+}

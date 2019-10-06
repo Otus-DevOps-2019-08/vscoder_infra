@@ -450,7 +450,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Метаданные проекта вынесены из `terraform/main.tf` в `terraform/metadata.tf`
 * Требования к версии terraform вынесены из `terraform/main.tf` в `terraform/metadata.tf`
 
-* Создана директория `modules/` для описания локальных модулей
+* В директории `terraform/` создана поддиректория `modules/` для описания локальных модулей
 * Описание инстанса `reddit-app` перенесено в модуль `modules/app/`, а так же
   * описание статического ip
   * описание правила фаервола
@@ -463,3 +463,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   terraform get
   ```
+* Правило фаервола для ssh перенесено из `vpc.tf` в отдельный модуль `modules/vpc/`, а так же:
+  * входящяя переменная `zone`
+* Созданные модули загружены в проект
+  ```
+  terraform get
+  ```
+* Инфраструктура создана `terraform apply`
+* Успешно выполнено подключение по ssh к созданному инстансу
