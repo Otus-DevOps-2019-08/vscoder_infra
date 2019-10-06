@@ -446,3 +446,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * В `terraform/variables.tf` добавлены пеерменные базовых образов диска для app и db
   * app_disk_image
   * db_disk_image
+* Правило фаервола для доступа к ssh вынесено из `terraform/main.tf` в `terraform/vpc.tf`
