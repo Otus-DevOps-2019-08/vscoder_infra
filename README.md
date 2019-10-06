@@ -207,6 +207,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Создан файл `main.tf`, в который добавлены секции
   * _terraform_ требованиями к версии `terraform`
   * _provided "google"_ со специфичными для GCP параметрами
+* Выполнена авторизация terraform в google
+  ```
+  gcloud auth application-default login
+  ```
 * Проект проинициализирован командой `terraform init`, в процессе чего загружены необходимые для работы с GCP модули
 * В `main.tf` добавлено базловое описание инстанса ВМ
   * имя
@@ -395,3 +399,28 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       ...
     ```
 * Протестирована отказоустойчивость
+
+## HomeWork 7: Принципы организации инфраструктурного кода и работа над инфраструктурой в команде на примере Terraform
+
+### Основное задание
+
+* Файл `lb.tf` из предыдущего задания с ** перемещён в поддиректорию `terraform/files/`
+* В `main.tf` описано правило фаервола `firewall_ssh`
+  При применении возникла ошибка
+  ```
+  Error: Error creating Firewall: googleapi: Error 409: The resource 'projects/infra-253214/global/firewalls/default-allow-ssh' already exists, alreadyExists
+  ```
+  так как правило с таким именем уже присутствует в проекте
+* Выполнен импорт правила из GCP в terraform state
+  ```
+  terraform import google_compute_firewall.firewall_ssh default-allow-ssh
+  ```
+* К ресурсу добавлено описание правила. Изменения применены `terraform apply`
+
+* В `main.tf` определён ресурс `google_compute_address.app_ip reddit-app-ip`
+* Инфраструктура пересоздана
+  ```
+  terraform destroy
+  terraform apply
+  ```
+* Добавлена ссылка google_compute_instance.app network_interface access_config nat_ip на созданный статический ip
