@@ -19,6 +19,7 @@ module "db" {
 }
 
 module "vpc" {
-  source = "./modules/vpc"
-  zone   = var.zone
+  source        = "./modules/vpc"
+  zone          = var.zone
+  source_ranges = ["0.0.0.0/0"]
 }

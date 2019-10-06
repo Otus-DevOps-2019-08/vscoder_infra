@@ -471,3 +471,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * Инфраструктура создана `terraform apply`
 * Успешно выполнено подключение по ssh к созданному инстансу
+* Параметризована переменная `source_ranges` модуля `vpc`
