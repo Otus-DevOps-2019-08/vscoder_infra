@@ -424,3 +424,12 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   terraform apply
   ```
 * Добавлена ссылка google_compute_instance.app network_interface access_config nat_ip на созданный статический ip
+
+* Создан файл `packer/db.json`, описывающий packer-образ `reddit-db-base` для БД (mongodb)
+* Создан файл `packer/app.json`, описывающий packer-образ `reddit-app-base` для app (ruby)
+* Создан скрипт `packer/build_image.sh` для создания образов из json-файлов
+* Запечены образы `reddit-db-base` и `reddit-app-base`
+  ```
+  ./build_image.sh db.json
+  ./build_image.sh app.json
+  ```
