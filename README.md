@@ -449,3 +449,17 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Правило фаервола для доступа к ssh вынесено из `terraform/main.tf` в `terraform/vpc.tf`
 * Метаданные проекта вынесены из `terraform/main.tf` в `terraform/metadata.tf`
 * Требования к версии terraform вынесены из `terraform/main.tf` в `terraform/metadata.tf`
+
+* Создана директория `modules/` для описания локальных модулей
+* Описание инстанса `reddit-app` перенесено в модуль `modules/app/`, а так же
+  * описание статического ip
+  * описание правила фаервола
+  * входящие переменные `public_key_path`, `zone`, `app_disk_image`
+  * выходящая переменная `app_external_ip` (впоследствии будет получена в `outputs.tf` основного модуля)
+* Описание инстанса `reddit-db` перенесено в модуль `modules/db/`, а так же
+  * описание правила фаервола
+  * входящие переменные `public_key_path`, `zone`, `db_disk_image`
+* Созданные модули загружены в проект
+  ```
+  terraform get
+  ```
