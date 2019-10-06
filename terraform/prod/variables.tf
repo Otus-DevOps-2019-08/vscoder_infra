@@ -33,3 +33,11 @@ variable db_disk_image {
   description = "Disk image for reddit db"
   default     = "reddit-db-base"
 }
+variable environment {
+  description = "Environment name"
+  default     = "prod"
+}
+variable use_static_ip {
+  description = "Need to create static ip for instance?"
+  default     = true
+}

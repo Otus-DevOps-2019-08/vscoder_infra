@@ -1,5 +1,5 @@
 resource "google_compute_instance" "db" {
-  name         = "reddit-db"
+  name         = "reddit-db-${var.environment}"
   machine_type = "g1-small"
   zone         = var.zone
   tags         = ["reddit-db"]
@@ -9,7 +9,7 @@ resource "google_compute_instance" "db" {
     }
   }
   network_interface {
-    network = "default"
+    network = "${var.network_name}-${var.environment}"
     access_config {}
   }
   metadata = {
@@ -17,8 +17,8 @@ resource "google_compute_instance" "db" {
   }
 }
 resource "google_compute_firewall" "firewall_mongo" {
-  name    = "allow-mongo-default"
-  network = "default"
+  name    = "allow-mongo-default-${var.environment}"
+  network = "${var.network_name}-${var.environment}"
   allow {
     protocol = "tcp"
     ports    = ["27017"]

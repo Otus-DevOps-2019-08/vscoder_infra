@@ -486,3 +486,22 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `terraform/variables.tf`
   * `terraform/terraform.tfvars`
 * Проверена правильность настроке инфраструктуры каждого из окружений посредством `terraform apply`
+* Для модулей параметризовано имя окружения (stage/prod)
+* Для каждого окружения создаётся отдельная сеть с именем `${var.network_name}-${var.environment}`
+* Для модуля app параметризовано создание ресурса `google_compute_address`, а так же назначение его инстансу.
+  Создание ресурса только если `var.use_static_ip` истина
+  ```
+  resource "google_compute_address" "app_ip" {
+    name = "reddit-app-ip-${var.environment}"
+    count = var.use_static_ip ? 1 : 0
+  }
+  ```
+  Назначение статического адреса только если `var.use_static_ip` истина
+  ```
+  network_interface {
+    network = "${var.network_name}-${var.environment}"
+    access_config {
+      nat_ip = var.use_static_ip ? google_compute_address.app_ip[0].address : null
+    }
+  }
+  ```
