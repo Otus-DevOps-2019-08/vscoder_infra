@@ -447,3 +447,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * app_disk_image
   * db_disk_image
 * Правило фаервола для доступа к ssh вынесено из `terraform/main.tf` в `terraform/vpc.tf`
+* Метаданные проекта вынесены из `terraform/main.tf` в `terraform/metadata.tf`
