@@ -433,3 +433,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ./build_image.sh db.json
   ./build_image.sh app.json
   ```
+
+* Добавлен файл `terraform/app.tf` с описанием создания инстанса `reddit-app`, а так же:
+  * статисеского адреса
+  * правила фаервола
+* Добавлен файл `terraform/db.tf` с описанием создания инстанса `reddit-db`, а так же:
+  * правила фаервола
+* Из `terraform/main.tf` убрано описание
+  * инстанса `reddit-app`
+  * правила фаервола для доступа к `reddit-app`
+  * статического ip-адреса
+* В `terraform/variables.tf` добавлены пеерменные базовых образов диска для app и db
+  * app_disk_image
+  * db_disk_image
