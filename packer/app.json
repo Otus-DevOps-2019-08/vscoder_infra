@@ -15,7 +15,7 @@
       "type": "googlecompute",
       "project_id": "{{user `project_id`}}",
       "image_name": "reddit-app-base-{{timestamp}}",
-      "image_family": "reddit-base",
+      "image_family": "reddit-app-base",
       "source_image_family": "{{user `source_image_family`}}",
       "zone": "{{user `zone`}}",
       "ssh_username": "appuser",
