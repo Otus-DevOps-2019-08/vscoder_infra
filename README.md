@@ -518,6 +518,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 **ВАЖНО:** Перед изменением `backend.tf` не забывать удалять текущую инфраструктуру `terraform destroy`
 
+**Примечание:** дял корректной работы с `backend` понадобилось убрать подстановку переменной в имя `storage-bucket`, так как *the backend configuration does not support variables or expressions of any sort*. Работу с переменными в бэкэндах, а так же поддерживать инфраструктурный код *DRY and maintenable* позволяет [terragrunt](https://github.com/gruntwork-io/terragrunt)
+
 * Создан `stage/backend.tf` с описанием remote backend для хранения состояния
   ```
   terraform {
