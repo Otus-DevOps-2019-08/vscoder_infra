@@ -8,7 +8,7 @@ module "storage-bucket" {
   source  = "SweetOps/storage-bucket/google"
   version = "0.3.0"
 
-  name     = "storage-bucket-test-${var.project}"
+  name     = "vscoder-otus-tf-state"
   location = var.region
 }
 
