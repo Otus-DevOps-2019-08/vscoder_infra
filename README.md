@@ -513,3 +513,47 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   location = var.region
   ```
 * Проверена работоспособность `terraform apply`
+
+### Задания со * Хранение state в gcs
+
+**ВАЖНО:** Перед изменением `backend.tf` не забывать удалять текущую инфраструктуру `terraform destroy`
+
+* Создан `stage/backend.tf` с описанием remote backend для хранения состояния
+  ```
+  terraform {
+    backend "gcs" {
+      bucket = "vscoder-otus-tf-state"
+      prefix = "terraform/state"
+    }
+  }
+  ```
+* Файлы `*.tfstate*` и `.terraform` вынесены из репозитория во внешнюю директорию
+* Выполнена инициализация `terraform init`
+* stage-инфраструктура развёрнута `terraform apply`.
+  Как и ожидалось, файлы состояния в директории не появились:
+  ```
+  .
+  ├── backend.tf
+  ├── main.tf
+  ├── outputs.tf
+  ├── terraform.tfvars
+  ├── terraform.tfvars.example
+  └── variables.tf
+
+  0 directories, 6 files
+  ```
+* Файл `stage/backend.tf` скопирован в `prod/backend.tf` без изменений
+* При выполнении `terraform plan` - все ресурсы запланированы к пересозданию. Такое поведение не устраивает.
+  ```
+  Plan: 7 to add, 0 to change, 6 to destroy.
+  ```
+* В обоих окружениях в `backend.tf` изменён `prefix`
+  Было: `prefix = "terraform/state"`
+  Стало: `prefix = "terraform/state/stage"` и `prefix = "terraform/state/prod"` соответственно
+* Применение инфраструктуры (`terraform apply`) для каждого из окружений прошло успешно. Одновременно.
+* `terraform show` для каждого из окружений выдаёт свой набор объектов
+* При попытке применить изменения (`terraform apply`) одновременно (из разных терминалов) для одного окружения, во втором терминале terraform выдал ошибку:
+  ```
+  Error: Error locking state: Error acquiring the state lock: writing "gs://vscoder-otus-tf-state/terraform/state/prod/default.tflock" failed: googleapi: Error 412: Precondition Failed, conditionNotMet
+  ```
+  что говорит о корректной работе блокировок
