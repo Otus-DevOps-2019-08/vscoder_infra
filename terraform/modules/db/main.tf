@@ -15,19 +15,6 @@ resource "google_compute_instance" "db" {
   metadata = {
     ssh-keys = "appuser:${file(var.public_key_path)}"
   }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo sed -i.bak 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf",
-      "sudo systemctl restart mongod.service"
-    ]
-  }
-  connection {
-    type        = "ssh"
-    host        = self.network_interface[0].access_config[0].nat_ip
-    user        = "appuser"
-    agent       = false
-    private_key = file(var.private_key_path)
-  }
 }
 resource "google_compute_firewall" "firewall_mongo" {
   name    = "allow-mongo-default-${var.environment}"
