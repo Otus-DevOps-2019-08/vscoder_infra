@@ -1,7 +1,5 @@
 project          = "project-name-here"
-public_key_path  = "~/.ssh/someusersshkey.pub"
-private_key_path = "~/.ssh/someusersshkey"
-disk_image       = "base-image-name"
+region  = "europe-west1"
 ssh_keys = [
   "someuser:ssh-rsa SomeSsHPUblickKey appuser"
 ]
