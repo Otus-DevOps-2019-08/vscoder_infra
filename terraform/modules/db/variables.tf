@@ -2,6 +2,11 @@ variable public_key_path {
   description = "Path to the public key used to connect to instance"
 }
 
+variable private_key_path {
+  description = "Path to ssh private key file for provisioners authentication"
+  default = "~/.ssh/id_rsa"
+}
+
 variable zone {
   description = "Zone"
 }

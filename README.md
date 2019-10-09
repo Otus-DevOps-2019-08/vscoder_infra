@@ -603,7 +603,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * В шаблоне systemd-юнита `puma.service.tmpl`:
     * параметризован путь к директории с приложением
     * параметризован пользователь от имени которого запускается приложение
-    * Добавлен параметр `EnvironmentFile` для передачи переменных окружения из файла `puma.env` запускаемому приложению
+    * Добавлен параметр `EnvironmentFile` для передачи переменных из файла `puma.env` в качестве переменных окружения запускаемому приложению
       ```
       [Service]
       EnvironmentFile=${APP_DIR}/puma.env
@@ -620,3 +620,14 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     * `puma.service` запускается и добавляется в автозагрузку
   * Помимо перечисленного, в stage-окружение добавлены дополнительные output variables
   * **НО** при запуске приложения, оно не смогло подключиться к БД по причине того, что MongoDB по умолчанию запускается на адресе `127.0.0.1`
+
+  * Запуск mongod сервиса на `0.0.0.0` исправлен добавлением в модуль `db` провиженера, заменяющено `bindIp: 127.0.0.1` на `bindIp: 0.0.0.0` в конфигурационном файле `mongod.conf` и перезапускающего сервис
+    ```
+    provisioner "remote-exec" {
+      inline = [
+        "sudo sed -i.bak 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf",
+        "sudo systemctl restart mongod.service"
+      ]
+    }
+    ```
+  * Приложение **работает** на http://<app_external_ip>:9292
