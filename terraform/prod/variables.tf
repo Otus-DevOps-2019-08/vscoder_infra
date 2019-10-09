@@ -13,7 +13,8 @@ variable public_key_path {
   description = "Path to the public key used for ssh access"
 }
 variable private_key_path {
-  description = "Path to the private key used for provisioners"
+  description = "Path to ssh private key file for provisioners authentication"
+  default = "~/.ssh/id_rsa"
 }
 variable disk_image {
   description = "Disk image"
@@ -35,9 +36,9 @@ variable db_disk_image {
 }
 variable environment {
   description = "Environment name"
-  default     = "prod"
+  default     = "stage"
 }
 variable use_static_ip {
   description = "Need to create static ip for instance?"
-  default     = true
+  default     = false
 }

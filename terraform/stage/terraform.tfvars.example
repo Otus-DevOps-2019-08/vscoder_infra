@@ -6,3 +6,4 @@ ssh_keys = [
   "someuser:ssh-rsa SomeSsHPUblickKey someuser"
 ]
 instance_count = 1
+environment    = "stage"
