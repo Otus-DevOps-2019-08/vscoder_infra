@@ -3,7 +3,7 @@ variable project {
 }
 
 variable region {
-  description = "Project"
+  description = "Region"
 }
 
 variable ssh_keys {
