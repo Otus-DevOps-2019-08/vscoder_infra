@@ -247,7 +247,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * В файл `main.tf` в ресурс _google_compute_instance_ добавлены 2 провиженера:
   * тип _file_ для копирования systemd unit- файла на инстанс
     ```
-      provisioner "file" {
+    provisioner "file" {
       source      = "files/puma.service"
       destination = "/tmp/puma.service"
     }
@@ -559,3 +559,64 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   Error: Error locking state: Error acquiring the state lock: writing "gs://vscoder-otus-tf-state/terraform/state/prod/default.tflock" failed: googleapi: Error 412: Precondition Failed, conditionNotMet
   ```
   что говорит о корректной работе блокировок
+
+### Задание с ** Провиженинг приложения с использованием пременных окружения
+
+* В модуль `db` добавлена output-переменная `db_internal_ip` для передачи в модуль `app`
+  ```
+  output "db_internal_ip" {
+    value = google_compute_instance.db.network_interface[0].network_ip
+  }
+  ```
+* В окружении `stage` данная переменная передаётся модулю `app` как часть переменной `database_url`
+  ```
+  database_url    = "${module.db.db_internal_ip}:27017"
+  ```
+* В модуле `app`
+  * создана input variable `database_url` для передачи провиженеру
+    ```
+    variable database_url {
+      description = "MongoDB url. Ex: 127.0.0.1:27017"
+    }
+    ```
+  * в `google_compute_instance` добавлены провиженеры
+    * заполняющий на основе переменной `var.database_url` файл `puma.env`
+      ```
+      provisioner "file" {
+        content      = "DATABASE_URL=${var.database_url}"
+        destination = "/tmp/puma.env"
+      }
+      ```
+    * передающий на инстанс шаблон systemd-юнита для запуска puma server
+      ```
+      provisioner "file" {
+        source      = "${path.module}/files/puma.service.tmpl"
+        destination = "/tmp/puma.service.tmpl"
+      }
+      ```
+    * выполняющий на инстансе скрипт `deploy.sh`
+      ```
+      provisioner "remote-exec" {
+        script = "${path.module}/files/deploy.sh"
+      }
+      ```
+  * В шаблоне systemd-юнита `puma.service.tmpl`:
+    * параметризован путь к директории с приложением
+    * параметризован пользователь от имени которого запускается приложение
+    * Добавлен параметр `EnvironmentFile` для передачи переменных окружения из файла `puma.env` запускаемому приложению
+      ```
+      [Service]
+      EnvironmentFile=${APP_DIR}/puma.env
+      ...
+      ```
+  * В файле `deploy.sh` выполняются следующие действия:
+    * экспортируется переменная `$APP_DIR` для корректной подстановки в шаблон systemd-юнита
+    * из репозитория устанавливается приложение в `$APP_DIR`
+    * файл с переменными окружения `puma.env` перемещается из временной директории в `$APP_DIR`
+    * в systemd добавляется сервис `puma.service` из шаблона `/tmp/puma.service.tmpl`
+      ```
+      cat /tmp/puma.service.tmpl | envsubst | sudo tee /etc/systemd/system/puma.service
+      ```
+    * `puma.service` запускается и добавляется в автозагрузку
+  * Помимо перечисленного, в stage-окружение добавлены дополнительные output variables
+  * **НО** при запуске приложения, оно не смогло подключиться к БД по причине того, что MongoDB по умолчанию запускается на адресе `127.0.0.1`
