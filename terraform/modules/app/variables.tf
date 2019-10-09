@@ -16,7 +16,7 @@ variable app_disk_image {
   default     = "reddit-app-base"
 }
 
-variable network_name {
+variable vpc_network_name {
   description = "Network name"
   default     = "default"
 }

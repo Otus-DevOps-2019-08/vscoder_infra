@@ -9,7 +9,7 @@ resource "google_compute_instance" "app" {
     }
   }
   network_interface {
-    network = "${var.network_name}-${var.environment}"
+    network = "${var.vpc_network_name}"
     access_config {
       nat_ip = var.use_static_ip ? google_compute_address.app_ip[0].address : null
     }
@@ -42,7 +42,7 @@ resource "google_compute_address" "app_ip" {
 }
 resource "google_compute_firewall" "firewall_puma" {
   name    = "allow-puma-default-${var.environment}"
-  network = "${var.network_name}-${var.environment}"
+  network = "${var.vpc_network_name}"
   allow {
     protocol = "tcp"
     ports    = ["9292"]

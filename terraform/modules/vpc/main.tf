@@ -1,6 +1,6 @@
 resource "google_compute_firewall" "firewall_ssh" {
-  name    = "${var.network_name}-allow-ssh-${var.environment}"
-  network = "${var.network_name}-${var.environment}"
+  name    = "${google_compute_network.vpc_network.name}-allow-ssh"
+  network = "${google_compute_network.vpc_network.name}"
   allow {
     protocol = "tcp"
     ports    = ["22"]

@@ -11,7 +11,7 @@ variable db_disk_image {
   default     = "reddit-db-base"
 }
 
-variable network_name {
+variable vpc_network_name {
   description = "Network name"
   default     = "default"
 }

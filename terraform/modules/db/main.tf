@@ -9,7 +9,7 @@ resource "google_compute_instance" "db" {
     }
   }
   network_interface {
-    network = "${var.network_name}-${var.environment}"
+    network = "${var.vpc_network_name}"
     access_config {}
   }
   metadata = {
@@ -18,7 +18,7 @@ resource "google_compute_instance" "db" {
 }
 resource "google_compute_firewall" "firewall_mongo" {
   name    = "allow-mongo-default-${var.environment}"
-  network = "${var.network_name}-${var.environment}"
+  network = "${var.vpc_network_name}"
   allow {
     protocol = "tcp"
     ports    = ["27017"]

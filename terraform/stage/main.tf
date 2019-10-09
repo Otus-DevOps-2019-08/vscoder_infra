@@ -17,6 +17,7 @@ module "db" {
   zone            = var.zone
   db_disk_image   = var.db_disk_image
   environment     = var.environment
+  vpc_network_name = module.vpc.vpc_network_name
 }
 
 module "app" {
@@ -28,4 +29,5 @@ module "app" {
   environment     = var.environment
   use_static_ip   = var.use_static_ip
   database_url    = "${module.db.db_internal_ip}:27017"
+  vpc_network_name = module.vpc.vpc_network_name
 }
