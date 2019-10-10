@@ -207,6 +207,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Создан файл `main.tf`, в который добавлены секции
   * _terraform_ требованиями к версии `terraform`
   * _provided "google"_ со специфичными для GCP параметрами
+* Выполнена авторизация terraform в google
+  ```
+  gcloud auth application-default login
+  ```
 * Проект проинициализирован командой `terraform init`, в процессе чего загружены необходимые для работы с GCP модули
 * В `main.tf` добавлено базловое описание инстанса ВМ
   * имя
@@ -243,7 +247,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * В файл `main.tf` в ресурс _google_compute_instance_ добавлены 2 провиженера:
   * тип _file_ для копирования systemd unit- файла на инстанс
     ```
-      provisioner "file" {
+    provisioner "file" {
       source      = "files/puma.service"
       destination = "/tmp/puma.service"
     }
@@ -395,3 +399,242 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       ...
     ```
 * Протестирована отказоустойчивость
+
+## HomeWork 7: Принципы организации инфраструктурного кода и работа над инфраструктурой в команде на примере Terraform
+
+### Основное задание
+
+* Файл `lb.tf` из предыдущего задания с ** перемещён в поддиректорию `terraform/files/`
+* В `main.tf` описано правило фаервола `firewall_ssh`
+  При применении возникла ошибка
+  ```
+  Error: Error creating Firewall: googleapi: Error 409: The resource 'projects/infra-253214/global/firewalls/default-allow-ssh' already exists, alreadyExists
+  ```
+  так как правило с таким именем уже присутствует в проекте
+* Выполнен импорт правила из GCP в terraform state
+  ```
+  terraform import google_compute_firewall.firewall_ssh default-allow-ssh
+  ```
+* К ресурсу добавлено описание правила. Изменения применены `terraform apply`
+
+* В `main.tf` определён ресурс `google_compute_address.app_ip reddit-app-ip`
+* Инфраструктура пересоздана
+  ```
+  terraform destroy
+  terraform apply
+  ```
+* Добавлена ссылка google_compute_instance.app network_interface access_config nat_ip на созданный статический ip
+
+* Создан файл `packer/db.json`, описывающий packer-образ `reddit-db-base` для БД (mongodb)
+* Создан файл `packer/app.json`, описывающий packer-образ `reddit-app-base` для app (ruby)
+* Создан скрипт `packer/build_image.sh` для создания образов из json-файлов
+* Запечены образы `reddit-db-base` и `reddit-app-base`
+  ```
+  ./build_image.sh db.json
+  ./build_image.sh app.json
+  ```
+
+* Добавлен файл `terraform/app.tf` с описанием создания инстанса `reddit-app`, а так же:
+  * статисеского адреса
+  * правила фаервола
+* Добавлен файл `terraform/db.tf` с описанием создания инстанса `reddit-db`, а так же:
+  * правила фаервола
+* Из `terraform/main.tf` убрано описание
+  * инстанса `reddit-app`
+  * правила фаервола для доступа к `reddit-app`
+  * статического ip-адреса
+* В `terraform/variables.tf` добавлены пеерменные базовых образов диска для app и db
+  * app_disk_image
+  * db_disk_image
+* Правило фаервола для доступа к ssh вынесено из `terraform/main.tf` в `terraform/vpc.tf`
+* Метаданные проекта вынесены из `terraform/main.tf` в `terraform/metadata.tf`
+* Требования к версии terraform вынесены из `terraform/main.tf` в `terraform/metadata.tf`
+
+* В директории `terraform/` создана поддиректория `modules/` для описания локальных модулей
+* Описание инстанса `reddit-app` перенесено в модуль `modules/app/`, а так же
+  * описание статического ip
+  * описание правила фаервола
+  * входящие переменные `public_key_path`, `zone`, `app_disk_image`
+  * выходящая переменная `app_external_ip` (впоследствии будет получена в `outputs.tf` основного модуля)
+* Описание инстанса `reddit-db` перенесено в модуль `modules/db/`, а так же
+  * описание правила фаервола
+  * входящие переменные `public_key_path`, `zone`, `db_disk_image`
+* Созданные модули загружены в проект
+  ```
+  terraform get
+  ```
+* Правило фаервола для ssh перенесено из `vpc.tf` в отдельный модуль `modules/vpc/`, а так же:
+  * входящяя переменная `zone`
+* Созданные модули загружены в проект
+  ```
+  terraform get
+  ```
+* Инфраструктура создана `terraform apply`
+* Успешно выполнено подключение по ssh к созданному инстансу
+* Параметризована переменная `source_ranges` модуля `vpc`
+* Протестирована работа переменной `source_ranges`
+  * При задании своего белого ip подключение по ssh к созданному инстансу выполняется успешно
+  * При задании любого другого белого ip, подключение не удалось
+    *ЗАМЕЧАНИЕ:* Фактичетски изменение `source_ranges` применяется спустя несколько десятков секунд после завершения выполнения команды `terraform apply`
+
+* Конфигурация разнесена по 2-м окружениям
+  * *stage* - доступ к ssh открыт со всех ip
+  * *prod* - доступ к ssh открыт только с моих ip
+* Из корня terraform-проекта удалены файлы, скопированные в каждое из окружений
+  * `terraform/main.tf`
+  * `terraform/outputs.tf`
+  * `terraform/variables.tf`
+  * `terraform/terraform.tfvars`
+* Проверена правильность настроке инфраструктуры каждого из окружений посредством `terraform apply`
+* Для модулей параметризовано имя окружения (stage/prod)
+* Для каждого окружения создаётся отдельная сеть с именем `${var.network_name}-${var.environment}`
+* Для модуля app параметризовано создание ресурса `google_compute_address`, а так же назначение его инстансу.
+  Создание ресурса только если `var.use_static_ip` истина
+  ```
+  resource "google_compute_address" "app_ip" {
+    name = "reddit-app-ip-${var.environment}"
+    count = var.use_static_ip ? 1 : 0
+  }
+  ```
+  Назначение статического адреса только если `var.use_static_ip` истина
+  ```
+  network_interface {
+    network = "${var.network_name}-${var.environment}"
+    access_config {
+      nat_ip = var.use_static_ip ? google_compute_address.app_ip[0].address : null
+    }
+  }
+  ```
+* Добавлен файл `storage-bucket.tf`, содержащий модуль `SweetOps/storage-bucket/google`
+* Для загрузки недостающих модулей выполнен `terraform init`
+* Для функционирования в секцию `module` понадобилось добавить/изменить передаваемые параметры
+  ```
+  name     = "storage-bucket-test-${var.project}"
+  location = var.region
+  ```
+* Проверена работоспособность `terraform apply`
+
+### Задания со * Хранение state в gcs
+
+**ВАЖНО:** Перед изменением `backend.tf` не забывать удалять текущую инфраструктуру `terraform destroy`
+
+**Примечание:** дял корректной работы с `backend` понадобилось убрать подстановку переменной в имя `storage-bucket`, так как *the backend configuration does not support variables or expressions of any sort*. Работу с переменными в бэкэндах, а так же поддерживать инфраструктурный код *DRY and maintenable* позволяет [terragrunt](https://github.com/gruntwork-io/terragrunt)
+
+* Создан `stage/backend.tf` с описанием remote backend для хранения состояния
+  ```
+  terraform {
+    backend "gcs" {
+      bucket = "vscoder-otus-tf-state"
+      prefix = "terraform/state"
+    }
+  }
+  ```
+* Файлы `*.tfstate*` и `.terraform` вынесены из репозитория во внешнюю директорию
+* Выполнена инициализация `terraform init`
+* stage-инфраструктура развёрнута `terraform apply`.
+  Как и ожидалось, файлы состояния в директории не появились:
+  ```
+  .
+  ├── backend.tf
+  ├── main.tf
+  ├── outputs.tf
+  ├── terraform.tfvars
+  ├── terraform.tfvars.example
+  └── variables.tf
+
+  0 directories, 6 files
+  ```
+* Файл `stage/backend.tf` скопирован в `prod/backend.tf` без изменений
+* При выполнении `terraform plan` - все ресурсы запланированы к пересозданию. Такое поведение не устраивает.
+  ```
+  Plan: 7 to add, 0 to change, 6 to destroy.
+  ```
+* В обоих окружениях в `backend.tf` изменён `prefix`
+  Было: `prefix = "terraform/state"`
+  Стало: `prefix = "terraform/state/stage"` и `prefix = "terraform/state/prod"` соответственно
+* Применение инфраструктуры (`terraform apply`) для каждого из окружений прошло успешно. Одновременно.
+* `terraform show` для каждого из окружений выдаёт свой набор объектов
+* При попытке применить изменения (`terraform apply`) одновременно (из разных терминалов) для одного окружения, во втором терминале terraform выдал ошибку:
+  ```
+  Error: Error locking state: Error acquiring the state lock: writing "gs://vscoder-otus-tf-state/terraform/state/prod/default.tflock" failed: googleapi: Error 412: Precondition Failed, conditionNotMet
+  ```
+  что говорит о корректной работе блокировок
+
+### Задание с ** Провиженинг приложения с использованием пременных окружения
+
+* В модуль `db` добавлена output-переменная `db_internal_ip` для передачи в модуль `app`
+  ```
+  output "db_internal_ip" {
+    value = google_compute_instance.db.network_interface[0].network_ip
+  }
+  ```
+* В окружении `stage` данная переменная передаётся модулю `app` как часть переменной `database_url`
+  ```
+  database_url    = "${module.db.db_internal_ip}:27017"
+  ```
+* В модуле `app`
+  * создана input variable `database_url` для передачи провиженеру
+    ```
+    variable database_url {
+      description = "MongoDB url. Ex: 127.0.0.1:27017"
+    }
+    ```
+  * в `google_compute_instance` добавлены провиженеры
+    * заполняющий на основе переменной `var.database_url` файл `puma.env`
+      ```
+      provisioner "file" {
+        content      = "DATABASE_URL=${var.database_url}"
+        destination = "/tmp/puma.env"
+      }
+      ```
+    * передающий на инстанс шаблон systemd-юнита для запуска puma server
+      ```
+      provisioner "file" {
+        source      = "${path.module}/files/puma.service.tmpl"
+        destination = "/tmp/puma.service.tmpl"
+      }
+      ```
+    * выполняющий на инстансе скрипт `deploy.sh`
+      ```
+      provisioner "remote-exec" {
+        script = "${path.module}/files/deploy.sh"
+      }
+      ```
+  * В шаблоне systemd-юнита `puma.service.tmpl`:
+    * параметризован путь к директории с приложением
+    * параметризован пользователь от имени которого запускается приложение
+    * Добавлен параметр `EnvironmentFile` для передачи переменных из файла `puma.env` в качестве переменных окружения запускаемому приложению
+      ```
+      [Service]
+      EnvironmentFile=${APP_DIR}/puma.env
+      ...
+      ```
+  * В файле `deploy.sh` выполняются следующие действия:
+    * экспортируется переменная `$APP_DIR` для корректной подстановки в шаблон systemd-юнита
+    * из репозитория устанавливается приложение в `$APP_DIR`
+    * файл с переменными окружения `puma.env` перемещается из временной директории в `$APP_DIR`
+    * в systemd добавляется сервис `puma.service` из шаблона `/tmp/puma.service.tmpl`
+      ```
+      cat /tmp/puma.service.tmpl | envsubst | sudo tee /etc/systemd/system/puma.service
+      ```
+    * `puma.service` запускается и добавляется в автозагрузку
+  * Помимо перечисленного, в stage-окружение добавлены дополнительные output variables
+* **НО** при запуске приложения, оно не смогло подключиться к БД по причине того, что MongoDB по умолчанию запускается на адресе `127.0.0.1`
+
+* Запуск mongod сервиса на `0.0.0.0` исправлен добавлением в модуль `db` провиженера, заменяющено `bindIp: 127.0.0.1` на `bindIp: 0.0.0.0` в конфигурационном файле `mongod.conf` и перезапускающего сервис
+  ```
+  provisioner "remote-exec" {
+    inline = [
+      "sudo sed -i.bak 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf",
+      "sudo systemctl restart mongod.service"
+    ]
+  }
+  ```
+* Приложение **работает** на http://<app_external_ip>:9292
+
+* Изменения конфигурационного файла MongoDB реализовано **на этапе сборки базового образа** средствами packer, так как это более правильный способ
+* Провиженер из модуля `db` ресурса `google_compute_instance` **убран** за ненадобностью
+
+* Скорректирован порядок создания модулей за счёт использования output переменной с именем созданной сети в модуле `vpc`, как входящей переменной с именем сети для модулей `app` и `db`
+
+* `prod` окружение обновлено до того же состояния, что и `stage`

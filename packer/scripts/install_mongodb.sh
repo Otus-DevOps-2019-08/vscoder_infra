@@ -30,6 +30,10 @@ apt-get -qq update
 echo "*** Install package: $PKGS"
 apt-get install -y $PKGS
 
+echo "*** Configure mongod to listen on ip 0.0.0.0"
+sed -i.bak 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
+cat /etc/mongod.conf
+
 #
 # Start and check
 #

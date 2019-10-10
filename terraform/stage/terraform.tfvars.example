@@ -1,0 +1,9 @@
+project          = "project-name-here"
+public_key_path  = "~/.ssh/someusersshkey.pub"
+private_key_path = "~/.ssh/someusersshkey"
+disk_image       = "base-image-name"
+ssh_keys = [
+  "someuser:ssh-rsa SomeSsHPUblickKey someuser"
+]
+instance_count = 1
+environment    = "stage"
