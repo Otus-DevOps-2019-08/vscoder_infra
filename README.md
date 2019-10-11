@@ -672,3 +672,12 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * В Terraform-модуль db, а так же в stage и prod окружения добавлена выходная переменная db_external_ip
 * В ansible inventory добавлен хост dbserver
+* Общие параметры подключения перенесены из inventory в конфиг `ansible/ansible.cfg`
+  ```
+  [defaults]
+  inventory =  # путь к inventory-файлу
+  remote_user =  # ssh пользователь
+  private_key_file =  # путь к закрытому ssh-ключу
+  host_key_checking =  # проверка ssh host fingerprint удалённых хостов
+  retry_files_enabled =  # создание .retry файлов в случае неудачного завершения плейбука
+  ```
