@@ -660,3 +660,13 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     executable location = /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/.venv/bin/ansible
     python version = 3.6.8 (default, Oct  7 2019, 12:59:55) [GCC 8.3.0]
   ```
+* Развёрнута stage-инфраструктура Terraform
+  ```
+  cd ../terraform/stage
+  terraform apply
+  ```
+* Создан inventory-файл `ansible/inventory` с указанием параметров подключения к поднятому terraform хосту reddit-app
+* Проверена возможность управления
+  ```
+  ansible appserver -i ./inventory -m ping
+  ```
