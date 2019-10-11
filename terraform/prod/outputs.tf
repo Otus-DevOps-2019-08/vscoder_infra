@@ -10,3 +10,6 @@ output "db_internal_ip" {
 output "database_url" {
   value = "${module.db.db_internal_ip}:27017"
 }
+output "db_external_ip" {
+  value = module.db.db_external_ip
+}
