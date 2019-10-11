@@ -638,3 +638,25 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Скорректирован порядок создания модулей за счёт использования output переменной с именем созданной сети в модуле `vpc`, как входящей переменной с именем сети для модулей `app` и `db`
 
 * `prod` окружение обновлено до того же состояния, что и `stage`
+
+## HomeWork 8: Управление конфигурацией. Основные DevOps инструменты. Знакомство с Ansible
+
+### Основное задание
+
+* В директории `ansible/` создано виртуальное окружение python, в которое установлен Ansible
+  ```
+  cd ansible/
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  ```
+* Проверена установка ansible
+  ```
+  # ansible --version
+  ansible 2.8.5
+    config file = /etc/ansible/ansible.cfg
+    configured module search path = ['/home/vscoder/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+    ansible python module location = /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/.venv/lib/python3.6/site-packages/ansible
+    executable location = /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/.venv/bin/ansible
+    python version = 3.6.8 (default, Oct  7 2019, 12:59:55) [GCC 8.3.0]
+  ```
