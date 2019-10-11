@@ -766,3 +766,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   appserver | FAILED | rc=128 >>
   fatal: destination path '/home/appuser/reddit' already exists and is not an empty directory.non-zero return code
   ```
+* Создан простой плейбук [clone.yml](ansible/clone.yml), выполняющий клонирование репозитория с приложением
+  ```
+  - name: Clone
+    hosts: app
+    tasks:
+      - name: Clone repo
+        git:
+          repo: https://github.com/express42/reddit.git
+          dest: /home/appuser/reddit
+  ```
+* Протестировано выполнение плейбука при наличии склонированного репозитория и после его удаления. Поведение ожидаемое:
+  * при наличии репозитория изменеий не произведено
+  * после удаления - заново клонируется репозиторий
