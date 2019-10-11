@@ -684,3 +684,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   host_key_checking =  # проверка ssh host fingerprint удалённых хостов
   retry_files_enabled =  # создание .retry файлов в случае неудачного завершения плейбука
   ```
+* Проверен аптайм инстанса dbserver
+  ```
+  ansible dbserver -m command -a uptime
+  ```
