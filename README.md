@@ -710,3 +710,59 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
           dbserver:       # хост dbserver
             ansible_host: <db_external_ip> # переменная хоста
   ```
+* Проверены различия в работе модулй `command` и `shell`
+  command:
+  ```
+  # ansible app -m command -a 'ruby -v'
+  appserver | CHANGED | rc=0 >>
+  ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+  ```
+  ```
+  # ansible app -m command -a 'ruby -v; bundler -v'
+  appserver | FAILED | rc=1 >>
+  ruby: invalid option -;  (-h will show valid options) (RuntimeError)non-zero return code
+  ```
+  shell:
+  ```
+  # ansible app -m shell -a 'ruby -v; bundler -v'
+  appserver | CHANGED | rc=0 >>
+  ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+  Bundler version 1.11.2
+  ```
+* Проверен статус mongod модулем `command` (*bashsible anipattern*)
+  ```
+  # ansible db -m command -a 'systemctl status mongod'
+  dbserver | CHANGED | rc=0 >>
+  ...
+  ```
+* Проверен статус mongod модулями `systemd` и `service` (*true way*)
+  systemd
+  ```
+  # ansible db -m systemd -a name=mongod
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "name": "mongod",
+    "status": {
+  ...
+  ```
+  service
+  ```
+  # ansible db -m service -a name=mongod
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "name": "mongod",
+    "status": {
+  ...
+  ```
+* Протестировано повторное выполнение модулей `git` и `command`. `git` идемпотентен, `command` - нет. Модуль `git` отработал успешно несколько раз, сообщив об отсуттствии изменений. Модуль `command` выдал ошибку:
+  ```
+  # ansible app -m command -a 'git clone https://github.com/express42/reddit.git /home/appuser/reddit'
+  appserver | FAILED | rc=128 >>
+  fatal: destination path '/home/appuser/reddit' already exists and is not an empty directory.non-zero return code
+  ```
