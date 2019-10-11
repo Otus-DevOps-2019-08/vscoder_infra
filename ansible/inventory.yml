@@ -1,0 +1,11 @@
+---
+all:                    # группа со всеми хостами
+  children:             # дочерние группы
+    app:                # группа app
+      hosts:            # хосты в группе app
+        appserver:      # хост appserver
+          ansible_host: 34.76.5.23  # переменная хоста
+    db:                 # группа db
+      hosts:            # группа db
+        dbserver:       # хост dbserver
+          ansible_host: 35.233.32.18 # переменная хоста

@@ -696,3 +696,17 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   dbserver ansible_host=<db_external_ip>
 
   ```
+* Создан аналогичный inventory в yaml-формате `ansible/inventory.yml`. Ansible настроен на использование нового инвентаря
+  ```
+  ---
+  all:                    # группа со всеми хостами
+    children:             # дочерние группы
+      app:                # группа app
+        hosts:            # хосты в группе app
+          appserver:      # хост appserver
+            ansible_host: <app_external_ip>  # переменная хоста
+      db:                 # группа db
+        hosts:            # группа db
+          dbserver:       # хост dbserver
+            ansible_host: <db_external_ip> # переменная хоста
+  ```
