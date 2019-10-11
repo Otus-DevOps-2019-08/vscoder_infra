@@ -688,3 +688,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   ansible dbserver -m command -a uptime
   ```
+* Хосты в inventory разделены по группам
+  ```
+  [app]
+  appserver ansible_host=<app_external_ip>
+  [db]
+  dbserver ansible_host=<db_external_ip>
+
+  ```
