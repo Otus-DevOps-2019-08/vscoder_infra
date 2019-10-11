@@ -671,7 +671,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ansible appserver -i ./inventory -m ping
   ```
 * В Terraform-модуль db, а так же в stage и prod окружения добавлена выходная переменная db_external_ip
-* В ansible inventory добавлен хост dbserver
+* В ansible inventory добавлен хост dbserver. Проверена доступность
+  ```
+  ansible dbserver -i ./inventory -m ping
+  ```
 * Общие параметры подключения перенесены из inventory в конфиг `ansible/ansible.cfg`
   ```
   [defaults]
