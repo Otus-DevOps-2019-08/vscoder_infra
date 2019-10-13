@@ -11,3 +11,9 @@ variables.json
 *.tfstate.backup
 *.tfvars
 .terraform/
+
+####
+# Python virtualenv
+####
+.venv
+venv

@@ -638,3 +638,193 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Скорректирован порядок создания модулей за счёт использования output переменной с именем созданной сети в модуле `vpc`, как входящей переменной с именем сети для модулей `app` и `db`
 
 * `prod` окружение обновлено до того же состояния, что и `stage`
+
+## HomeWork 8: Управление конфигурацией. Основные DevOps инструменты. Знакомство с Ansible
+
+### Основное задание
+
+* В директории `ansible/` создано виртуальное окружение python, в которое установлен Ansible
+  ```
+  cd ansible/
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  ```
+* Проверена установка ansible
+  ```
+  # ansible --version
+  ansible 2.8.5
+    config file = /etc/ansible/ansible.cfg
+    configured module search path = ['/home/vscoder/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+    ansible python module location = /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/.venv/lib/python3.6/site-packages/ansible
+    executable location = /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/.venv/bin/ansible
+    python version = 3.6.8 (default, Oct  7 2019, 12:59:55) [GCC 8.3.0]
+  ```
+* Развёрнута stage-инфраструктура Terraform
+  ```
+  cd ../terraform/stage
+  terraform apply
+  ```
+* Создан inventory-файл `ansible/inventory` с указанием параметров подключения к поднятому terraform хосту reddit-app
+* Проверена возможность управления
+  ```
+  ansible appserver -i ./inventory -m ping
+  ```
+* В Terraform-модуль db, а так же в stage и prod окружения добавлена выходная переменная db_external_ip
+* В ansible inventory добавлен хост dbserver. Проверена доступность
+  ```
+  ansible dbserver -i ./inventory -m ping
+  ```
+* Общие параметры подключения перенесены из inventory в конфиг `ansible/ansible.cfg`
+  ```
+  [defaults]
+  inventory =  # путь к inventory-файлу
+  remote_user =  # ssh пользователь
+  private_key_file =  # путь к закрытому ssh-ключу
+  host_key_checking =  # проверка ssh host fingerprint удалённых хостов
+  retry_files_enabled =  # создание .retry файлов в случае неудачного завершения плейбука
+  ```
+* Проверен аптайм инстанса dbserver
+  ```
+  ansible dbserver -m command -a uptime
+  ```
+* Хосты в inventory разделены по группам
+  ```
+  [app]
+  appserver ansible_host=<app_external_ip>
+  [db]
+  dbserver ansible_host=<db_external_ip>
+
+  ```
+* Создан аналогичный inventory в yaml-формате `ansible/inventory.yml`. Ansible настроен на использование нового инвентаря
+  ```
+  ---
+  all:                    # группа со всеми хостами
+    children:             # дочерние группы
+      app:                # группа app
+        hosts:            # хосты в группе app
+          appserver:      # хост appserver
+            ansible_host: <app_external_ip>  # переменная хоста
+      db:                 # группа db
+        hosts:            # группа db
+          dbserver:       # хост dbserver
+            ansible_host: <db_external_ip> # переменная хоста
+  ```
+* Проверены различия в работе модулй `command` и `shell`
+  * command:
+    ```
+    # ansible app -m command -a 'ruby -v'
+    appserver | CHANGED | rc=0 >>
+    ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+    ```
+    ```
+    # ansible app -m command -a 'ruby -v; bundler -v'
+    appserver | FAILED | rc=1 >>
+    ruby: invalid option -;  (-h will show valid options) (RuntimeError)non-zero return code
+    ```
+  * shell:
+    ```
+    # ansible app -m shell -a 'ruby -v; bundler -v'
+    appserver | CHANGED | rc=0 >>
+    ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+    Bundler version 1.11.2
+    ```
+* Проверен статус mongod модулем `command` (*bashsible anipattern*)
+  ```
+  # ansible db -m command -a 'systemctl status mongod'
+  dbserver | CHANGED | rc=0 >>
+  ...
+  ```
+* Проверен статус mongod модулями `systemd` и `service` (*true way*)
+  systemd
+  ```
+  # ansible db -m systemd -a name=mongod
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "name": "mongod",
+    "status": {
+  ...
+  ```
+  service
+  ```
+  # ansible db -m service -a name=mongod
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "name": "mongod",
+    "status": {
+  ...
+  ```
+* Протестировано повторное выполнение модулей `git` и `command`. `git` идемпотентен, `command` - нет. Модуль `git` отработал успешно несколько раз, сообщив об отсуттствии изменений. Модуль `command` выдал ошибку:
+  ```
+  # ansible app -m command -a 'git clone https://github.com/express42/reddit.git /home/appuser/reddit'
+  appserver | FAILED | rc=128 >>
+  fatal: destination path '/home/appuser/reddit' already exists and is not an empty directory.non-zero return code
+  ```
+* Создан простой плейбук [clone.yml](ansible/clone.yml), выполняющий клонирование репозитория с приложением
+  ```
+  - name: Clone
+    hosts: app
+    tasks:
+      - name: Clone repo
+        git:
+          repo: https://github.com/express42/reddit.git
+          dest: /home/appuser/reddit
+  ```
+* Протестировано выполнение плейбука при наличии склонированного репозитория и после его удаления. Поведение ожидаемое:
+  * при наличии репозитория изменеий не произведено
+  * после удаления - заново клонируется репозиторий
+
+### Задание со \*: Работа с динамическим inventory
+
+* Создан файл [inventory.json](ansible/inventory.json) содержащий json в формате динамического инвентаря
+  ```
+  ansible-inventory --list > inventory.json
+  ```
+* Создан python-скрипт [json2inv.py](ansible/json2inv.py) который, при запуске с параметром `--list`, возвращает json из файла `inventory.json`, предварительно проверив его на корректность
+  ```
+  usage: json2inv.py [-h] [--json-file JSON_FILE] [-l] [--host HOST] [-d]
+
+  Read json file and print them content to stdout. Author: Aleksey Koloskov
+  <vsyscoder@yandex.ru>
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    --json-file JSON_FILE
+                          path to dynamic json-inventory file (default:
+                          ./inventory.json)
+    -l, --list            print json content to stdout (default: False)
+    --host HOST           print single host variables (default: None)
+    -d, --debug           print debug messages (default: False)
+  ```
+* В [ansible.cfg](ansible/ansible.cfg) прописан inventory-скрипт
+  ```
+  inventory = json2inv.py
+  ```
+* Протестирована работоспособность:
+  ```
+  # ansible -m ping all
+  appserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+  }
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+  }
+  ```
+* Просто и понятно про статический inventory в формате json удалось найти здесь: https://stackoverflow.com/a/57768613/3488348
+  * Статический json-inventory имеет ту же структуру, что и inventory в формате yaml (протестировано `ansible -i static-inventory.json -m ping all`)
+  * Динамическй json-inventory -- это **обязательно** результат выполнения скрипта, имеющий несколько другую структуру. Подробнее можно узнать по ссылке: https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
+* Исправлена ошибка, препятствующая запуску inventory-скрипта на python версии младше 3.6
