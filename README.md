@@ -824,6 +824,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     "ping": "pong"
   }
   ```
-* Статический json-inventory имеет ту же структуру, что и inventory в формате yaml (протестировано `ansible -i static-inventory.json -m ping all`)
-* Динамическй json-inventory -- это **обязательно** результат выполнения скрипта, имеющий несколько другую структуру. Подробнее можно узнать по ссылке: https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
+* Просто и понятно про статический inventory в формате json удалось найти здесь: https://stackoverflow.com/a/57768613/3488348
+  * Статический json-inventory имеет ту же структуру, что и inventory в формате yaml (протестировано `ansible -i static-inventory.json -m ping all`)
+  * Динамическй json-inventory -- это **обязательно** результат выполнения скрипта, имеющий несколько другую структуру. Подробнее можно узнать по ссылке: https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
 * Исправлена ошибка, препятствующая запуску inventory-скрипта на python версии младше 3.6
