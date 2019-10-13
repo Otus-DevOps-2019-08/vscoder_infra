@@ -12,8 +12,8 @@ import logging
 
 def main():
     parser = argparse.ArgumentParser(
-        description=f"""Read json file and print them content to stdout.
-        Author: {__author__} <{__author_email__}>""",
+        description="""Read json file and print them content to stdout.
+        Author: {author} <{email}>""".format(author=__author__, email=__author_email__),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--json-file', default=os.path.join(os.path.dirname(__file__), "inventory.json"),
                         help='path to dynamic json-inventory file')
