@@ -779,3 +779,48 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Протестировано выполнение плейбука при наличии склонированного репозитория и после его удаления. Поведение ожидаемое:
   * при наличии репозитория изменеий не произведено
   * после удаления - заново клонируется репозиторий
+
+### Задание со \*: Работа с динамическим inventory
+
+* Создан файл [inventory.json](ansible/inventory.json) содержащий json в формате динамического инвентаря
+  ```
+  ansible-inventory --list > inventory.json
+  ```
+* Создан python-скрипт [json2inv.py](ansible/json2inv.py) который, при запуске с параметром `--list`, возвращает json из файла `inventory.json`, предварительно проверив его на корректность
+  ```
+  usage: json2inv.py [-h] [--json-file JSON_FILE] [-l] [--host HOST] [-d]
+
+  Read json file and print them content to stdout. Author: Aleksey Koloskov
+  <vsyscoder@yandex.ru>
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    --json-file JSON_FILE
+                          path to dynamic json-inventory file (default:
+                          ./inventory.json)
+    -l, --list            print json content to stdout (default: False)
+    --host HOST           print single host variables (default: None)
+    -d, --debug           print debug messages (default: False)
+  ```
+* В [ansible.cfg](ansible/ansible.cfg) прописан inventory-скрипт
+  ```
+  inventory = json2inv.py
+  ```
+* Протестирована работоспособность:
+  ```
+  # ansible -m ping all
+  appserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+  }
+  dbserver | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+  }
+  ```
