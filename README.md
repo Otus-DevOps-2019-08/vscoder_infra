@@ -711,24 +711,24 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
             ansible_host: <db_external_ip> # переменная хоста
   ```
 * Проверены различия в работе модулй `command` и `shell`
-  command:
-  ```
-  # ansible app -m command -a 'ruby -v'
-  appserver | CHANGED | rc=0 >>
-  ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
-  ```
-  ```
-  # ansible app -m command -a 'ruby -v; bundler -v'
-  appserver | FAILED | rc=1 >>
-  ruby: invalid option -;  (-h will show valid options) (RuntimeError)non-zero return code
-  ```
-  shell:
-  ```
-  # ansible app -m shell -a 'ruby -v; bundler -v'
-  appserver | CHANGED | rc=0 >>
-  ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
-  Bundler version 1.11.2
-  ```
+  * command:
+    ```
+    # ansible app -m command -a 'ruby -v'
+    appserver | CHANGED | rc=0 >>
+    ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+    ```
+    ```
+    # ansible app -m command -a 'ruby -v; bundler -v'
+    appserver | FAILED | rc=1 >>
+    ruby: invalid option -;  (-h will show valid options) (RuntimeError)non-zero return code
+    ```
+  * shell:
+    ```
+    # ansible app -m shell -a 'ruby -v; bundler -v'
+    appserver | CHANGED | rc=0 >>
+    ruby 2.3.1p112 (2016-04-26) [x86_64-linux-gnu]
+    Bundler version 1.11.2
+    ```
 * Проверен статус mongod модулем `command` (*bashsible anipattern*)
   ```
   # ansible db -m command -a 'systemctl status mongod'
