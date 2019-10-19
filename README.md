@@ -862,3 +862,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Плейбук `reddit_app2.yml` переименован в `reddit_app_multiple_plays.yml`
 * Создан плейбук `db.yml` в который добавлен сценарий `Configure MongoDB` по развёртыванию MongoDB. Из сценария удалён тег
 * Создан плейбук `app.yml` в который добавлен сценарий `Configure App` по настройке приложения. Из сценария удалён тег
+* Создан плейбук `deploy.yml` в который добавлен сценарий `Deploy App` по настройке приложения. Из сценария удалён тег
