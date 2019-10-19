@@ -857,4 +857,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Добавлен плейбук [reddit_app2.yml](playbooks/reddit_app2.yml)
 * В плейбук добавлен сценарий для настройки и запуска MongoDB
 * В плейбук добавлен сценарий дня настройки и автозапуска приложения
-
+* В плейбук добавлен сценарий `Deploy App` с тегом `deploy-tag` для деплоя приложения

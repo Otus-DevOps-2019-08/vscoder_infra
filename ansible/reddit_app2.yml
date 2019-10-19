@@ -43,3 +43,32 @@
   handlers:
     - name: reload puma
       systemd: name=puma state=restarted
+
+- name: Deploy App
+  hosts: app
+  tags: deploy-tag
+  become: true
+  vars:
+    app_repo_url: https://github.com/express42/reddit.git
+    app_version: monolith
+    app_dest: /home/appuser/reddit
+  tasks:
+    - name: Fetch the latest version of application code
+      git:
+        repo: "{{ app_repo_url }}"
+        dest: "{{ app_dest }}"
+        version: "{{ app_version }}"
+      notify: reload puma
+      tags:
+        - deploy-tag
+
+    - name: Bundle install
+      bundler:
+        state: present
+        chdir: "{{ app_dest }}"
+      tags:
+        - deploy-tag
+
+  handlers:
+    - name: reload puma
+      systemd: name=puma state=restarted
