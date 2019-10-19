@@ -14,6 +14,15 @@
       tags:
         - db-tag
 
+    - name: Fetch the latest version of application code
+      git:
+        repo: "https://github.com/express42/reddit.git"
+        dest: /home/appuser/reddit
+        version: monolith # <-- Указываем нужную ветку
+      notify: reload puma
+      tags:
+        - deploy-tag
+
     - name: Add unit file for Puma
       become: true
       copy:
