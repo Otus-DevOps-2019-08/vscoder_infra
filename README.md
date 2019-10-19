@@ -834,3 +834,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Основное задание
 
 * Закомментирован провиженинг приложения средствами terraform
+* Создан playbook [reddit_app.yml](ansible/reddit_app.yml) в котором с помощью модуля `template` генерируется конфиг для сервиса mongod
+* Создан шаблон конфига сервиса mongod [mongod.conf.j2](ansible/templates/mongod.conf.j2)
+* Выполнена проверка применения плейбука командой
+  ```
+  ansible-playbook reddit_app.yml --diff --check --limit db
+  ```
