@@ -1,4 +1,9 @@
 ####
+# IDE
+####
+.vscode/
+
+####
 # Packer
 ####
 variables.json
