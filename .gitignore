@@ -22,3 +22,8 @@ variables.json
 ####
 .venv
 venv
+
+####
+# Ansible
+####
+*.retry
