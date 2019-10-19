@@ -9,5 +9,10 @@
         src: templates/mongod.conf.j2
         dest: /etc/mongod.conf
         mode: 0644
+      notify: restart mongod
       tags:
         - db-tag
+  handlers:
+    - name: restart mongod
+      become: true
+      service: name=mongod state=restarted

@@ -840,3 +840,5 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   ansible-playbook reddit_app.yml --diff --check --limit db
   ```
+* В плейбук добавлен хэндлер, который перезапускает сервис `mongod` если конфиг изменился.
+* К задаче добавлена секция `notify`, которая сообщает о необходимости запуска хендлера.
