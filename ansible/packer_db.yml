@@ -32,6 +32,11 @@
         mode: 0644
       notify: restart mongod
 
+    - name: Start mongod service on boot
+      systemd:
+        name: mongod
+        enabled: yes
+
   handlers:
     - name: restart mongod
       service: name=mongod state=restarted
