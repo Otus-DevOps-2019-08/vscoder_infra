@@ -1038,3 +1038,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
         separator: ""
         key: labels['group']
     ```
+
+### Вне задания: Makefile
+
+* Создан [Makefile](Makefile) с набором целей для часто используемых операций, например
+  * `make install_packer` - скачает и распакует бинарник `packer` в директорию `~/bin/`
+  * `make packer_build_db` - соберёт packer-образ, описанный в [packer/db.json]
