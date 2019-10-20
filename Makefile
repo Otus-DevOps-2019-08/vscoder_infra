@@ -18,7 +18,7 @@ install_packer:
 	unzip -o ${TEMP_DIR}/packer-${PACKER_VERSION}.zip -d ${TEMP_DIR}/
 	mv ${TEMP_DIR}/packer ${BIN_DIR}/packer-${PACKER_VERSION}
 	ln -sf packer-${PACKER_VERSION} ${BIN_DIR}/packer
-	${BIN_DIR}/packer --version
+	${BIN_DIR}/packer --version && rm ${TEMP_DIR}/packer-${PACKER_VERSION}.zip
 
 install_ansible:
 	test -d .venv || python3 -m venv .venv
