@@ -1,0 +1,37 @@
+- name: Configure MongoDB
+  hosts: all
+  become: true
+  vars:
+    key_url: https://www.mongodb.org/static/pgp/server-3.2.asc
+    mongodb_version: 3.2
+    packages:
+      - mongodb-org
+    mongo_bind_ip: 0.0.0.0
+  tasks:
+    - name: Provide repository apt key
+      apt_key:
+        url: "{{ key_url }}"
+        state: present
+
+    - name: Add repository
+      apt_repository:
+        repo: "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/{{ mongodb_version }} multiverse"
+        state: present
+        update_cache: yes
+        filename: "mongodb-org-{{ mongodb_version }}"
+
+    - name: Install package
+      apt:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Change mongo config file
+      template:
+        src: templates/mongod.conf.j2
+        dest: /etc/mongod.conf
+        mode: 0644
+      notify: restart mongod
+
+  handlers:
+    - name: restart mongod
+      service: name=mongod state=restarted

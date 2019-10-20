@@ -1043,4 +1043,13 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 * Создан [Makefile](Makefile) с набором целей для часто используемых операций, например
   * `make install_packer` - скачает и распакует бинарник `packer` в директорию `~/bin/`
-  * `make packer_build_db` - соберёт packer-образ, описанный в [packer/db.json]
+
+### Провижининг в Packer
+
+* Создан плейбук [packer_db.yml](ansible/packer_db.yml), реализующий провиженинг для образа reddit-db-base
+* В [db.json](packer/db.json) провиженер `shell` заменён на `ansible`, запускающий [packer_db.yml](ansible/packer_db.yml)
+* В [Makefile](Makefile) добавлена цель `packer_build_db` для сборки packer-образа из [db.json](packer/db.json)
+* Собран образ `reddit-db-base`
+  ```
+  make packer_build_db
+  ```
