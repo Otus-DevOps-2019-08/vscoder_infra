@@ -1,0 +1,19 @@
+- name: Provide reddit-app-base
+  hosts: all
+  become: true
+  vars:
+    packages:
+      - ruby-full
+      - ruby-bundler
+      - build-essential
+  tasks:
+    - name: Install packages
+      apt:
+        name: "{{ packages }}"
+
+    - name: Check installation
+      command: "{{ item }}"
+      changed_when: false
+      loop:
+        - ruby -v
+        - bundler -v

@@ -26,3 +26,6 @@ install_ansible:
 
 packer_build_db:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/db.json
+
+packer_build_app:
+	${BIN_DIR}/packer build -var-file=packer/variables.json packer/app.json

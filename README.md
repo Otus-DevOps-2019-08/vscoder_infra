@@ -1053,3 +1053,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   make packer_build_db
   ```
+* Создан плейбук [packer_app.yml](ansible/packer_app.yml), реализующий провиженинг для образа reddit-db-base
+* В [app.json](packer/app.json) провиженер `shell` заменён на `ansible`, запускающий [packer_app.yml](ansible/packer_app.yml)
+* В [Makefile](Makefile) добавлена цель `packer_build_app` для сборки packer-образа из [app.json](packer/app.json)
+* Собран образ `reddit-app-base`
+  ```
+  make packer_build_app
+  ```
