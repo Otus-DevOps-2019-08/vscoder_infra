@@ -5,7 +5,7 @@ TEMP_DIR?=/tmp
 
 PACKER_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 
-.PHONY: debug install_packer
+# .PHONY: debug
 
 debug:
 	echo PACKER_VERSION=${PACKER_VERSION}
@@ -24,8 +24,30 @@ install_ansible:
 	test -d .venv || python3 -m venv .venv
 	./.venv/bin/pip install ansible
 
+# TODO:
+# install_terraform:
+
 packer_build_db:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/db.json
 
 packer_build_app:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/app.json
+
+terraform_stage_init:
+	cd terraform/stage && ${BIN_DIR}/terraform init
+
+terraform_stage_apply:
+	cd terraform/stage && ${BIN_DIR}/terraform apply
+
+terraform_stage_destroy:
+	cd terraform/stage && ${BIN_DIR}/terraform destroy
+
+terraform_prod_init:
+	cd terraform/prod && ${BIN_DIR}/terraform init
+
+terraform_prod_apply:
+	cd terraform/prod && ${BIN_DIR}/terraform apply
+
+terraform_prod_destroy:
+	cd terraform/prod && ${BIN_DIR}/terraform destroy
+
