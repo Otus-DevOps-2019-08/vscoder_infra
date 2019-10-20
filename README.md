@@ -959,6 +959,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
         ]
     }
     ```
+* Для дебага значений переменных, можно в `tasks:` добавить следующую задачу
+  ```
+  - name: Debug
+    debug:
+      var: hostvars
+    tags:
+      - never
+      - debug
+  ```
+  Чтобы вывести отладочную информацию, необходимо запустить `ansible-playbook` с `--tags debug`
 
 #### Реализация
 
@@ -999,3 +1009,32 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
   ```
+* Реализована группировка хостов в зависимости от значения GCE `labels -> group`, для этого
+  * В [terraform/modules/db/main.tf](terraform/modules/db/main.tf) добавлен `labels`
+    ```
+    labels = {
+      group       = "db"
+    }
+    ```
+  * В [terraform/modules/app/main.tf](terraform/modules/app/main.tf) добавлен `labels`
+    ```
+    labels = {
+      group = "app"
+    }
+    ```
+  * В [ansible/infra.gcp.yml](ansible/infra.gcp.yml) блок
+    ```
+    groups:
+      # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+      db: "'reddit-db' in (tags['items']|list)"
+      # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+      app: "'reddit-app' in (tags['items']|list)"
+    ```
+    заменён на
+    ```
+    keyed_groups:
+      # Create groups from GCE labels
+      - prefix: ""
+        separator: ""
+        key: labels['group']
+    ```
