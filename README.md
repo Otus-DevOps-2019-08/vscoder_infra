@@ -868,3 +868,134 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `db.yml`
   * `app.yml`
   * `deploy.yml`
+* Проверена работоспособность вышеописанной конфигурации
+  ```
+  ansible-playbook --diff site.yml --check
+  ansible-playbook --diff site.yml
+  ```
+
+### Задание со \*: Динамический inventory
+
+#### Исследование
+
+* Для использования динамического инвентаря google cloud platform, [официальная документации ansible](https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html) предлагает использовать inventory plugin [gcp_compute](https://docs.ansible.com/ansible/latest/plugins/inventory/gcp_compute.html). Преимущества dynamic inventory plugin над dynamic inventory script, описаны [здесь](https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html)
+  ```
+  In previous versions you had to create a script or program that can output JSON in the correct format when invoked with the proper arguments. You can still use and write inventory scripts, as we ensured backwards compatibility via the script inventory plugin and there is no restriction on the programming language used. If you choose to write a script, however, you will need to implement some features yourself. i.e caching, configuration management, dynamic variable and group composition, etc. While with inventory plugins you can leverage the Ansible codebase to add these common features.
+  ```
+* Для разбиения инстансов по группам можно использовать несколько [способов](https://docs.ansible.com/ansible/latest/plugins/inventory.html#using-inventory-plugins).
+  * Пример JSON-представления тегов:
+  ```
+  "tags": {
+    "fingerprint": "NQyRUqL7UTU=",
+    "items": [
+      "reddit-db"
+    ]
+  }
+  ```
+  * Статическое задание групп в зависимости от значений тегов:
+    ```
+    groups:
+      # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+      db: "'reddit-db' in (tags['items']|list)"
+      # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+      app: "'reddit-app' in (tags['items']|list)"
+    ```
+    на выходе получим
+    ```
+    "app": {
+      "hosts": [
+        "reddit-app-stage"
+      ]
+    },
+    "db": {
+      "hosts": [
+        "reddit-db-stage"
+      ]
+    }
+    ```
+  * Чтобы более правильно группировать инстансы, [официальная документация terraform](https://www.terraform.io/docs/extend/best-practices/naming.html) рекомендует следующую схему назначения тэгов:
+    ```
+    tags          = {
+      Name        = "Application Server"
+      Environment = "production"
+    }
+    ```
+    TODO: протестировать
+  * Так же можно использовать [gcp labels](https://www.terraform.io/docs/providers/google/r/compute_instance.html#labels) - (Optional) A map of key/value label pairs to assign to the instance.
+    TODO: протестировать
+  * Так же можно реализовать разбиение по группам средствами `keyed_groups`:
+    [terraform/modules/app/main.tf](terraform/modules/app/main.tf)
+    ```
+    resource "google_compute_instance" "app" {
+      ...
+      tags         = ["reddit-app"]
+      ...
+    ```
+    [terraform/modules/db/main.tf](terraform/modules/db/main.tf)
+    ```
+    resource "google_compute_instance" "db" {
+      ...
+      tags         = ["reddit-db"]
+      ...
+    ```
+    [ansible/infra.gcp.yml](ansible/infra.gcp.yml)
+    ```
+    keyed_groups:
+      # Create groups from GCE labels
+      - prefix: "group"
+        separator: "_"
+        key: tags['items']
+    ```
+    на выходе получим группы
+    ```
+    "group_reddit_app": {
+        "hosts": [
+            "reddit-app-stage"
+        ]
+    },
+    "group_reddit_db": {
+        "hosts": [
+            "reddit-db-stage"
+        ]
+    }
+    ```
+
+#### Реализация
+
+* Создан service account `ansible` с ролью `Compute Viewer` для просмотра инстансов.
+* JSON credintials сохранены в директорию вне репозитория `~/.gce/`
+* Создан файл [infra.gcp.yml](ansible/infra.gcp.yml) с настройками инвентаря
+  ```
+  plugin: gcp_compute
+  projects:
+    - infra-253214
+  auth_kind: serviceaccount
+  service_account_file: ~/.gce/infra-253214-ansible-1319bf6f5839.json
+  hostnames:
+    # List host by name instead of the default public ip
+    - name
+  compose:
+    # Set an inventory parameter to use the Public IP address to connect to the host
+    # For Private ip use "networkInterfaces[0].networkIP"
+    ansible_host: networkInterfaces[0].accessConfigs[0].natIP
+  groups:
+    # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+    db: "'reddit-db' in (tags['items']|list)"
+    # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+    app: "'reddit-app' in (tags['items']|list)"
+  ```
+  Группы реализованы обоими способами дл/я большей гибкости. Статическое разбиение `groups:` для сохранения обратной совместимости с текущими плейбуками.
+* В конфигурационном файле [ansible.cfg](ansible/ansible.cfg) прописано использование динамического инвентаря по-умолчанию
+  ```
+  [defaults]
+  inventory = infra.gcp.yml
+  ...
+
+  [inventory]
+  enable_plugins = gcp_compute
+  ```
+* Работа инвентаря протестирована `ansible-inventory --list`
+* В шаблоне [db_config.j2](ansible/templates/db_config.j2) в качестве ip-адреса БД установлено значение `['ansible_default_ipv4']['address']` первого инстанса в группе `db`
+  ```
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  ```

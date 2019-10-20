@@ -1,0 +1,17 @@
+plugin: gcp_compute
+projects:
+  - infra-253214
+auth_kind: serviceaccount
+service_account_file: ~/.gce/infra-253214-ansible-1319bf6f5839.json
+hostnames:
+  # List host by name instead of the default public ip
+  - name
+compose:
+  # Set an inventory parameter to use the Public IP address to connect to the host
+  # For Private ip use "networkInterfaces[0].networkIP"
+  ansible_host: networkInterfaces[0].accessConfigs[0].natIP
+groups:
+  # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+  db: "'reddit-db' in (tags['items']|list)"
+  # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+  app: "'reddit-app' in (tags['items']|list)"
