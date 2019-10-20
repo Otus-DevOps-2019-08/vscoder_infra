@@ -22,7 +22,7 @@ install_packer:
 
 install_ansible:
 	test -d .venv || python3 -m venv .venv
-	./.venv/bin/pip install ansible
+	./.venv/bin/pip install -r ansible/requirements.txt
 
 # TODO:
 # install_terraform:
@@ -51,3 +51,11 @@ terraform_prod_apply:
 terraform_prod_destroy:
 	cd terraform/prod && ${BIN_DIR}/terraform destroy
 
+ansible_inventory_list:
+	cd ansible && ../.venv/bin/ansible-inventory --list
+
+ansible_site_check:
+	cd ansible && ../.venv/bin/ansible-playbook --diff site.yml --check
+
+ansible_site_apply:
+	cd ansible && ../.venv/bin/ansible-playbook --diff site.yml
