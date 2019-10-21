@@ -68,3 +68,12 @@ ansible_site_apply:
 	sleep 5 && \
 	cd ./ansible && \
 	../.venv/bin/ansible-playbook --diff site.yml
+
+
+build: packer_build_db packer_build_app
+
+infra_stage: terraform_stage_init terraform_stage_apply
+
+infra_prod: terraform_prod_init terraform_prod_apply
+
+site: ansible_site_check ansible_site_apply

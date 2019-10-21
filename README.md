@@ -1075,3 +1075,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `ansible_inventory_list` вывести текущий inventory в json
   * `ansible_site_check` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
   * `ansible_site_apply` выполнить плейбук [site.yml](ansible/site.yml)
+  * `build` выполнит `packer_build_db` `packer_build_app`
+  * `infra_stage` выполнит `terraform_stage_init` `terraform_stage_apply`
+  * `infra_prod` выполнит `terraform_prod_init` `terraform_prod_apply`
+  * `site` выполнит `ansible_site_check` `ansible_site_apply`
