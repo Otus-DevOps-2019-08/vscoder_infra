@@ -34,28 +34,28 @@ packer_build_app:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/app.json
 
 terraform_stage_init:
-	cd terraform/stage && ${BIN_DIR}/terraform init
+	cd ./terraform/stage && ${BIN_DIR}/terraform init
 
 terraform_stage_apply:
-	cd terraform/stage && ${BIN_DIR}/terraform apply
+	cd ./terraform/stage && ${BIN_DIR}/terraform apply
 
 terraform_stage_destroy:
-	cd terraform/stage && ${BIN_DIR}/terraform destroy
+	cd ./terraform/stage && ${BIN_DIR}/terraform destroy
 
 terraform_prod_init:
-	cd terraform/prod && ${BIN_DIR}/terraform init
+	cd ./terraform/prod && ${BIN_DIR}/terraform init
 
 terraform_prod_apply:
-	cd terraform/prod && ${BIN_DIR}/terraform apply
+	cd ./terraform/prod && ${BIN_DIR}/terraform apply
 
 terraform_prod_destroy:
-	cd terraform/prod && ${BIN_DIR}/terraform destroy
+	cd ./terraform/prod && ${BIN_DIR}/terraform destroy
 
 ansible_inventory_list:
-	cd ansible && ../.venv/bin/ansible-inventory --list
+	cd ./ansible && ../.venv/bin/ansible-inventory --list
 
 ansible_site_check:
-	cd ansible && ../.venv/bin/ansible-playbook --diff site.yml --check
+	cd ./ansible && pwd && ../.venv/bin/ansible-playbook --diff site.yml --check
 
 ansible_site_apply:
-	cd ansible && ../.venv/bin/ansible-playbook --diff site.yml
+	cd ./ansible && ../.venv/bin/ansible-playbook --diff site.yml
