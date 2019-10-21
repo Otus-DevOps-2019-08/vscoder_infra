@@ -1059,17 +1059,19 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Вне задания: Makefile
 
 * Создан [Makefile](Makefile) с набором целей для часто используемых операций
-  * `debug:` вывод на экран значений переменных
-  * `install_packer:` скачать и распакова бинарник `packer` в директорию `~/bin/`
-  * `install_ansible:` установить ansible с зависимостями в python virtualenv
-  * `packer_build_db:` собрать packer-образ reddit-db-base
-  * `packer_build_app:` собрать packer-образ reddit-app-base
-  * `terraform_stage_init:` выполнить terraform init в stage-окружении
-  * `terraform_stage_apply:` выполнить terraform apply в stage-окружении
-  * `terraform_stage_destroy:` выполнить terraform destroy в stage-окружении
-  * `terraform_prod_init:` выполнить terraform init в prod-окружении
-  * `terraform_prod_apply:` выполнить terraform apply в prod-окружении
-  * `terraform_prod_destroy:` выполнить terraform destroy в prod-окружении
-  * `ansible_inventory_list:` вывести текущий inventory в json
-  * `ansible_site_check:` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
-  * `ansible_site_apply:` выполнить плейбук [site.yml](ansible/site.yml)
+  * `debug` вывод на экран значений переменных
+  * `install_packer` скачать и распакова бинарник `packer` в директорию `~/bin/`
+  * `install_ansible` установить ansible с зависимостями в python virtualenv
+  * `packer_build_db` собрать packer-образ reddit-db-base
+  * `packer_build_app` собрать packer-образ reddit-app-base
+  * `terraform_stage_init` выполнить terraform init в stage-окружении
+  * `terraform_stage_apply` выполнить terraform apply в stage-окружении
+  * `terraform_stage_destroy` выполнить terraform destroy в stage-окружении
+  * `terraform_stage_url` показать url приложения в stage окружении
+  * `terraform_prod_init` выполнить terraform init в prod-окружении
+  * `terraform_prod_apply` выполнить terraform apply в prod-окружении
+  * `terraform_prod_destroy` выполнить terraform destroy в prod-окружении
+  * `terraform_prod_url` показать url приложения в prod окружении
+  * `ansible_inventory_list` вывести текущий inventory в json
+  * `ansible_site_check` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
+  * `ansible_site_apply` выполнить плейбук [site.yml](ansible/site.yml)

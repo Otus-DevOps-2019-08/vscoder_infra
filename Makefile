@@ -42,6 +42,9 @@ terraform_stage_apply:
 terraform_stage_destroy:
 	cd ./terraform/stage && ${BIN_DIR}/terraform destroy
 
+terraform_stage_url:
+	cd ./terraform/stage && ${BIN_DIR}/terraform output app_url	
+
 terraform_prod_init:
 	cd ./terraform/prod && ${BIN_DIR}/terraform init
 
@@ -50,6 +53,9 @@ terraform_prod_apply:
 
 terraform_prod_destroy:
 	cd ./terraform/prod && ${BIN_DIR}/terraform destroy
+
+terraform_prod_url:
+	cd ./terraform/prod && ${BIN_DIR}/terraform output app_url	
 
 ansible_inventory_list:
 	cd ./ansible && ../.venv/bin/ansible-inventory --list
