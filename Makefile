@@ -64,4 +64,7 @@ ansible_site_check:
 	cd ./ansible && pwd && ../.venv/bin/ansible-playbook --diff site.yml --check
 
 ansible_site_apply:
-	cd ./ansible && ../.venv/bin/ansible-playbook --diff site.yml
+	echo "Press CTRL+C within 5 seconds to cancel playbook..." && \
+	sleep 5 && \
+	cd ./ansible && \
+	../.venv/bin/ansible-playbook --diff site.yml
