@@ -834,16 +834,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Основное задание
 
 * Закомментирован провиженинг приложения средствами terraform
-
+---
 * Создан playbook [reddit_app.yml](ansible/reddit_app.yml) в котором с помощью модуля `template` генерируется конфиг для сервиса mongod
 * Создан шаблон конфига сервиса mongod [mongod.conf.j2](ansible/templates/mongod.conf.j2)
 * Выполнена проверка применения плейбука командой
   ```
-  ansible-playbook reddit_app.yml --diff --check --limit db
+  ansible-playbook reddit_db.yml --diff --check --limit db
   ```
 * В плейбук добавлен хэндлер, который перезапускает сервис `mongod` если конфиг изменился.
 * К задаче добавлена секция `notify`, которая сообщает о необходимости запуска хендлера.
-
+---
 * Добавлен systemd unit-файл [puma.service](ansible/files/puma.service) для запуска приложения
 * В плейбук добавлена задача для копирования unit-файла на хост, модуль `copy`
 * Добавлена задача, включающая автозапуск сервиса, модуль `systemd`
@@ -853,21 +853,21 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Вручную задано значение переменной `db_host`, содержащей внутренний адрес инстанса db
 * Добавлена задача по получению приложения из git-репозитория, модуль `git`
 * Добавлена задача по установке зависимостей, модуль `bundler`
-
+---
 * Добавлен плейбук [reddit_app2.yml](playbooks/reddit_app2.yml)
 * В плейбук добавлен сценарий `Configure MongoDB` с тегом `db-tag` для настройки и запуска MongoDB
 * В плейбук добавлен сценарий `Configure App` с тегом `app-tag` дня настройки и автозапуска приложения
 * В плейбук добавлен сценарий `Deploy App` с тегом `deploy-tag` для деплоя приложения
-
-* Плейбук `reddit_app.yml` переименован в `reddit_app_one_play.yml`
-* Плейбук `reddit_app2.yml` переименован в `reddit_app_multiple_plays.yml`
-* Создан плейбук `db.yml` в который добавлен сценарий `Configure MongoDB` по развёртыванию MongoDB. Из сценария удалён тег
-* Создан плейбук `app.yml` в который добавлен сценарий `Configure App` по настройке приложения. Из сценария удалён тег
-* Создан плейбук `deploy.yml` в который добавлен сценарий `Deploy App` по настройке приложения. Из сценария удалён тег
-* Добавлен плейбук `site.yml`, который, для настиройки всей инфраструктуры, поочерёдно запускает
-  * `db.yml`
-  * `app.yml`
-  * `deploy.yml`
+---
+* Плейбук [reddit_app.yml](ansible/reddit_app.yml) переименован в [reddit_app_one_play.yml](ansible/reddit_app_one_play.yml)
+* Плейбук [reddit_app2.yml](playbooks/reddit_app2.yml) переименован в [reddit_app_multiple_plays.yml](ansible/reddit_app_multiple_plays.yml)
+* Создан плейбук [db.yml](ansible/db.yml) в который добавлен сценарий `Configure MongoDB` по развёртыванию MongoDB. Из сценария удалён тег
+* Создан плейбук [app.yml](ansible/app.yml) в который добавлен сценарий `Configure App` по настройке приложения. Из сценария удалён тег
+* Создан плейбук [deploy.yml](ansible/deploy.yml) в который добавлен сценарий `Deploy App` по настройке приложения. Из сценария удалён тег
+* Добавлен плейбук [site.yml](ansible/site.yml), который, для настиройки всей инфраструктуры, поочерёдно запускает
+  * [db.yml](ansible/db.yml)
+  * [app.yml](ansible/app.yml)
+  * [deploy.yml](ansible/deploy.yml)
 * Проверена работоспособность вышеописанной конфигурации
   ```
   ansible-playbook --diff site.yml --check
