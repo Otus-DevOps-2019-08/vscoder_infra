@@ -1198,3 +1198,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [ansible/environments/prod/group_vars/app](ansible/environments/prod/group_vars/app) для группы `app`
   * [ansible/environments/prod/group_vars/db](ansible/environments/prod/group_vars/db) для группы `db`
   * [ansible/environments/prod/group_vars/all](ansible/environments/prod/group_vars/all) для всех групп
+* Добавлены значения по умолчанию для переменной `env: local` в каждом из окружений
