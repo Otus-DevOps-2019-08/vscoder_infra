@@ -1079,3 +1079,43 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `infra_stage` выполнит `terraform_stage_init` `terraform_stage_apply`
   * `infra_prod` выполнит `terraform_prod_init` `terraform_prod_apply`
   * `site` выполнит `ansible_site_check` `ansible_site_apply`
+
+
+## HomeWork 10: Ansible: работа с ролями и окружениями
+
+### Основное задание
+
+* Для храниения ролей, создана директория [ansible/roles](ansible/roles)
+* Созданы роли `app` и `db` с помощью ansible-galaxy
+  ```shell
+  cd ansible/roles
+  ansible-galaxy init app
+  ansible-galaxy init db
+  ```
+  Структура роли
+  ```
+  $ tree db
+  db
+  ├── defaults       # <-- Директория для переменных по умолчанию
+  │   └── main.yml
+  ├── files
+  ├── handlers
+  │   └── main.yml
+  ├── meta           # <-- Информация о роли, создателе и зависимостях
+  │   └── main.yml
+  ├── README.md
+  ├── tasks          # <-- Директория для тасков
+  │   └── main.yml
+  ├── templates
+  ├── tests
+  │   ├── inventory
+  │   └── test.yml
+  └── vars           # <-- Директория для переменных, которые не должны
+      └── main.yml   #     переопределяться пользователем
+
+  8 directories, 8 files
+  ```
+* В задачи роли db [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) добавлена задача по изменению конфига монги
+* Шаблон конфига монги скопирован из [ansible/templates/mongod.conf.j2](ansible/templates/mongod.conf.j2) в [ansible/roles/db/templates/mongod.conf.j2](ansible/roles/db/templates/mongod.conf.j2)
+* Определён хэндлер [ansible/roles/db/handlers/main.yml](ansible/roles/db/handlers/main.yml), перезапускающий mongod
+* В [ansible/roles/db/defaults/main.yml](ansible/roles/db/defaults/main.yml) определены значения переменных по умолчанию
