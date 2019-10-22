@@ -1161,10 +1161,19 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
 ---
-* Изменён [Makefile](Makefile) с набором целей для часто используемых операций. Добавлена переменная `ENV` для задания окружения. Окружение по умолчанию: `stage`. Для указания окружения необходимо указать значение переменной `ENV`
-  ```shell
-  make <target> ENV=prod
+* Изменён [Makefile](Makefile) с набором целей для часто используемых операций. 
+  * Добавлена переменная `ENV` для задания окружения. Окружение по умолчанию: `stage`.
+  * Добавлена переменная `INV` для задания файла инвентаря. Значение по умолчанию: `inventory.gcp.yml`.
+  * В секцию `[inventory]` конфигурационного файла [ansible/ansible.cfg](ansible/ansible.cfg) добавлена поддержка инвентаря в `ini` формате
   ```
+  [inventory]
+  enable_plugins = gcp_compute, ini
+  ```
+  * Для запуска цели в prod окружении с использованием статического инвентаря, необходимо выполнить
+  ```shell
+  make <target> ENV=prod INV=inventory
+  ```
+* Описание доступных целей для команды `make`
   * `debug` вывод на экран значений переменных
   * `install_packer` скачать и распакова бинарник `packer` в директорию `~/bin/`
   * `install_ansible` установить ansible с зависимостями в python virtualenv
