@@ -8,7 +8,7 @@
 - name: Add config for DB connection
   template:
     src: db_config.j2
-    path: /home/appuser/db_config
+    dest: /home/appuser/db_config
     owner: appuser
     group: appuser
 
