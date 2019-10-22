@@ -1149,15 +1149,25 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Созданы директории для окружений [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
 * Inventory-файл [ansible/inventory](ansible/inventory) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
 * Inventory-файл динамического инвентаря [ansible/inventory.gcp.yml](ansible/inventory.gcp.yml) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
-* В конфигурационный файл динамического инвентаря [ansible/environments/stage/inventory.gcp.yml](ansible/environments/stage/inventory.gcp.yml) добавлено значение соответствующего окружения
+* **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/stage/inventory.gcp.yml](ansible/environments/stage/inventory.gcp.yml) добавлено значение соответствующего окружения
   ```yaml
   compose:
     env: stage
   ```
-* В конфигурационный файл динамического инвентаря [ansible/environments/prod/inventory.gcp.yml](ansible/environments/prod/inventory.gcp.yml) добавлено значение соответствующего окружения
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `env_stage`
+  ```yaml
+  groups:
+    env_stage: yes
+  ```
+* **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/prod/inventory.gcp.yml](ansible/environments/prod/inventory.gcp.yml) добавлено значение соответствующего окружения
   ```yaml
   compose:
     env: prod
+  ```
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `env_prod`
+  ```yaml
+  groups:
+    env_prod: yes
   ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
 ---
