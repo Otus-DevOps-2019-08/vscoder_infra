@@ -1132,3 +1132,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Фаил systemd unit-а скопирован из [ansible/files/puma.service](ansible/files/puma.service) в [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service)
 * В [ansible/roles/app/handlers/main.yml](ansible/roles/app/handlers/main.yml) определён хендлер, перезапускающий сервис `puma`
 * В [ansible/roles/app/defaults/main.yml](ansible/roles/app/defaults/main.yml) определена переменная по умолчанию с адресом MongoDB
+
+#### Плейбуки для app и db
+
+* Плейбук [ansible/app.yml](ansible/app.yml) модифицирован на использования роли [ansible/roles/app](ansible/roles/app)
+* Плейбук [ansible/db.yml](ansible/db.yml) модифицирован на использования роли [ansible/roles/db](ansible/roles/db)
