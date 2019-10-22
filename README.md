@@ -1137,3 +1137,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 * Плейбук [ansible/app.yml](ansible/app.yml) модифицирован на использования роли [ansible/roles/app](ansible/roles/app)
 * Плейбук [ansible/db.yml](ansible/db.yml) модифицирован на использования роли [ansible/roles/db](ansible/roles/db)
+* Выполнена проверка работоспособности изменённых ролей
+  ```
+  make terraform_stage_destroy terraform_stage_apply
+  make ansible_site_check ansible_site_apply
+  ```
