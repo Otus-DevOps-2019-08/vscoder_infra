@@ -1199,3 +1199,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [ansible/environments/prod/group_vars/db](ansible/environments/prod/group_vars/db) для группы `db`
   * [ansible/environments/prod/group_vars/all](ansible/environments/prod/group_vars/all) для всех групп
 * Добавлены значения по умолчанию для переменной `env: local` в каждом из окружений
+* В роли [ansible/roles/app](ansible/roles/app) и [ansible/roles/db](ansible/roles/db) добавлена задача, отображающая текущее значение переменной `env`
+  ```yaml
+  - name: Show info about the env this host belongs to
+    debug:
+      msg: "This host is in {{ env }} environment!!!"
+  ```
