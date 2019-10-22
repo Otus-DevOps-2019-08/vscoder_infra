@@ -1160,3 +1160,24 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     env: prod
   ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
+---
+* Изменён [Makefile](Makefile) с набором целей для часто используемых операций. Добавлена переменная `ENV` для задания окружения. Окружение по умолчанию: `stage`. Для указания окружения необходимо указать значение переменной `ENV`
+  ```shell
+  make <target> ENV=prod
+  ```
+  * `debug` вывод на экран значений переменных
+  * `install_packer` скачать и распакова бинарник `packer` в директорию `~/bin/`
+  * `install_ansible` установить ansible с зависимостями в python virtualenv
+  * `packer_build_db` собрать packer-образ reddit-db-base
+  * `packer_build_app` собрать packer-образ reddit-app-base
+  * `terraform_init` выполнить terraform init в stage-окружении
+  * `terraform_apply` выполнить terraform apply в stage-окружении
+  * `terraform_destroy` выполнить terraform destroy в stage-окружении
+  * `terraform_url` показать url приложения в stage окружении
+  * `ansible_inventory_list` вывести текущий inventory в json
+  * `ansible_site_check` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
+  * `ansible_site_apply` выполнить плейбук [site.yml](ansible/site.yml)
+  * `build` выполнит `packer_build_db` `packer_build_app`
+  * `infra` выполнит `terraform_init` `terraform_apply`
+  * `site` выполнит `ansible_site_check` `ansible_site_apply`
+---

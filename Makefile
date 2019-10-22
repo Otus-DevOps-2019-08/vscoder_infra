@@ -1,7 +1,10 @@
-# Packer-related actions
 PACKER_VERSION?=1.4.4
 BIN_DIR?=~/bin
 TEMP_DIR?=/tmp
+# Environment name
+ENV?=stage
+# inventory file name inside environment
+INV?=inventory.gcp.yml
 
 PACKER_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 
@@ -33,47 +36,33 @@ packer_build_db:
 packer_build_app:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/app.json
 
-terraform_stage_init:
-	cd ./terraform/stage && ${BIN_DIR}/terraform init
+terraform_init:
+	cd ./terraform/${ENV} && ${BIN_DIR}/terraform init
 
-terraform_stage_apply:
-	cd ./terraform/stage && ${BIN_DIR}/terraform apply
+terraform_apply:
+	cd ./terraform/${ENV} && ${BIN_DIR}/terraform apply
 
-terraform_stage_destroy:
-	cd ./terraform/stage && ${BIN_DIR}/terraform destroy
+terraform_destroy:
+	cd ./terraform/${ENV} && ${BIN_DIR}/terraform destroy
 
-terraform_stage_url:
-	cd ./terraform/stage && ${BIN_DIR}/terraform output app_url	
-
-terraform_prod_init:
-	cd ./terraform/prod && ${BIN_DIR}/terraform init
-
-terraform_prod_apply:
-	cd ./terraform/prod && ${BIN_DIR}/terraform apply
-
-terraform_prod_destroy:
-	cd ./terraform/prod && ${BIN_DIR}/terraform destroy
-
-terraform_prod_url:
-	cd ./terraform/prod && ${BIN_DIR}/terraform output app_url	
+terraform_url:
+	cd ./terraform/${ENV} && ${BIN_DIR}/terraform output app_url	
 
 ansible_inventory_list:
 	cd ./ansible && ../.venv/bin/ansible-inventory --list
 
 ansible_site_check:
-	cd ./ansible && pwd && ../.venv/bin/ansible-playbook --diff site.yml --check
+	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff site.yml --check
 
 ansible_site_apply:
 	echo "Press CTRL+C within 5 seconds to cancel playbook..." && \
 	sleep 5 && \
 	cd ./ansible && \
-	../.venv/bin/ansible-playbook --diff site.yml
+	../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff site.yml
 
 
 build: packer_build_db packer_build_app
 
-infra_stage: terraform_stage_init terraform_stage_apply
-
-infra_prod: terraform_prod_init terraform_prod_apply
+infra: terraform_init terraform_apply
 
 site: ansible_site_check ansible_site_apply
