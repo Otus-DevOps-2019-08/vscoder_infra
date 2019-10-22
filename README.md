@@ -1138,7 +1138,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Плейбук [ansible/app.yml](ansible/app.yml) модифицирован на использования роли [ansible/roles/app](ansible/roles/app)
 * Плейбук [ansible/db.yml](ansible/db.yml) модифицирован на использования роли [ansible/roles/db](ansible/roles/db)
 * Выполнена проверка работоспособности изменённых ролей
-  ```
+  ```shell
   make terraform_stage_destroy terraform_stage_apply
   make ansible_site_check ansible_site_apply
   ```
@@ -1147,4 +1147,15 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 * Созданы директории для окружений [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
 * Inventory-файл [ansible/inventory](ansible/inventory) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
+* Inventory-файл динамического инвентаря [ansible/inventory.gcp.yml](ansible/inventory.gcp.yml) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
+* В конфигурационный файл динамического инвентаря [ansible/environments/stage/inventory.gcp.yml](ansible/environments/stage/inventory.gcp.yml) добавлено значение соответствующего окружения
+  ```yaml
+  compose:
+    env: stage
+  ```
+* В конфигурационный файл динамического инвентаря [ansible/environments/prod/inventory.gcp.yml](ansible/environments/prod/inventory.gcp.yml) добавлено значение соответствующего окружения
+  ```yaml
+  compose:
+    env: prod
+  ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
