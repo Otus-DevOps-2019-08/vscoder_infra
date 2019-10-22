@@ -1194,3 +1194,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [ansible/environments/stage/group_vars/app](ansible/environments/stage/group_vars/app) для группы `app`
   * [ansible/environments/stage/group_vars/db](ansible/environments/stage/group_vars/db) для группы `db`
   * [ansible/environments/stage/group_vars/all](ansible/environments/stage/group_vars/all) для всех групп
+* Добавлены `group_vars` для `prod`-окружения
+  * [ansible/environments/prod/group_vars/app](ansible/environments/prod/group_vars/app) для группы `app`
+  * [ansible/environments/prod/group_vars/db](ansible/environments/prod/group_vars/db) для группы `db`
+  * [ansible/environments/prod/group_vars/all](ansible/environments/prod/group_vars/all) для всех групп
