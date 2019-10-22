@@ -1086,10 +1086,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Основное задание
 
 * Для храниения ролей, создана директория [ansible/roles](ansible/roles)
-* Созданы роли `app` и `db` с помощью ansible-galaxy
+
+#### Роль db
+* Создана пустая роль `db` с помощью ansible-galaxy
   ```shell
   cd ansible/roles
-  ansible-galaxy init app
   ansible-galaxy init db
   ```
   Структура роли
@@ -1119,3 +1120,15 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Шаблон конфига монги скопирован из [ansible/templates/mongod.conf.j2](ansible/templates/mongod.conf.j2) в [ansible/roles/db/templates/mongod.conf.j2](ansible/roles/db/templates/mongod.conf.j2)
 * Определён хэндлер [ansible/roles/db/handlers/main.yml](ansible/roles/db/handlers/main.yml), перезапускающий mongod
 * В [ansible/roles/db/defaults/main.yml](ansible/roles/db/defaults/main.yml) определены значения переменных по умолчанию
+
+#### Роль app
+* Создана пустая роль `app` с помощью ansible-galaxy
+  ```shell
+  cd ansible/roles
+  ansible-galaxy init app
+  ```
+* В задачи роли db [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) добавлены задачи из [ansible/app.yml](ansible/app.yml)
+* Шаблон с переменными окружения для запускаемого приложения скопирован из [ansible/templates/db_config.j2](ansible/templates/db_config.j2) в [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2)
+* Фаил systemd unit-а скопирован из [ansible/files/puma.service](ansible/files/puma.service) в [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service)
+* В [ansible/roles/app/handlers/main.yml](ansible/roles/app/handlers/main.yml) определён хендлер, перезапускающий сервис `puma`
+* В [ansible/roles/app/defaults/main.yml](ansible/roles/app/defaults/main.yml) определена переменная по умолчанию с адресом MongoDB
