@@ -882,6 +882,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   In previous versions you had to create a script or program that can output JSON in the correct format when invoked with the proper arguments. You can still use and write inventory scripts, as we ensured backwards compatibility via the script inventory plugin and there is no restriction on the programming language used. If you choose to write a script, however, you will need to implement some features yourself. i.e caching, configuration management, dynamic variable and group composition, etc. While with inventory plugins you can leverage the Ansible codebase to add these common features.
   ```
+* Описание параметров плагина `gcp_compute` [https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/inventory/gcp_compute.py](https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/inventory/gcp_compute.py)
 * Для разбиения инстансов по группам можно использовать несколько [способов](https://docs.ansible.com/ansible/latest/plugins/inventory.html#using-inventory-plugins).
   * Пример JSON-представления тегов:
   ```
