@@ -49,7 +49,7 @@ terraform_url:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform output app_url	
 
 ansible_inventory_list:
-	cd ./ansible && ../.venv/bin/ansible-inventory --list
+	cd ./ansible && ../.venv/bin/ansible-inventory -i environments/${ENV}/${INV} --list
 
 ansible_site_check:
 	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff site.yml --check
