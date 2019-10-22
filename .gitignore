@@ -1,4 +1,9 @@
 ####
+# IDE
+####
+.vscode/
+
+####
 # Packer
 ####
 variables.json
@@ -17,3 +22,8 @@ variables.json
 ####
 .venv
 venv
+
+####
+# Ansible
+####
+*.retry

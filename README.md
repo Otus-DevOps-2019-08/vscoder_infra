@@ -828,3 +828,254 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * Статический json-inventory имеет ту же структуру, что и inventory в формате yaml (протестировано `ansible -i static-inventory.json -m ping all`)
   * Динамическй json-inventory -- это **обязательно** результат выполнения скрипта, имеющий несколько другую структуру. Подробнее можно узнать по ссылке: https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
 * Исправлена ошибка, препятствующая запуску inventory-скрипта на python версии младше 3.6
+
+## HomeWork 9: Деплой и управление конфигурацией с Ansible
+
+### Основное задание
+
+* Закомментирован провиженинг приложения средствами terraform
+---
+* Создан playbook [reddit_app.yml](ansible/reddit_app.yml) в котором с помощью модуля `template` генерируется конфиг для сервиса mongod
+* Создан шаблон конфига сервиса mongod [mongod.conf.j2](ansible/templates/mongod.conf.j2)
+* Выполнена проверка применения плейбука командой
+  ```
+  ansible-playbook reddit_db.yml --diff --check --limit db
+  ```
+* В плейбук добавлен хэндлер, который перезапускает сервис `mongod` если конфиг изменился.
+* К задаче добавлена секция `notify`, которая сообщает о необходимости запуска хендлера.
+---
+* Добавлен systemd unit-файл [puma.service](ansible/files/puma.service) для запуска приложения
+* В плейбук добавлена задача для копирования unit-файла на хост, модуль `copy`
+* Добавлена задача, включающая автозапуск сервиса, модуль `systemd`
+* Добавлен хэндлер, перезапускабщий сервис  при изменении unit-файла
+* Добавлен шаблон [db_config.j2](templates/db_config.j2), содержащий переменные окружения для запускаемого сервиса. В частности, переменную `DATABASE_URL`, получающую значение из ansible-переменной `db_host`
+* Добавлена задача для копирования шаблона с переменными окружения на хост
+* Вручную задано значение переменной `db_host`, содержащей внутренний адрес инстанса db
+* Добавлена задача по получению приложения из git-репозитория, модуль `git`
+* Добавлена задача по установке зависимостей, модуль `bundler`
+---
+* Добавлен плейбук [reddit_app2.yml](playbooks/reddit_app2.yml)
+* В плейбук добавлен сценарий `Configure MongoDB` с тегом `db-tag` для настройки и запуска MongoDB
+* В плейбук добавлен сценарий `Configure App` с тегом `app-tag` дня настройки и автозапуска приложения
+* В плейбук добавлен сценарий `Deploy App` с тегом `deploy-tag` для деплоя приложения
+---
+* Плейбук [reddit_app.yml](ansible/reddit_app.yml) переименован в [reddit_app_one_play.yml](ansible/reddit_app_one_play.yml)
+* Плейбук [reddit_app2.yml](playbooks/reddit_app2.yml) переименован в [reddit_app_multiple_plays.yml](ansible/reddit_app_multiple_plays.yml)
+* Создан плейбук [db.yml](ansible/db.yml) в который добавлен сценарий `Configure MongoDB` по развёртыванию MongoDB. Из сценария удалён тег
+* Создан плейбук [app.yml](ansible/app.yml) в который добавлен сценарий `Configure App` по настройке приложения. Из сценария удалён тег
+* Создан плейбук [deploy.yml](ansible/deploy.yml) в который добавлен сценарий `Deploy App` по настройке приложения. Из сценария удалён тег
+* Добавлен плейбук [site.yml](ansible/site.yml), который, для настиройки всей инфраструктуры, поочерёдно запускает
+  * [db.yml](ansible/db.yml)
+  * [app.yml](ansible/app.yml)
+  * [deploy.yml](ansible/deploy.yml)
+* Проверена работоспособность вышеописанной конфигурации
+  ```
+  ansible-playbook --diff site.yml --check
+  ansible-playbook --diff site.yml
+  ```
+
+### Задание со \*: Динамический inventory
+
+#### Исследование
+
+* Для использования динамического инвентаря google cloud platform, [официальная документации ansible](https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html) предлагает использовать inventory plugin [gcp_compute](https://docs.ansible.com/ansible/latest/plugins/inventory/gcp_compute.html). Преимущества dynamic inventory plugin над dynamic inventory script, описаны [здесь](https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html)
+  ```
+  In previous versions you had to create a script or program that can output JSON in the correct format when invoked with the proper arguments. You can still use and write inventory scripts, as we ensured backwards compatibility via the script inventory plugin and there is no restriction on the programming language used. If you choose to write a script, however, you will need to implement some features yourself. i.e caching, configuration management, dynamic variable and group composition, etc. While with inventory plugins you can leverage the Ansible codebase to add these common features.
+  ```
+* Для разбиения инстансов по группам можно использовать несколько [способов](https://docs.ansible.com/ansible/latest/plugins/inventory.html#using-inventory-plugins).
+  * Пример JSON-представления тегов:
+  ```
+  "tags": {
+    "fingerprint": "NQyRUqL7UTU=",
+    "items": [
+      "reddit-db"
+    ]
+  }
+  ```
+  * Статическое задание групп в зависимости от значений тегов:
+    ```
+    groups:
+      # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+      db: "'reddit-db' in (tags['items']|list)"
+      # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+      app: "'reddit-app' in (tags['items']|list)"
+    ```
+    на выходе получим
+    ```
+    "app": {
+      "hosts": [
+        "reddit-app-stage"
+      ]
+    },
+    "db": {
+      "hosts": [
+        "reddit-db-stage"
+      ]
+    }
+    ```
+  * Чтобы более правильно группировать инстансы, [официальная документация terraform](https://www.terraform.io/docs/extend/best-practices/naming.html) рекомендует следующую схему назначения тэгов:
+    ```
+    tags          = {
+      Name        = "Application Server"
+      Environment = "production"
+    }
+    ```
+    TODO: протестировать
+  * Так же можно использовать [gcp labels](https://www.terraform.io/docs/providers/google/r/compute_instance.html#labels) - (Optional) A map of key/value label pairs to assign to the instance.
+    TODO: протестировать
+  * Так же можно реализовать разбиение по группам средствами `keyed_groups`:
+    [terraform/modules/app/main.tf](terraform/modules/app/main.tf)
+    ```
+    resource "google_compute_instance" "app" {
+      ...
+      tags         = ["reddit-app"]
+      ...
+    ```
+    [terraform/modules/db/main.tf](terraform/modules/db/main.tf)
+    ```
+    resource "google_compute_instance" "db" {
+      ...
+      tags         = ["reddit-db"]
+      ...
+    ```
+    [ansible/infra.gcp.yml](ansible/infra.gcp.yml)
+    ```
+    keyed_groups:
+      # Create groups from GCE labels
+      - prefix: "group"
+        separator: "_"
+        key: tags['items']
+    ```
+    на выходе получим группы
+    ```
+    "group_reddit_app": {
+        "hosts": [
+            "reddit-app-stage"
+        ]
+    },
+    "group_reddit_db": {
+        "hosts": [
+            "reddit-db-stage"
+        ]
+    }
+    ```
+* Для дебага значений переменных, можно в `tasks:` добавить следующую задачу
+  ```
+  - name: Debug
+    debug:
+      var: hostvars
+    tags:
+      - never
+      - debug
+  ```
+  Чтобы вывести отладочную информацию, необходимо запустить `ansible-playbook` с `--tags debug`
+
+#### Реализация
+
+* Создан service account `ansible` с ролью `Compute Viewer` для просмотра инстансов.
+* JSON credintials сохранены в директорию вне репозитория `~/.gce/`
+* Создан файл [infra.gcp.yml](ansible/infra.gcp.yml) с настройками инвентаря
+  ```
+  plugin: gcp_compute
+  projects:
+    - infra-253214
+  auth_kind: serviceaccount
+  service_account_file: ~/.gce/infra-253214-ansible-1319bf6f5839.json
+  hostnames:
+    # List host by name instead of the default public ip
+    - name
+  compose:
+    # Set an inventory parameter to use the Public IP address to connect to the host
+    # For Private ip use "networkInterfaces[0].networkIP"
+    ansible_host: networkInterfaces[0].accessConfigs[0].natIP
+  groups:
+    # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+    db: "'reddit-db' in (tags['items']|list)"
+    # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+    app: "'reddit-app' in (tags['items']|list)"
+  ```
+  Группы реализованы обоими способами дл/я большей гибкости. Статическое разбиение `groups:` для сохранения обратной совместимости с текущими плейбуками.
+* В конфигурационном файле [ansible.cfg](ansible/ansible.cfg) прописано использование динамического инвентаря по-умолчанию
+  ```
+  [defaults]
+  inventory = infra.gcp.yml
+  ...
+
+  [inventory]
+  enable_plugins = gcp_compute
+  ```
+* Работа инвентаря протестирована `ansible-inventory --list`
+* В шаблоне [db_config.j2](ansible/templates/db_config.j2) в качестве ip-адреса БД установлено значение `['ansible_default_ipv4']['address']` первого инстанса в группе `db`
+  ```
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  ```
+* Реализована группировка хостов в зависимости от значения GCE `labels -> group`, для этого
+  * В [terraform/modules/db/main.tf](terraform/modules/db/main.tf) добавлен `labels`
+    ```
+    labels = {
+      group       = "db"
+    }
+    ```
+  * В [terraform/modules/app/main.tf](terraform/modules/app/main.tf) добавлен `labels`
+    ```
+    labels = {
+      group = "app"
+    }
+    ```
+  * В [ansible/infra.gcp.yml](ansible/infra.gcp.yml) блок
+    ```
+    groups:
+      # add hosts to the group 'db' if any of the dictionary's keys or values is the word 'reddit-db'
+      db: "'reddit-db' in (tags['items']|list)"
+      # add hosts to the group 'app' if any of the dictionary's keys or values is the word 'reddit-app'
+      app: "'reddit-app' in (tags['items']|list)"
+    ```
+    заменён на
+    ```
+    keyed_groups:
+      # Create groups from GCE labels
+      - prefix: ""
+        separator: ""
+        key: labels['group']
+    ```
+
+### Провижининг в Packer
+
+* Создан плейбук [packer_db.yml](ansible/packer_db.yml), реализующий провиженинг для образа reddit-db-base
+* В [db.json](packer/db.json) провиженер `shell` заменён на `ansible`, запускающий [packer_db.yml](ansible/packer_db.yml)
+* В [Makefile](Makefile) добавлена цель `packer_build_db` для сборки packer-образа из [db.json](packer/db.json)
+* Собран образ `reddit-db-base`
+  ```
+  make packer_build_db
+  ```
+* Создан плейбук [packer_app.yml](ansible/packer_app.yml), реализующий провиженинг для образа reddit-db-base
+* В [app.json](packer/app.json) провиженер `shell` заменён на `ansible`, запускающий [packer_app.yml](ansible/packer_app.yml)
+* В [Makefile](Makefile) добавлена цель `packer_build_app` для сборки packer-образа из [app.json](packer/app.json)
+* Собран образ `reddit-app-base`
+  ```
+  make packer_build_app
+  ```
+
+### Вне задания: Makefile
+
+* Создан [Makefile](Makefile) с набором целей для часто используемых операций
+  * `debug` вывод на экран значений переменных
+  * `install_packer` скачать и распакова бинарник `packer` в директорию `~/bin/`
+  * `install_ansible` установить ansible с зависимостями в python virtualenv
+  * `packer_build_db` собрать packer-образ reddit-db-base
+  * `packer_build_app` собрать packer-образ reddit-app-base
+  * `terraform_stage_init` выполнить terraform init в stage-окружении
+  * `terraform_stage_apply` выполнить terraform apply в stage-окружении
+  * `terraform_stage_destroy` выполнить terraform destroy в stage-окружении
+  * `terraform_stage_url` показать url приложения в stage окружении
+  * `terraform_prod_init` выполнить terraform init в prod-окружении
+  * `terraform_prod_apply` выполнить terraform apply в prod-окружении
+  * `terraform_prod_destroy` выполнить terraform destroy в prod-окружении
+  * `terraform_prod_url` показать url приложения в prod окружении
+  * `ansible_inventory_list` вывести текущий inventory в json
+  * `ansible_site_check` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
+  * `ansible_site_apply` выполнить плейбук [site.yml](ansible/site.yml)
+  * `build` выполнит `packer_build_db` `packer_build_app`
+  * `infra_stage` выполнит `terraform_stage_init` `terraform_stage_apply`
+  * `infra_prod` выполнит `terraform_prod_init` `terraform_prod_apply`
+  * `site` выполнит `ansible_site_check` `ansible_site_apply`
