@@ -1142,3 +1142,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   make terraform_stage_destroy terraform_stage_apply
   make ansible_site_check ansible_site_apply
   ```
+
+#### Окружения
+
+* Созданы директории для окружений [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
+* Inventory-файл [ansible/inventory](ansible/inventory) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
+* В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
