@@ -51,6 +51,9 @@ terraform_url:
 ansible_inventory_list:
 	cd ./ansible && ../.venv/bin/ansible-inventory -i environments/${ENV}/${INV} --list
 
+ansible_install_requirements:
+	cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/${ENV}/requirements.yml
+
 ansible_site_check:
 	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml --check
 

@@ -1356,3 +1356,21 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```shell
   cd ./ansible && ../.venv/bin/ansible -i environments/stage/inventory.gcp.yml app --become -m systemd -a "name=puma state=restarted"
   ```
+
+
+#### Работа с Community-ролями
+
+* Создан файл с зависимостями для `prod` [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) и `stage` [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) окружений, содержащий модуль `jdauphant.nginx`
+  ```
+  - src: jdauphant.nginx
+    version: v2.21.1
+  ```
+* Создана цель в [Makefile](Makefile)
+  ```shell
+  ansible_install_requirements:
+  	cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/${ENV}/requirements.yml
+  ```
+* Установлена роль `jdauphant.nginx` с `ansible-galaxy`
+  ```shell
+  make ansible_install_requirements
+  ```

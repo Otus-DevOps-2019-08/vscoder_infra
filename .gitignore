@@ -27,3 +27,4 @@ venv
 # Ansible
 ####
 *.retry
+ansible/roles_imported/*
