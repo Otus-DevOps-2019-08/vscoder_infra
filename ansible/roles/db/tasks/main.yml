@@ -3,6 +3,10 @@
   debug:
     msg: "This host is in {{ env }} environment!!!"
 
+- name: Show info about groups this host belongs to
+  debug:
+    msg: "This host is in groups: {{ group_names | join(', ') }}."
+
 - name: Change mongo config file
   template:
     src: mongod.conf.j2

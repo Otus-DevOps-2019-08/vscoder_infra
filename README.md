@@ -1215,3 +1215,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     debug:
       msg: "This host is in {{ env }} environment!!!"
   ```
+* В роли [ansible/roles/app](ansible/roles/app) и [ansible/roles/db](ansible/roles/db) добавлена задача, отображающая текущие группы хоста
+  ```yaml
+  - name: Show info about groups this host belongs to
+    debug:
+      msg: "This host is in groups: {{ group_names | join(', ') }}."
+  ```
