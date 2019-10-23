@@ -1384,3 +1384,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       proxy_pass http://127.0.0.1:9292;
       }
   ```
+* В [terraform/modules/app/main.tf](terraform/modules/app/main.tf) добавлено правило фаервола `modules.app.google_compute_firewall.firewall_http` для пропуска трафика на 80 порт хостов с меткой `reddit-app`
