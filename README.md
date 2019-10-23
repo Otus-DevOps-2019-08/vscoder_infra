@@ -1154,20 +1154,20 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   compose:
     env: stage
   ```
-* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `env_stage`
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `gcp_stage`
   ```yaml
   groups:
-    env_stage: yes
+    gcp_stage: yes
   ```
 * **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/prod/inventory.gcp.yml](ansible/environments/prod/inventory.gcp.yml) добавлено значение соответствующего окружения
   ```yaml
   compose:
     env: prod
   ```
-* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `env_prod`
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `gcp_prod`
   ```yaml
   groups:
-    env_prod: yes
+    gcp_prod: yes
   ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
 ---

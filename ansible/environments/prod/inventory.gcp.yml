@@ -16,4 +16,4 @@ keyed_groups:
     separator: ""
     key: labels['group']
 groups:
-  env_prod: yes
+  gcp_prod: yes

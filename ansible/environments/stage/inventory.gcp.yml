@@ -16,4 +16,4 @@ keyed_groups:
     separator: ""
     key: labels['group']
 groups:
-  env_stage: yes
+  gcp_stage: yes
