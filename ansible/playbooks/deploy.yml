@@ -22,6 +22,10 @@
       tags:
         - deploy-tag
 
+    - name: Debug site url
+      debug:
+        msg: "http://{{ ansible_host }}"
+
   handlers:
     - name: reload puma
       systemd: name=puma state=restarted
