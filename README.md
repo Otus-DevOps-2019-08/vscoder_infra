@@ -1221,3 +1221,84 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     debug:
       msg: "This host is in groups: {{ group_names | join(', ') }}."
   ```
+* Выполнена реорганизация файлов и каталогов: <details><summary>подробнее</summary>
+  ```
+  ansible
+  ├── ansible.cfg
+  ├── environments
+  │   ├── prod
+  │   │   ├── group_vars
+  │   │   │   ├── all
+  │   │   │   ├── app
+  │   │   │   └── db
+  │   │   ├── inventory
+  │   │   └── inventory.gcp.yml
+  │   └── stage
+  │       ├── group_vars
+  │       │   ├── all
+  │       │   ├── app
+  │       │   └── db
+  │       ├── inventory
+  │       └── inventory.gcp.yml
+  ├── old
+  │   ├── files
+  │   │   └── puma.service
+  │   ├── inventory.json
+  │   ├── inventory.yml
+  │   ├── json2inv.py
+  │   └── templates
+  │       ├── db_config.j2
+  │       └── mongod.conf.j2
+  ├── playbooks
+  │   ├── app.yml
+  │   ├── clone.yml
+  │   ├── db.yml
+  │   ├── deploy.yml
+  │   ├── packer_app.yml
+  │   ├── packer_db.yml
+  │   ├── reddit_app_multiple_plays.yml
+  │   ├── reddit_app_one_play.yml
+  │   └── site.yml
+  ├── requirements.txt
+  └── roles
+      ├── app
+      │   ├── defaults
+      │   │   └── main.yml
+      │   ├── files
+      │   │   └── puma.service
+      │   ├── handlers
+      │   │   └── main.yml
+      │   ├── meta
+      │   │   └── main.yml
+      │   ├── README.md
+      │   ├── tasks
+      │   │   └── main.yml
+      │   ├── templates
+      │   │   └── db_config.j2
+      │   ├── tests
+      │   │   ├── inventory
+      │   │   └── test.yml
+      │   └── vars
+      │       └── main.yml
+      └── db
+          ├── defaults
+          │   └── main.yml
+          ├── files
+          ├── handlers
+          │   └── main.yml
+          ├── meta
+          │   └── main.yml
+          ├── README.md
+          ├── tasks
+          │   └── main.yml
+          ├── templates
+          │   └── mongod.conf.j2
+          ├── tests
+          │   ├── inventory
+          │   └── test.yml
+          └── vars
+              └── main.yml
+
+  28 directories, 46 files
+  ```
+  <details>
