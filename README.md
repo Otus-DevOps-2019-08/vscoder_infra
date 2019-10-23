@@ -1361,7 +1361,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 #### Работа с Community-ролями
 
 * Создан файл с зависимостями для `prod` [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) и `stage` [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) окружений, содержащий модуль `jdauphant.nginx`
-  ```
+  ```yaml
   - src: jdauphant.nginx
     version: v2.21.1
   ```
@@ -1373,4 +1373,14 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Установлена роль `jdauphant.nginx` с `ansible-galaxy`
   ```shell
   make ansible_install_requirements
+  ```
+* Конфигурация для роли добавлена в переменные группы `app` обоих окружений
+  ```yaml
+  nginx_sites:
+  default:
+    - listen 80
+    - server_name "reddit"
+    - location / {
+      proxy_pass http://127.0.0.1:9292;
+      }
   ```
