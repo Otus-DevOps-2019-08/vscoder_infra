@@ -52,13 +52,13 @@ ansible_inventory_list:
 	cd ./ansible && ../.venv/bin/ansible-inventory -i environments/${ENV}/${INV} --list
 
 ansible_site_check:
-	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff site.yml --check
+	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml --check
 
 ansible_site_apply:
 	echo "Press CTRL+C within 5 seconds to cancel playbook..." && \
 	sleep 5 && \
 	cd ./ansible && \
-	../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff site.yml
+	../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml
 
 
 build: packer_build_db packer_build_app
