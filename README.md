@@ -1302,3 +1302,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   28 directories, 46 files
   ```
   <details>
+* Улучшен конфиг [ansible/ansible.cfg](ansible/ansible.cfg)
+  * Явно указан путь к ролям
+    ```ini
+    roles_path = ./roles
+    ```
+  * Включен обязательный вывод diff при наличии изменений и вывод 5 строк контекста
+    ```ini
+    [diff]
+    always = True
+    context = 5
+    ```
+  * Добавлены комментарии
+
