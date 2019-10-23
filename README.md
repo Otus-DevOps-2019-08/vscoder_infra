@@ -1385,3 +1385,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       }
   ```
 * В [terraform/modules/app/main.tf](terraform/modules/app/main.tf) добавлено правило фаервола `modules.app.google_compute_firewall.firewall_http` для пропуска трафика на 80 порт хостов с меткой `reddit-app`
+* В плейбук [ansible/playbooks/app.yml](ansible/playbooks/app.yml) добавлен вызов роли `jdauphant.nginx`
