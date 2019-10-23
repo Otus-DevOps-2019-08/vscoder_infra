@@ -1315,3 +1315,44 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     ```
   * Добавлены комментарии
 
+#### Проверка
+* Унечтожено окружение `stage`
+  ```shell
+  make ENV=stage terraform_destroy
+  ```
+* Создано окружение `prod`
+  ```shell
+  make ENV=prod terraform_apply
+  ```
+* Развёрнут сайт
+  ```shell
+  make ENV=prod ansible_site_apply
+  ```
+* Проверена работоспособность (в браузере открыт url)
+  ```shell
+  make terraform_url ENV=prod
+  ```
+* Без унечтожения prod-окружения, создано `stage` окружение
+  ```shell
+  make ENV=stage terraform_apply
+  make ENV=stage ansible_site_apply
+  make ENV=stage terraform_url
+  ```
+* При проверкe `stage` окружения, возникла ошибка подключения к БД. Причиной оказалась **ошибка** при назначении переменной
+  ```
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  ```
+  берётся ip-адрес первого хоста в группе `db`, который принадлежит другому окружению и имеет другой ip
+  TODO: продумать решение данной проблемы!
+* Унечтожена инфраструктура окружения `prod`
+  ```shell
+  make ENV=prod terraform_destroy
+  ```
+* Повторно развёрнут сайт на `stage`-окружении
+  ```shell
+  make ENV=stage ansible_site_apply
+  ```
+* При тестировании снова возникла ошибка доступа к БД. В [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) в задачу `Add config for DB connection` добавлено уведомление хендлера, перезапускающего сервис puma: `notify: reload puma`, после чего сервис был вручную перезапущен из консоли
+  ```shell
+  cd ./ansible && ../.venv/bin/ansible -i environments/stage/inventory.gcp.yml app --become -m systemd -a "name=puma state=restarted"
+  ```
