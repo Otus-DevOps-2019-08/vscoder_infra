@@ -36,6 +36,12 @@ packer_build_db:
 packer_build_app:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/app.json
 
+packer_validate:
+	${BIN_DIR}/packer validate -var-file=packer/variables.json packer/db.json
+	${BIN_DIR}/packer validate -var-file=packer/variables.json packer/app.json
+	${BIN_DIR}/packer validate -var-file=packer/variables.json packer/ubuntu16.json
+	${BIN_DIR}/packer validate -var-file=packer/variables-immutable.json packer/immutable.json
+
 terraform_init:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform init
 

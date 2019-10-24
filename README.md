@@ -1414,3 +1414,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Задание со \*: Использование динамического инвернтаря
 
 Уже реальзовано на стадии создания окружений
+
+### Задание с \*\*: Настройка TravisCI
+
+* Исправлены пути к провиженерам в
+  * [packer/ubuntu16.json](packer/ubuntu16.json)
+  * [packer/immutable.json](packer/immutable.json)
