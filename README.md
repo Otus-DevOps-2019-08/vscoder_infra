@@ -1425,3 +1425,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [terraform/](terraform/stage)
   * [terraform/](terraform/prod)
 * В [Makefile](Makefile) добавлена цель `install_terraform`, выполняющая установку `terraform`
+* В [Makefile](Makefile) добавлена цель `install_tflint`, выполняющая установку `tflint`
+* В [Makefile](Makefile) добавлена цель `terraform_tflint`, выполняющая проверку средствами `tflint` следующих директорий
+  * [terraform/](terraform/)
+  * [terraform/](terraform/stage)
+  * [terraform/](terraform/prod)
+* Создан конфигурационный файл [terraform/.tflint.hcl](terraform/.tflint.hcl) с описанием конфига `tflint`. Ссылка на [документацию](https://github.com/wata727/tflint/blob/master/docs/guides/config.md)

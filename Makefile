@@ -12,7 +12,8 @@ TERRAFORM_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${P
 # Terraform-related variables
 TERRAFORM_VERSION?=0.12.12
 TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
+TFLINT_VERSION?=0.12.1
+TFLINT_URL=https://github.com/wata727/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip
 
 # .PHONY: debug
 
@@ -21,6 +22,7 @@ debug:
 	echo BIN_DIR=${BIN_DIR}
 	echo TEMP_DIR=${TEMP_DIR}
 	echo PACKER_URL=${PACKER_URL}
+
 
 install_packer:
 	wget ${PACKER_URL} -O ${TEMP_DIR}/packer-${PACKER_VERSION}.zip
@@ -34,12 +36,19 @@ install_ansible:
 	./.venv/bin/pip install -r ansible/requirements.txt
 
 install_terraform:
-	# Install terraform binary
 	wget ${TERRAFORM_URL} -O ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip
 	unzip -o ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip -d ${TEMP_DIR}/
 	mv ${TEMP_DIR}/terraform ${BIN_DIR}/terraform-${TERRAFORM_VERSION}
 	ln -sf terraform-${TERRAFORM_VERSION} ${BIN_DIR}/terraform
 	${BIN_DIR}/terraform --version && rm ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip
+
+install_tflint:
+	wget ${TFLINT_URL} -O ${TEMP_DIR}/tflint-${TFLINT_VERSION}.zip
+	unzip -o ${TEMP_DIR}/tflint-${TFLINT_VERSION}.zip -d ${TEMP_DIR}/
+	mv ${TEMP_DIR}/tflint ${BIN_DIR}/tflint-${TFLINT_VERSION}
+	ln -sf tflint-${TFLINT_VERSION} ${BIN_DIR}/tflint
+	${BIN_DIR}/tflint --version && rm ${TEMP_DIR}/tflint-${TFLINT_VERSION}.zip
+
 
 packer_build_db:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/db.json
@@ -53,6 +62,7 @@ packer_validate:
 	${BIN_DIR}/packer validate -var-file=packer/variables.json packer/ubuntu16.json
 	${BIN_DIR}/packer validate -var-file=packer/variables-immutable.json packer/immutable.json
 
+
 terraform_init:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform init
 
@@ -60,6 +70,11 @@ terraform_validate:
 	cd ./terraform && ${BIN_DIR}/terraform validate
 	cd ./terraform/stage && ${BIN_DIR}/terraform validate
 	cd ./terraform/prod && ${BIN_DIR}/terraform validate
+
+terraform_tflint:
+	cd ./terraform && ${BIN_DIR}/tflint
+	cd ./terraform/stage && ${BIN_DIR}/tflint
+	cd ./terraform/prod && ${BIN_DIR}/tflint
 
 terraform_apply:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform apply
@@ -69,6 +84,7 @@ terraform_destroy:
 
 terraform_url:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform output app_url	
+
 
 ansible_inventory_list:
 	cd ./ansible && ../.venv/bin/ansible-inventory -i environments/${ENV}/${INV} --list
