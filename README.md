@@ -1391,3 +1391,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```shell
   make terraform_apply ansible_site_apply
   ```
+
+#### Ansible vault
+
+* Создан файл с ключём вне репозирория. Данный файл прописан в [ansible/ansible.cfg](ansible/ansible.cfg)
+  ```ini
+  vault_password_file = ~/path/to/vault.key
+  ```
