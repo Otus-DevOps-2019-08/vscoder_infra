@@ -92,6 +92,9 @@ ansible_inventory_list:
 ansible_install_requirements:
 	cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/${ENV}/requirements.yml
 
+ansible_lint:
+	cd ./ansible && ../.venv/bin/ansible-lint playbooks/*.yml
+
 ansible_site_check:
 	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml --check
 
