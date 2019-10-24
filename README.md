@@ -1445,3 +1445,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     * [ansible/roles/ви/meta/main.yml](ansible/roles/ви/meta/main.yml)
   * Добавлена версия git-репозитория в [ansible/playbooks/clone.yml](ansible/playbooks/clone.yml)
 * В [Makefile](Makefile) добавлена цель `ansible_syntax`, выполняющая проверку синтаксиса всех [ansible-плейбуков](ansible/playbooks)
+* Настроен [trytravis](https://github.com/sethmlarson/trytravis) в соответствии с [инструкцией](https://medium.com/@Nklya/локальное-тестирование-в-travisci-2b5ef9adb16e)
