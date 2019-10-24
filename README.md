@@ -1398,3 +1398,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```ini
   vault_password_file = ~/path/to/vault.key
   ```
+* Создан плейбук [ansible/playbooks/users.yml](ansible/playbooks/users.yml), добавляющий пользователей в систему
+* Созданы файлы с credentials для stage и prod окружений
+  * [ansible/environments/stage/credentials.yml](ansible/environments/stage/credentials.yml)
+  * [ansible/environments/prod/credentials.yml](ansible/environments/prod/credentials.yml
+* Файлы с credentials зашифрованы
+  ```shell
+  cd ansible
+  ansible-vault encrypt environments/stage/credentials.yml
+  ansible-vault encrypt environments/prod/credentials.yml
+  ```
+* Вызов плейбука `users.yml` добавлен в основной плейбук [ansible/playbooks/site.yml](ansible/playbooks/site.yml)
+* Проверена работоспособность `make terraform_apply ansible_site_apply`
+* После включения авторизации в ssh с использованием пароля (а не только ключа), удалось успешно подключиться пользователем `admin`
