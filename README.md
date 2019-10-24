@@ -1357,7 +1357,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   cd ./ansible && ../.venv/bin/ansible -i environments/stage/inventory.gcp.yml app --become -m systemd -a "name=puma state=restarted"
   ```
 
-
 #### Работа с Community-ролями
 
 * Создан файл с зависимостями для `prod` [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) и `stage` [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) окружений, содержащий модуль `jdauphant.nginx`
@@ -1411,3 +1410,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Вызов плейбука `users.yml` добавлен в основной плейбук [ansible/playbooks/site.yml](ansible/playbooks/site.yml)
 * Проверена работоспособность `make terraform_apply ansible_site_apply`
 * После включения авторизации в ssh с использованием пароля (а не только ключа), удалось успешно подключиться пользователем `admin`
+
+### Задание со \*: Использование динамического инвернтаря
+
+Уже реальзовано на стадии создания окружений
