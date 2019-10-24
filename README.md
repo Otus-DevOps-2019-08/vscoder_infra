@@ -1449,15 +1449,23 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Исправлен путь к ролям в [ansible/ansible.cfg](ansible/ansible.cfg) с  целью прохождения travis-ci тестов. С `roles_path = ./roles_imported:./roles` на `roles_path = ./roles`
 * С той же целью изменён [.gitignore](.gitignore)
 
-#### Реализация
+#### Trytravis
 
 * В [README.md](README.md) добавлен статус билда, как описано в [документации](https://docs.travis-ci.com/user/status-images)
-  * Создан пустой репозиторий [trytravis-otus](https://github.com/vscoder/trytravis-otus), содержащий только `README.md`. Имя репозитория должно содержать `trytravis`
-  * В [https://travis-ci.org](https://travis-ci.org) (обязательно **.org**) выполнен вход по учётке github
-  * Добавлен созданный репозиторий
-  * Для настройки trytravis на локальном хосте выполнена команда `trytravis --repo ssh://git@github.com/vscoder/trytravis-otus.git`, указывающая использовать данный репозиторий для тестирования
-  * Для запуска тестирования, необходимо перейти в директорию тестируемого репозитория и запустить `trytravis`
-    ```shell
-    cd vscoder-infra
-    trytravis
-    ```
+* Создан пустой репозиторий [trytravis-otus](https://github.com/vscoder/trytravis-otus), содержащий только `README.md`. Имя репозитория должно содержать `trytravis`
+* В [https://travis-ci.org](https://travis-ci.org) (обязательно **.org**) выполнен вход по учётке github
+* Добавлен созданный репозиторий
+* Для настройки trytravis на локальном хосте выполнена команда `trytravis --repo ssh://git@github.com/vscoder/trytravis-otus.git`, указывающая использовать данный репозиторий для тестирования
+* Для запуска тестирования, необходимо перейти в директорию тестируемого репозитория и запустить `trytravis`
+  ```shell
+  cd vscoder-infra
+  trytravis
+  ```
+
+#### Реализация
+
+* В [Makefile](Makefile) добавлены две цели
+  ```
+  install: install_packer install_terraform install_tflint install_ansible
+  validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
+  ```

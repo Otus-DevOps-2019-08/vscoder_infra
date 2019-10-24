@@ -7,7 +7,7 @@ INV?=inventory.gcp.yml
 
 # Packer-related variables
 PACKER_VERSION?=1.4.4
-TERRAFORM_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
+PACKER_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 
 # Terraform-related variables
 TERRAFORM_VERSION?=0.12.12
@@ -107,6 +107,10 @@ ansible_site_apply:
 	cd ./ansible && \
 	../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml
 
+
+install: install_packer install_terraform install_tflint install_ansible
+
+validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
 
 build: packer_build_db packer_build_app
 
