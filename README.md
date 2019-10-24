@@ -1424,4 +1424,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [terraform/](terraform/)
   * [terraform/](terraform/stage)
   * [terraform/](terraform/prod)
-
+* В [Makefile](Makefile) добавлена цель `install_terraform`, выполняющая установку `terraform`

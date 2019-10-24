@@ -1,4 +1,3 @@
-PACKER_VERSION?=1.4.4
 BIN_DIR?=~/bin
 TEMP_DIR?=/tmp
 # Environment name
@@ -6,7 +5,14 @@ ENV?=stage
 # inventory file name inside environment
 INV?=inventory.gcp.yml
 
-PACKER_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
+# Packer-related variables
+PACKER_VERSION?=1.4.4
+TERRAFORM_URL=https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
+
+# Terraform-related variables
+TERRAFORM_VERSION?=0.12.12
+TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
 
 # .PHONY: debug
 
@@ -27,8 +33,13 @@ install_ansible:
 	test -d .venv || python3 -m venv .venv
 	./.venv/bin/pip install -r ansible/requirements.txt
 
-# TODO:
-# install_terraform:
+install_terraform:
+	# Install terraform binary
+	wget ${TERRAFORM_URL} -O ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip
+	unzip -o ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip -d ${TEMP_DIR}/
+	mv ${TEMP_DIR}/terraform ${BIN_DIR}/terraform-${TERRAFORM_VERSION}
+	ln -sf terraform-${TERRAFORM_VERSION} ${BIN_DIR}/terraform
+	${BIN_DIR}/terraform --version && rm ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip
 
 packer_build_db:
 	${BIN_DIR}/packer build -var-file=packer/variables.json packer/db.json
