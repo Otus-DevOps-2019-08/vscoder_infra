@@ -1420,6 +1420,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 ### Задание с \*\*: Настройка TravisCI
 
+#### Подготовка
+
 * Исправлены пути к провиженерам в
   * [packer/ubuntu16.json](packer/ubuntu16.json)
   * [packer/immutable.json](packer/immutable.json)
@@ -1442,3 +1444,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     * [ansible/roles/app/meta/main.yml](ansible/roles/app/meta/main.yml)
     * [ansible/roles/ви/meta/main.yml](ansible/roles/ви/meta/main.yml)
   * Добавлена версия git-репозитория в [ansible/playbooks/clone.yml](ansible/playbooks/clone.yml)
+* В [Makefile](Makefile) добавлена цель `ansible_syntax`, выполняющая проверку синтаксиса всех [ansible-плейбуков](ansible/playbooks)

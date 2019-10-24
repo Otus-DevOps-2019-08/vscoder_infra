@@ -95,6 +95,9 @@ ansible_install_requirements:
 ansible_lint:
 	cd ./ansible && ../.venv/bin/ansible-lint playbooks/*.yml
 
+ansible_syntax:
+	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ../.venv/bin/ansible-playbook --syntax-check
+
 ansible_site_check:
 	cd ./ansible && pwd && ../.venv/bin/ansible-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml --check
 
