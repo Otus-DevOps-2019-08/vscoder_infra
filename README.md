@@ -1,6 +1,9 @@
 # vscoder_infra
 Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
+[![Build Status](https://travis-ci.com/Otus-DevOps-2019-08/vscoder_infra.svg?branch=master)](https://travis-ci.com/Otus-DevOps-2019-08/vscoder_infra)
+
+
 # Домашние задания
 
 ## HomeWork 2: GitChatOps
