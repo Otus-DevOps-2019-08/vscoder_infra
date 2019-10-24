@@ -45,6 +45,11 @@ packer_validate:
 terraform_init:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform init
 
+terraform_validate:
+	cd ./terraform && ${BIN_DIR}/terraform validate
+	cd ./terraform/stage && ${BIN_DIR}/terraform validate
+	cd ./terraform/prod && ${BIN_DIR}/terraform validate
+
 terraform_apply:
 	cd ./terraform/${ENV} && ${BIN_DIR}/terraform apply
 

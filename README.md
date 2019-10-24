@@ -1420,3 +1420,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Исправлены пути к провиженерам в
   * [packer/ubuntu16.json](packer/ubuntu16.json)
   * [packer/immutable.json](packer/immutable.json)
+* В [Makefile](Makefile) добавлена цель `terraform_validate`, выполняющая `terraform validate` в директориях
+  * [terraform/](terraform/)
+  * [terraform/](terraform/stage)
+  * [terraform/](terraform/prod)
+
