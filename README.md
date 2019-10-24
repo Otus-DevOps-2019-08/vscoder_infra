@@ -1431,3 +1431,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [terraform/](terraform/stage)
   * [terraform/](terraform/prod)
 * Создан конфигурационный файл [terraform/.tflint.hcl](terraform/.tflint.hcl) с описанием конфига `tflint`. Ссылка на [документацию](https://github.com/wata727/tflint/blob/master/docs/guides/config.md)
+* В [Makefile](Makefile) добавлена цель `ansible_lint`, выполняющая проверку всех [ansible-плейбуков](ansible/playbooks) средствами `ansible-lint`
+* В [ansible/requirements.txt](ansible/requirements.txt) добавлена зависимость `ansible-lint==4.1.0`
+* Исправлены предупреждения линтера:
+  * В [ansible/.ansible-lint](ansible/.ansible-lint) добавлено исключение директории [ansible/roles_imported/](ansible/roles_imported/) из проверки линтером
+  * Заполнена мета-информация ролей
+    * [ansible/roles/app/meta/main.yml](ansible/roles/app/meta/main.yml)
+    * [ansible/roles/ви/meta/main.yml](ansible/roles/ви/meta/main.yml)
+  * Добавлена версия git-репозитория в [ansible/playbooks/clone.yml](ansible/playbooks/clone.yml)
