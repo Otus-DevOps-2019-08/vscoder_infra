@@ -1469,3 +1469,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   install: install_packer install_terraform install_tflint install_ansible
   validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
   ```
+* Доработан [Makefile](Makefile). Пути к исполняемым файлам `packer`, `terraform`, `tflint`, `ansible` теперь можно задать через переменные окружения
