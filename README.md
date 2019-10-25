@@ -1448,6 +1448,13 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Настроен [trytravis](https://github.com/sethmlarson/trytravis) в соответствии с [инструкцией](https://medium.com/@Nklya/локальное-тестирование-в-travisci-2b5ef9adb16e)
 * Исправлен путь к ролям в [ansible/ansible.cfg](ansible/ansible.cfg) с  целью прохождения travis-ci тестов. С `roles_path = ./roles_imported:./roles` на `roles_path = ./roles`
 * С той же целью изменён [.gitignore](.gitignore)
+* В [Makefile](Makefile) добавлены две цели
+  ```
+  install: install_packer install_terraform install_tflint install_ansible
+  validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
+  ```
+* Доработан [Makefile](Makefile). Пути к исполняемым файлам `packer`, `terraform`, `tflint`, `ansible` теперь можно задать через переменные окружения
+* В [Makefile](Makefile) добавлена цель `terraform_init_nobackend` для инициализации terraform без использования remote backends. Необходимо для статической валидации средствами `terraform validate`
 
 #### Trytravis
 
@@ -1464,10 +1471,3 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 #### Реализация
 
-* В [Makefile](Makefile) добавлены две цели
-  ```
-  install: install_packer install_terraform install_tflint install_ansible
-  validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
-  ```
-* Доработан [Makefile](Makefile). Пути к исполняемым файлам `packer`, `terraform`, `tflint`, `ansible` теперь можно задать через переменные окружения
-* В [Makefile](Makefile) добавлена цель `terraform_init_nobackend` для инициализации terraform без использования remote backends. Необходимо для статической валидации средствами `terraform validate`
