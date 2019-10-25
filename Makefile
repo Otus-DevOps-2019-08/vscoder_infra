@@ -14,6 +14,8 @@ PACKER?=${BIN_DIR}/packer
 TERRAFORM_VERSION?=0.12.12
 TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 TERRAFORM?=${BIN_DIR}/terraform
+
+# Tflint-related variables
 TFLINT_VERSION?=0.12.1
 TFLINT_URL=https://github.com/wata727/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip
 TFLINT?=${BIN_DIR}/tflint
@@ -71,8 +73,10 @@ packer_validate:
 
 
 terraform_init:
-	cd ./terraform && ${TERRAFORM} init
 	cd ./terraform/${ENV} && ${TERRAFORM} init
+
+terraform_init_nobackend:
+	cd ./terraform/${ENV} && ${TERRAFORM} init -backend=false
 
 terraform_validate:
 	cd ./terraform && ${TERRAFORM} validate

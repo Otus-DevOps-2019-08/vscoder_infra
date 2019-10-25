@@ -1470,3 +1470,4 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
   ```
 * Доработан [Makefile](Makefile). Пути к исполняемым файлам `packer`, `terraform`, `tflint`, `ansible` теперь можно задать через переменные окружения
+* В [Makefile](Makefile) добавлена цель `terraform_init_nobackend` для инициализации terraform без использования remote backends. Необходимо для статической валидации средствами `terraform validate`
