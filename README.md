@@ -47,8 +47,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Роль app](#%d0%a0%d0%be%d0%bb%d1%8c-app)
       - [Плейбуки для app и db](#%d0%9f%d0%bb%d0%b5%d0%b9%d0%b1%d1%83%d0%ba%d0%b8-%d0%b4%d0%bb%d1%8f-app-%d0%b8-db)
       - [Окружения](#%d0%9e%d0%ba%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
-  - [* В ansible/ansible.cfg прописан по умолчанию inventory для stage-окружения](#%d0%92-ansibleansiblecfg-%d0%bf%d1%80%d0%be%d0%bf%d0%b8%d1%81%d0%b0%d0%bd-%d0%bf%d0%be-%d1%83%d0%bc%d0%be%d0%bb%d1%87%d0%b0%d0%bd%d0%b8%d1%8e-inventory-%d0%b4%d0%bb%d1%8f-stage-%d0%be%d0%ba%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
-  - [* `site` выполнит `ansible_site_check` `ansible_site_apply`](#site-%d0%b2%d1%8b%d0%bf%d0%be%d0%bb%d0%bd%d0%b8%d1%82-ansiblesitecheck-ansiblesiteapply)
       - [Проверка](#%d0%9f%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0)
       - [Работа с Community-ролями](#%d0%a0%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-community-%d1%80%d0%be%d0%bb%d1%8f%d0%bc%d0%b8)
       - [Ansible vault](#ansible-vault)
@@ -57,6 +55,19 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Подготовка](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0)
       - [Trytravis](#trytravis)
       - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-1)
+- [Makefile](#makefile)
+  - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
+    - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
+    - [Packer](#packer)
+    - [Terraform](#terraform)
+    - [Tflint](#tflint)
+    - [Ansible](#ansible)
+  - [Цели](#%d0%a6%d0%b5%d0%bb%d0%b8)
+    - [Устанока зависимостей](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%ba%d0%b0-%d0%b7%d0%b0%d0%b2%d0%b8%d1%81%d0%b8%d0%bc%d0%be%d1%81%d1%82%d0%b5%d0%b9)
+    - [Packer](#packer-1)
+    - [Terraform](#terraform-1)
+    - [Ansible](#ansible-1)
+    - [Aliases](#aliases)
 
 # Домашние задания
 
@@ -1227,7 +1238,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     gcp_prod: yes
   ```
 * В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
----
 * Изменён [Makefile](Makefile) с набором целей для часто используемых операций. 
   * Добавлена переменная `ENV` для задания окружения. Окружение по умолчанию: `stage`.
   * Добавлена переменная `INV` для задания файла инвентаря. Значение по умолчанию: `inventory.gcp.yml`.
@@ -1240,23 +1250,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```shell
   make <target> ENV=prod INV=inventory
   ```
-* Описание доступных целей для команды `make`
-  * `debug` вывод на экран значений переменных
-  * `install_packer` скачать и распакова бинарник `packer` в директорию `~/bin/`
-  * `install_ansible` установить ansible с зависимостями в python virtualenv
-  * `packer_build_db` собрать packer-образ reddit-db-base
-  * `packer_build_app` собрать packer-образ reddit-app-base
-  * `terraform_init` выполнить terraform init в stage-окружении
-  * `terraform_apply` выполнить terraform apply в stage-окружении
-  * `terraform_destroy` выполнить terraform destroy в stage-окружении
-  * `terraform_url` показать url приложения в stage окружении
-  * `ansible_inventory_list` вывести текущий inventory в json
-  * `ansible_site_check` проверить (`--check`) плейбук [site.yml](ansible/site.yml)
-  * `ansible_site_apply` выполнить плейбук [site.yml](ansible/site.yml)
-  * `build` выполнит `packer_build_db` `packer_build_app`
-  * `infra` выполнит `terraform_init` `terraform_apply`
-  * `site` выполнит `ansible_site_check` `ansible_site_apply`
----
 * Добавлены `group_vars` для `stage`-окружения
   * [ansible/environments/stage/group_vars/app](ansible/environments/stage/group_vars/app) для группы `app`
   * [ansible/environments/stage/group_vars/db](ansible/environments/stage/group_vars/db) для группы `db`
@@ -1569,3 +1562,66 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     # ...
     - make ansible_syntax ansible_lint
   ```
+
+# Makefile
+
+## Переменные
+
+### Общие
+`BIN_DIR` директория с исполняемыми файлами (или директория для распаковки исполняемых файлов) packer, terraform, tflint. По умолчанию `~/bin`
+`TEMP_DIR` временная директория для загрузки packer, terraform, tflint. По умолчанию `/tmp`
+`ENV` окружение, stage или prod. По умолчанию `stage`
+`INV` имя inventory-файла ansible в директории соответствующего окружения
+
+### Packer
+`PACKER_VERSION` версия packer. По умолчанию `1.4.4`
+`PACKER` путь к исполняемому файлу packer. По умолчанию `${BIN_DIR}/packer`
+
+### Terraform
+`TERRAFORM_VERSION` версия terraform. По умолчанию `0.12.12`
+`TERRAFORM` путь к исполняемому файлу terraform. По умолчанию `${BIN_DIR}/terraform`
+
+### Tflint
+`TFLINT_VERSION` версия tflint. По умолчанию `0.12.1`
+`TFLINT` путь к исполняемому файлу tflint. По умолчанию `${BIN_DIR}/tflint`
+
+### Ansible
+`ANSIBLE` путь к исполняемому файлу ansible относительно директории `./ansible`. По умолчанию `../.venv/bin/ansible`. Для использования system-wide ansible, необходимо присвоить `ANSIBLE=ansible`
+
+## Цели
+
+`debug` вывод на экран значений переменных
+
+### Устанока зависимостей
+`install_packer` скачать и распакова исполняемый файл `packer` в директорию `~/bin/`
+`install_ansible_virtualenv` установить ansible с зависимостями в виртуальное окружение python с использованием `virtualenv`. Подходит для старых дистрибутивов с python2 (протестировано на ubuntu-14.04)
+`install_ansible_venv` установить ansible с зависимостями в виртуальное окружение python с использованием `python3 -m venv`. Подходит для современных дистрибутивов с python3.5+ (протестировано на ubuntu-18.04)
+`install_terraform` скачать и распакова исполняемый файл `terraform` в директорию `~/bin/`
+`install_tflint` скачать и распакова исполняемый файл `tflint` в директорию `~/bin/`
+
+### Packer
+`packer_build_db` собрать packer-образ reddit-db-base
+`packer_build_app` собрать packer-образ reddit-app-base
+`packer_validate` выполнить валидацию шаблонов packer
+
+### Terraform
+`terraform_init ENV=<stage|prod>` выполнить terraform init
+`terraform_init_nobackend ENV=<stage|prod>` выполнить terraform init без проверки remote backends (для последующей валидации кода)
+`terraform_apply ENV=<stage|prod>` выполнить terraform apply
+`terraform_destroy ENV=<stage|prod>` выполнить terraform destroy
+`terraform_url ENV=<stage|prod>` показать url приложения
+
+### Ansible
+`ansible_inventory_list ENV=<stage|prod>` вывести текущий inventory в json
+`ansible_install_requirements ENV=<stage|prod>` установить внешние роли из `environments/${ENV}/requirements.yml`
+`ansible_lint` выполнить `ansible-lint` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
+`ansible_site_check` выполнить `ansible-playbook --syntax-check` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
+`ansible_site_check ENV=<stage|prod>` проверить (`--check`) плейбук [site.yml](ansible/playbooks/site.yml)
+`ansible_site_apply ENV=<stage|prod>` выполнить плейбук [site.yml](ansible/playbooks/site.yml)
+
+### Aliases
+`install`: `install_packer install_terraform install_tflint install_ansible_venv`
+`validate`: `packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint`
+`build`: `packer_build_db packer_build_app`
+`infra`: `terraform_init terraform_apply`
+`site`: `ansible_site_check ansible_site_apply`
