@@ -111,11 +111,11 @@ ansible_install_requirements:
 	cd ./ansible && ${ANSIBLE}-galaxy install -r environments/${ENV}/requirements.yml
 
 ansible_lint:
-	${ANSIBLE}-lint --version
-	cd ./ansible && ${ANSIBLE}-lint playbooks/*.yml
+	cd ./ansible && ${ANSIBLE}-lint --version
+	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ${ANSIBLE}-lint
 
 ansible_syntax:
-	${ANSIBLE}-playbook --version
+	cd ./ansible && ${ANSIBLE}-playbook --version
 	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ${ANSIBLE}-playbook --syntax-check
 
 ansible_site_check:
