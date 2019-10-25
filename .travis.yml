@@ -9,17 +9,21 @@ install:
   - sudo apt-get install python-virtualenv
   - make install_ansible_virtualenv
 before_script:
-  # Создание файлов-заглушек с переменными
+  # Create fake variables files
   - cp packer/variables.json.example packer/variables.json
   - cp terraform/terraform.tfvars.example terraform/terraform.tfvars
   - cp terraform/stage/terraform.tfvars.example terraform/stage/terraform.tfvars
   - cp terraform/prod/terraform.tfvars.example terraform/prod/terraform.tfvars
-  # Инициализация terraform для директории terraform/, а так же для stage и prod окружений
+  # Initialise terraform
   - make terraform_init_nobackend ENV=""
   - make terraform_init_nobackend ENV="stage"
   - make terraform_init_nobackend ENV="prod"
+  # Create fake ansible vault key file
+  - mkdir -p ~/.ansible/keys/
+  - echo "fakepassword" > ~/.ansible/keys/otus-devops-vault.key
 script:
   - make packer_validate terraform_validate terraform_tflint
+  - make ansible_syntax ansible_lint
 notifications:
   slack:
     rooms:

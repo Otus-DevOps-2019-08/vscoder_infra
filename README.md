@@ -1508,3 +1508,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     }
   ]
   ```
+* В [.travis.yml](.travis.yml) для ansible-плейбуков добавлена проверка синтаксиса и запуск `ansible-lint`
+  ```yaml
+  script:
+    # ...
+    - make ansible_syntax ansible_lint
+  ```
