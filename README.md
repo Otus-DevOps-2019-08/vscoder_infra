@@ -1471,3 +1471,38 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 #### Реализация
 
+* В [.travis.yml](.travis.yml) реализована валидация кода packer и terraform. А именно
+  * Добавлена секция `install` с установкой необходимых бинарников
+    ```yaml
+    install:
+      - make install_packer install_terraform install_tflint
+    ```
+  * Добавлена секция `before_script` с действиями, подготавливающими код к валидации
+    ```yaml
+    before_script:
+      # Создание файлов-заглушек с переменными
+      - cp packer/variables.json.example packer/variables.json
+      - cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+      - cp terraform/stage/terraform.tfvars.example terraform/stage/terraform.tfvars
+      - cp terraform/prod/terraform.tfvars.example terraform/prod/terraform.tfvars
+      # Инициализация terraform для директории terraform/, а так же для stage и prod окружений
+      - make terraform_init_nobackend ENV=""
+      - make terraform_init_nobackend ENV="stage"
+      - make terraform_init_nobackend ENV="prod"
+    ```
+  * Добавлена секция `script`, в которой выполняется валидация
+    ```yaml
+    script:
+      - make packer_validate terraform_validate terraform_tflint
+    ```
+* Создан скрипт-обёртка [packer/scripts/ansible-playbook.sh](packer/scripts/ansible-playbook.sh) для запуска packer-ом провиженера типа ansible
+  В шаблонах packer-а [packer/app.json](packer/app.json) и [packer/db.json](packer/db.json) в провиженер типа ansible добавлен параметр `command`, указывающий на созданный скрипт. Теперь провиженеры выглядят так (пример для [db.json](packer/db.json))
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_db.yml"
+    }
+  ]
+  ```

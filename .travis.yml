@@ -2,8 +2,24 @@ dist: trusty
 sudo: required
 language: bash
 before_install:
-- curl https://raw.githubusercontent.com/express42/otus-homeworks/2019-08/run.sh |
-  bash
+  - curl https://raw.githubusercontent.com/express42/otus-homeworks/2019-08/run.sh |
+    bash
+install:
+  - make install_packer install_terraform install_tflint
+  - sudo apt-get install python-virtualenv
+  - make install_ansible_virtualenv
+before_script:
+  # Создание файлов-заглушек с переменными
+  - cp packer/variables.json.example packer/variables.json
+  - cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+  - cp terraform/stage/terraform.tfvars.example terraform/stage/terraform.tfvars
+  - cp terraform/prod/terraform.tfvars.example terraform/prod/terraform.tfvars
+  # Инициализация terraform для директории terraform/, а так же для stage и prod окружений
+  - make terraform_init_nobackend ENV=""
+  - make terraform_init_nobackend ENV="stage"
+  - make terraform_init_nobackend ENV="prod"
+script:
+  - make packer_validate terraform_validate terraform_tflint
 notifications:
   slack:
     rooms:
