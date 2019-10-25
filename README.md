@@ -1149,7 +1149,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 #### Окружения
 
-* Созданы директории для окружений [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
+* Созданы директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
 * Inventory-файл [ansible/inventory](ansible/inventory) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
 * Inventory-файл динамического инвентаря [ansible/inventory.gcp.yml](ansible/inventory.gcp.yml) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
 * **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/stage/inventory.gcp.yml](ansible/environments/stage/inventory.gcp.yml) добавлено значение соответствующего окружения
@@ -1319,7 +1319,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * Добавлены комментарии
 
 #### Проверка
-* Унечтожено окружение `stage`
+* Уничтожено окружение `stage`
   ```shell
   make ENV=stage terraform_destroy
   ```
@@ -1335,7 +1335,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```shell
   make terraform_url ENV=prod
   ```
-* Без унечтожения prod-окружения, создано `stage` окружение
+* Без уничтожения prod-окружения, создано `stage` окружение
   ```shell
   make ENV=stage terraform_apply
   make ENV=stage ansible_site_apply
@@ -1347,7 +1347,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   берётся ip-адрес первого хоста в группе `db`, который принадлежит другому окружению и имеет другой ip
   TODO: продумать решение данной проблемы!
-* Унечтожена инфраструктура окружения `prod`
+* Уничтожена инфраструктура окружения `prod`
   ```shell
   make ENV=prod terraform_destroy
   ```
@@ -1433,8 +1433,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * В [Makefile](Makefile) добавлена цель `install_tflint`, выполняющая установку `tflint`
 * В [Makefile](Makefile) добавлена цель `terraform_tflint`, выполняющая проверку средствами `tflint` следующих директорий
   * [terraform/](terraform/)
-  * [terraform/](terraform/stage)
-  * [terraform/](terraform/prod)
+  * [terraform/stage](terraform/stage)
+  * [terraform/prod](terraform/prod)
 * Создан конфигурационный файл [terraform/.tflint.hcl](terraform/.tflint.hcl) с описанием конфига `tflint`. Ссылка на [документацию](https://github.com/wata727/tflint/blob/master/docs/guides/config.md)
 * В [Makefile](Makefile) добавлена цель `ansible_lint`, выполняющая проверку всех [ansible-плейбуков](ansible/playbooks) средствами `ansible-lint`
 * В [ansible/requirements.txt](ansible/requirements.txt) добавлена зависимость `ansible-lint==4.1.0`
