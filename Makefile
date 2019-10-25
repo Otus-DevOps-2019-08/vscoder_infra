@@ -70,6 +70,7 @@ packer_build_app:
 	${PACKER} build -var-file=packer/variables.json packer/app.json
 
 packer_validate:
+	${PACKER} --version
 	${PACKER} validate -var-file=packer/variables.json packer/db.json
 	${PACKER} validate -var-file=packer/variables.json packer/app.json
 	${PACKER} validate -var-file=packer/variables.json packer/ubuntu16.json
@@ -83,6 +84,7 @@ terraform_init_nobackend:
 	cd ./terraform/${ENV} && ${TERRAFORM} init -backend=false
 
 terraform_validate:
+	${TERRAFORM} --version
 	cd ./terraform && ${TERRAFORM} validate
 	cd ./terraform/stage && ${TERRAFORM} validate
 	cd ./terraform/prod && ${TERRAFORM} validate
@@ -109,9 +111,11 @@ ansible_install_requirements:
 	cd ./ansible && ${ANSIBLE}-galaxy install -r environments/${ENV}/requirements.yml
 
 ansible_lint:
+	${ANSIBLE}-lint --version
 	cd ./ansible && ${ANSIBLE}-lint playbooks/*.yml
 
 ansible_syntax:
+	${ANSIBLE}-playbook --version
 	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ${ANSIBLE}-playbook --syntax-check
 
 ansible_site_check:
