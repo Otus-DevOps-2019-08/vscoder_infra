@@ -44,6 +44,10 @@ install_ansible_venv:
 	test -d ./.venv || python3 -m venv ./.venv
 	./.venv/bin/pip install -r ansible/requirements.txt
 
+install_ansible_virtualenv:
+	test -d ./.venv || virtualenv ./.venv
+	./.venv/bin/pip install -r ansible/requirements.txt
+
 install_terraform:
 	wget ${TERRAFORM_URL} -O ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip
 	unzip -o ${TEMP_DIR}/terraform-${TERRAFORM_VERSION}.zip -d ${TEMP_DIR}/
