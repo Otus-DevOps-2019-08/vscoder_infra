@@ -30,8 +30,20 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "packer/scripts/ansible-playbook.sh",
+      "destination": "/tmp/ansible-playbook.sh"
+    },
+    {
       "type": "ansible",
+      "command": "./packer/scripts/ansible-playbook.sh",
       "playbook_file": "ansible/playbooks/packer_app.yml"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "rm /tmp/ansible-playbook.sh"
+      ]
     }
   ]
 }
