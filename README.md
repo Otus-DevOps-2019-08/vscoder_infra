@@ -1457,6 +1457,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * В [Makefile](Makefile) добавлена цель `terraform_init_nobackend` для инициализации terraform без использования remote backends. Необходимо для статической валидации средствами `terraform validate`
 * В [Makefile](Makefile) добавлена цель `install_ansible_virtualenv` для установки ansible в virtualenv-окружение с использованием пакета `virtualenv`
 * В [Makefile](Makefile) добавлено отображение версий используемых программ при вызове линтеров
+* В [Makefile](Makefile) для `ansible_syntax` явно указан inventory-файл [ansible/environments/stage/inventory](ansible/environments/stage/inventory) чтобы избежать предурпеждений во время проверки синтаксиса
 
 #### Trytravis
 

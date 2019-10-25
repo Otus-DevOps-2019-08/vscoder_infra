@@ -116,7 +116,7 @@ ansible_lint:
 
 ansible_syntax:
 	cd ./ansible && ${ANSIBLE}-playbook --version
-	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ${ANSIBLE}-playbook --syntax-check
+	cd ./ansible && find playbooks -name "*.yml" -type f -print0 | xargs -0 -n1 ${ANSIBLE}-playbook -i environments/stage/inventory --syntax-check
 
 ansible_site_check:
 	cd ./ansible && pwd && ${ANSIBLE}-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml --check
