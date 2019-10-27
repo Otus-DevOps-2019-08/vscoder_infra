@@ -1655,6 +1655,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   .pytest_cache
   ```
 
+* Добавлен [ansible/Vagrantfile](ansible/Vagrantfile) с описанием terraform-инфраструктуры в vagrant (2 ВМ, db и app)
+
 ### Тестирование ролей при помощи Molecule и Testinfra
 
 ### Переключение сбора образов пакером на использование ролей
