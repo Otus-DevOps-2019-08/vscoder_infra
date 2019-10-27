@@ -27,3 +27,6 @@ venv
 # Ansible
 ####
 *.retry
+ansible/roles_imported/*
+# Fix tests passing
+jdauphant.nginx

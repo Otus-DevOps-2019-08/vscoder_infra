@@ -1,6 +1,74 @@
 # vscoder_infra
 Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
+[![Build Status](https://travis-ci.com/Otus-DevOps-2019-08/vscoder_infra.svg?branch=master)](https://travis-ci.com/Otus-DevOps-2019-08/vscoder_infra)
+
+- [vscoder_infra](#vscoderinfra)
+- [Домашние задания](#%d0%94%d0%be%d0%bc%d0%b0%d1%88%d0%bd%d0%b8%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f)
+  - [HomeWork 2: GitChatOps](#homework-2-gitchatops)
+  - [HomeWork 3: Знакомство с облачной инфраструктурой. Google Cloud Platform](#homework-3-%d0%97%d0%bd%d0%b0%d0%ba%d0%be%d0%bc%d1%81%d1%82%d0%b2%d0%be-%d1%81-%d0%be%d0%b1%d0%bb%d0%b0%d1%87%d0%bd%d0%be%d0%b9-%d0%b8%d0%bd%d1%84%d1%80%d0%b0%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%be%d0%b9-google-cloud-platform)
+  - [HomeWork 4: Деплой тестового приложения](#homework-4-%d0%94%d0%b5%d0%bf%d0%bb%d0%be%d0%b9-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5)
+    - [Самостоятельная работа](#%d0%a1%d0%b0%d0%bc%d0%be%d1%81%d1%82%d0%be%d1%8f%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d0%b0%d1%8f-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0)
+    - [Дополнительное задание 1](#%d0%94%d0%be%d0%bf%d0%be%d0%bb%d0%bd%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-1)
+    - [Дополнительное задание 2](#%d0%94%d0%be%d0%bf%d0%be%d0%bb%d0%bd%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-2)
+    - [Прочее](#%d0%9f%d1%80%d0%be%d1%87%d0%b5%d0%b5)
+  - [HomeWork 5: Сборка образов VM при помощи Paker](#homework-5-%d0%a1%d0%b1%d0%be%d1%80%d0%ba%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2-vm-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-paker)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-1)
+    - [Самостоятельные задания](#%d0%a1%d0%b0%d0%bc%d0%be%d1%81%d1%82%d0%be%d1%8f%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f)
+    - [Первое задание со *](#%d0%9f%d0%b5%d1%80%d0%b2%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be)
+    - [Второе задание со *](#%d0%92%d1%82%d0%be%d1%80%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be)
+  - [HomeWork 6: Практика IaC с использованием Terraform](#homework-6-%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0-iac-%d1%81-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5%d0%bc-terraform)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-2)
+    - [Самостоятельные задания](#%d0%a1%d0%b0%d0%bc%d0%be%d1%81%d1%82%d0%be%d1%8f%d1%82%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-1)
+    - [Задания со *](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-%d1%81%d0%be)
+    - [Задания с **](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-%d1%81)
+  - [HomeWork 7: Принципы организации инфраструктурного кода и работа над инфраструктурой в команде на примере Terraform](#homework-7-%d0%9f%d1%80%d0%b8%d0%bd%d1%86%d0%b8%d0%bf%d1%8b-%d0%be%d1%80%d0%b3%d0%b0%d0%bd%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8-%d0%b8%d0%bd%d1%84%d1%80%d0%b0%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%bd%d0%be%d0%b3%d0%be-%d0%ba%d0%be%d0%b4%d0%b0-%d0%b8-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d0%bd%d0%b0%d0%b4-%d0%b8%d0%bd%d1%84%d1%80%d0%b0%d1%81%d1%82%d1%80%d1%83%d0%ba%d1%82%d1%83%d1%80%d0%be%d0%b9-%d0%b2-%d0%ba%d0%be%d0%bc%d0%b0%d0%bd%d0%b4%d0%b5-%d0%bd%d0%b0-%d0%bf%d1%80%d0%b8%d0%bc%d0%b5%d1%80%d0%b5-terraform)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-3)
+    - [Задания со * Хранение state в gcs](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-%d1%81%d0%be--%d0%a5%d1%80%d0%b0%d0%bd%d0%b5%d0%bd%d0%b8%d0%b5-state-%d0%b2-gcs)
+    - [Задание с ** Провиженинг приложения с использованием пременных окружения](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81--%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f-%d1%81-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5%d0%bc-%d0%bf%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d1%85-%d0%be%d0%ba%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
+  - [HomeWork 8: Управление конфигурацией. Основные DevOps инструменты. Знакомство с Ansible](#homework-8-%d0%a3%d0%bf%d1%80%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d0%b5%d0%b9-%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d1%8b%d0%b5-devops-%d0%b8%d0%bd%d1%81%d1%82%d1%80%d1%83%d0%bc%d0%b5%d0%bd%d1%82%d1%8b-%d0%97%d0%bd%d0%b0%d0%ba%d0%be%d0%bc%d1%81%d1%82%d0%b2%d0%be-%d1%81-ansible)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-4)
+    - [Задание со \*: Работа с динамическим inventory](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%a0%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-%d0%b4%d0%b8%d0%bd%d0%b0%d0%bc%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%bc-inventory)
+  - [HomeWork 9: Деплой и управление конфигурацией с Ansible](#homework-9-%d0%94%d0%b5%d0%bf%d0%bb%d0%be%d0%b9-%d0%b8-%d1%83%d0%bf%d1%80%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bd%d1%84%d0%b8%d0%b3%d1%83%d1%80%d0%b0%d1%86%d0%b8%d0%b5%d0%b9-%d1%81-ansible)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-5)
+  - [* Закомментирован провиженинг приложения средствами terraform](#%d0%97%d0%b0%d0%ba%d0%be%d0%bc%d0%bc%d0%b5%d0%bd%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd-%d0%bf%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-terraform)
+  - [* К задаче добавлена секция `notify`, которая сообщает о необходимости запуска хендлера.](#%d0%9a-%d0%b7%d0%b0%d0%b4%d0%b0%d1%87%d0%b5-%d0%b4%d0%be%d0%b1%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b0-%d1%81%d0%b5%d0%ba%d1%86%d0%b8%d1%8f-notify-%d0%ba%d0%be%d1%82%d0%be%d1%80%d0%b0%d1%8f-%d1%81%d0%be%d0%be%d0%b1%d1%89%d0%b0%d0%b5%d1%82-%d0%be-%d0%bd%d0%b5%d0%be%d0%b1%d1%85%d0%be%d0%b4%d0%b8%d0%bc%d0%be%d1%81%d1%82%d0%b8-%d0%b7%d0%b0%d0%bf%d1%83%d1%81%d0%ba%d0%b0-%d1%85%d0%b5%d0%bd%d0%b4%d0%bb%d0%b5%d1%80%d0%b0)
+  - [* Добавлена задача по установке зависимостей, модуль `bundler`](#%d0%94%d0%be%d0%b1%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd%d0%b0-%d0%b7%d0%b0%d0%b4%d0%b0%d1%87%d0%b0-%d0%bf%d0%be-%d1%83%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%ba%d0%b5-%d0%b7%d0%b0%d0%b2%d0%b8%d1%81%d0%b8%d0%bc%d0%be%d1%81%d1%82%d0%b5%d0%b9-%d0%bc%d0%be%d0%b4%d1%83%d0%bb%d1%8c-bundler)
+  - [* В плейбук добавлен сценарий `Deploy App` с тегом `deploy-tag` для деплоя приложения](#%d0%92-%d0%bf%d0%bb%d0%b5%d0%b9%d0%b1%d1%83%d0%ba-%d0%b4%d0%be%d0%b1%d0%b0%d0%b2%d0%bb%d0%b5%d0%bd-%d1%81%d1%86%d0%b5%d0%bd%d0%b0%d1%80%d0%b8%d0%b9-deploy-app-%d1%81-%d1%82%d0%b5%d0%b3%d0%be%d0%bc-deploy-tag-%d0%b4%d0%bb%d1%8f-%d0%b4%d0%b5%d0%bf%d0%bb%d0%be%d1%8f-%d0%bf%d1%80%d0%b8%d0%bb%d0%be%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
+    - [Задание со \*: Динамический inventory](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%94%d0%b8%d0%bd%d0%b0%d0%bc%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b9-inventory)
+      - [Исследование](#%d0%98%d1%81%d1%81%d0%bb%d0%b5%d0%b4%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5)
+      - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f)
+    - [Провижининг в Packer](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b8%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-packer)
+    - [Вне задания: Makefile](#%d0%92%d0%bd%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-makefile)
+  - [HomeWork 10: Ansible: работа с ролями и окружениями](#homework-10-ansible-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-%d1%80%d0%be%d0%bb%d1%8f%d0%bc%d0%b8-%d0%b8-%d0%be%d0%ba%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f%d0%bc%d0%b8)
+    - [Основное задание](#%d0%9e%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d0%be%d0%b5-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-6)
+      - [Роль db](#%d0%a0%d0%be%d0%bb%d1%8c-db)
+      - [Роль app](#%d0%a0%d0%be%d0%bb%d1%8c-app)
+      - [Плейбуки для app и db](#%d0%9f%d0%bb%d0%b5%d0%b9%d0%b1%d1%83%d0%ba%d0%b8-%d0%b4%d0%bb%d1%8f-app-%d0%b8-db)
+      - [Окружения](#%d0%9e%d0%ba%d1%80%d1%83%d0%b6%d0%b5%d0%bd%d0%b8%d1%8f)
+      - [Проверка](#%d0%9f%d1%80%d0%be%d0%b2%d0%b5%d1%80%d0%ba%d0%b0)
+      - [Работа с Community-ролями](#%d0%a0%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-community-%d1%80%d0%be%d0%bb%d1%8f%d0%bc%d0%b8)
+      - [Ansible vault](#ansible-vault)
+    - [Задание со \*: Использование динамического инвернтаря](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%98%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b4%d0%b8%d0%bd%d0%b0%d0%bc%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%b8%d0%bd%d0%b2%d0%b5%d1%80%d0%bd%d1%82%d0%b0%d1%80%d1%8f)
+    - [Задание с \*\*: Настройка TravisCI](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81--%d0%9d%d0%b0%d1%81%d1%82%d1%80%d0%be%d0%b9%d0%ba%d0%b0-travisci)
+      - [Подготовка](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0)
+      - [Trytravis](#trytravis)
+      - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-1)
+- [Makefile](#makefile)
+  - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
+    - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
+    - [Packer](#packer)
+    - [Terraform](#terraform)
+    - [Tflint](#tflint)
+    - [Ansible](#ansible)
+  - [Цели](#%d0%a6%d0%b5%d0%bb%d0%b8)
+    - [Устанока зависимостей](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%ba%d0%b0-%d0%b7%d0%b0%d0%b2%d0%b8%d1%81%d0%b8%d0%bc%d0%be%d1%81%d1%82%d0%b5%d0%b9)
+    - [Packer](#packer-1)
+    - [Terraform](#terraform-1)
+    - [Ansible](#ansible-1)
+    - [Aliases](#aliases)
+
 # Домашние задания
 
 ## HomeWork 2: GitChatOps
@@ -882,6 +950,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
   In previous versions you had to create a script or program that can output JSON in the correct format when invoked with the proper arguments. You can still use and write inventory scripts, as we ensured backwards compatibility via the script inventory plugin and there is no restriction on the programming language used. If you choose to write a script, however, you will need to implement some features yourself. i.e caching, configuration management, dynamic variable and group composition, etc. While with inventory plugins you can leverage the Ansible codebase to add these common features.
   ```
+* Описание параметров плагина `gcp_compute` [https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/inventory/gcp_compute.py](https://github.com/ansible/ansible/blob/devel/lib/ansible/plugins/inventory/gcp_compute.py)
 * Для разбиения инстансов по группам можно использовать несколько [способов](https://docs.ansible.com/ansible/latest/plugins/inventory.html#using-inventory-plugins).
   * Пример JSON-представления тегов:
   ```
@@ -1079,3 +1148,480 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `infra_stage` выполнит `terraform_stage_init` `terraform_stage_apply`
   * `infra_prod` выполнит `terraform_prod_init` `terraform_prod_apply`
   * `site` выполнит `ansible_site_check` `ansible_site_apply`
+
+
+## HomeWork 10: Ansible: работа с ролями и окружениями
+
+### Основное задание
+
+* Для храниения ролей, создана директория [ansible/roles](ansible/roles)
+
+#### Роль db
+* Создана пустая роль `db` с помощью ansible-galaxy
+  ```shell
+  cd ansible/roles
+  ansible-galaxy init db
+  ```
+  Структура роли
+  ```
+  $ tree db
+  db
+  ├── defaults       # <-- Директория для переменных по умолчанию
+  │   └── main.yml
+  ├── files
+  ├── handlers
+  │   └── main.yml
+  ├── meta           # <-- Информация о роли, создателе и зависимостях
+  │   └── main.yml
+  ├── README.md
+  ├── tasks          # <-- Директория для тасков
+  │   └── main.yml
+  ├── templates
+  ├── tests
+  │   ├── inventory
+  │   └── test.yml
+  └── vars           # <-- Директория для переменных, которые не должны
+      └── main.yml   #     переопределяться пользователем
+
+  8 directories, 8 files
+  ```
+* В задачи роли db [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) добавлена задача по изменению конфига монги
+* Шаблон конфига монги скопирован из [ansible/templates/mongod.conf.j2](ansible/templates/mongod.conf.j2) в [ansible/roles/db/templates/mongod.conf.j2](ansible/roles/db/templates/mongod.conf.j2)
+* Определён хэндлер [ansible/roles/db/handlers/main.yml](ansible/roles/db/handlers/main.yml), перезапускающий mongod
+* В [ansible/roles/db/defaults/main.yml](ansible/roles/db/defaults/main.yml) определены значения переменных по умолчанию
+
+#### Роль app
+* Создана пустая роль `app` с помощью ansible-galaxy
+  ```shell
+  cd ansible/roles
+  ansible-galaxy init app
+  ```
+* В задачи роли db [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) добавлены задачи из [ansible/app.yml](ansible/app.yml)
+* Шаблон с переменными окружения для запускаемого приложения скопирован из [ansible/templates/db_config.j2](ansible/templates/db_config.j2) в [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2)
+* Фаил systemd unit-а скопирован из [ansible/files/puma.service](ansible/files/puma.service) в [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service)
+* В [ansible/roles/app/handlers/main.yml](ansible/roles/app/handlers/main.yml) определён хендлер, перезапускающий сервис `puma`
+* В [ansible/roles/app/defaults/main.yml](ansible/roles/app/defaults/main.yml) определена переменная по умолчанию с адресом MongoDB
+
+#### Плейбуки для app и db
+
+* Плейбук [ansible/app.yml](ansible/app.yml) модифицирован на использования роли [ansible/roles/app](ansible/roles/app)
+* Плейбук [ansible/db.yml](ansible/db.yml) модифицирован на использования роли [ansible/roles/db](ansible/roles/db)
+* Выполнена проверка работоспособности изменённых ролей
+  ```shell
+  make terraform_stage_destroy terraform_stage_apply
+  make ansible_site_check ansible_site_apply
+  ```
+
+#### Окружения
+
+* Созданы директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) для соответствующих окружений
+* Inventory-файл [ansible/inventory](ansible/inventory) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
+* Inventory-файл динамического инвентаря [ansible/inventory.gcp.yml](ansible/inventory.gcp.yml) скопирован в директории [ansible/environments/stage](ansible/environments/stage) и [ansible/environments/prod](ansible/environments/prod) и удалён
+* **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/stage/inventory.gcp.yml](ansible/environments/stage/inventory.gcp.yml) добавлено значение соответствующего окружения
+  ```yaml
+  compose:
+    env: stage
+  ```
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `gcp_stage`
+  ```yaml
+  groups:
+    gcp_stage: yes
+  ```
+* **НЕ РАБОТАЕТ** В конфигурационный файл динамического инвентаря [ansible/environments/prod/inventory.gcp.yml](ansible/environments/prod/inventory.gcp.yml) добавлено значение соответствующего окружения
+  ```yaml
+  compose:
+    env: prod
+  ```
+* Предыдущее действие отменено, для указания окружения, все хосты помещены в группу `gcp_prod`
+  ```yaml
+  groups:
+    gcp_prod: yes
+  ```
+* В [ansible/ansible.cfg](ansible/ansible.cfg) прописан по умолчанию inventory для stage-окружения
+* Изменён [Makefile](Makefile) с набором целей для часто используемых операций. 
+  * Добавлена переменная `ENV` для задания окружения. Окружение по умолчанию: `stage`.
+  * Добавлена переменная `INV` для задания файла инвентаря. Значение по умолчанию: `inventory.gcp.yml`.
+  * В секцию `[inventory]` конфигурационного файла [ansible/ansible.cfg](ansible/ansible.cfg) добавлена поддержка инвентаря в `ini` формате
+  ```
+  [inventory]
+  enable_plugins = gcp_compute, ini
+  ```
+  * Для запуска цели в prod окружении с использованием статического инвентаря, необходимо выполнить
+  ```shell
+  make <target> ENV=prod INV=inventory
+  ```
+* Добавлены `group_vars` для `stage`-окружения
+  * [ansible/environments/stage/group_vars/app](ansible/environments/stage/group_vars/app) для группы `app`
+  * [ansible/environments/stage/group_vars/db](ansible/environments/stage/group_vars/db) для группы `db`
+  * [ansible/environments/stage/group_vars/all](ansible/environments/stage/group_vars/all) для всех групп
+* Добавлены `group_vars` для `prod`-окружения
+  * [ansible/environments/prod/group_vars/app](ansible/environments/prod/group_vars/app) для группы `app`
+  * [ansible/environments/prod/group_vars/db](ansible/environments/prod/group_vars/db) для группы `db`
+  * [ansible/environments/prod/group_vars/all](ansible/environments/prod/group_vars/all) для всех групп
+* Добавлены значения по умолчанию для переменной `env: local` в каждом из окружений
+* В роли [ansible/roles/app](ansible/roles/app) и [ansible/roles/db](ansible/roles/db) добавлена задача, отображающая текущее значение переменной `env`
+  ```yaml
+  - name: Show info about the env this host belongs to
+    debug:
+      msg: "This host is in {{ env }} environment!!!"
+  ```
+* В роли [ansible/roles/app](ansible/roles/app) и [ansible/roles/db](ansible/roles/db) добавлена задача, отображающая текущие группы хоста
+  ```yaml
+  - name: Show info about groups this host belongs to
+    debug:
+      msg: "This host is in groups: {{ group_names | join(', ') }}."
+  ```
+* Выполнена реорганизация файлов и каталогов: <details><summary>подробнее</summary>
+  ```
+  ansible
+  ├── ansible.cfg
+  ├── environments
+  │   ├── prod
+  │   │   ├── group_vars
+  │   │   │   ├── all
+  │   │   │   ├── app
+  │   │   │   └── db
+  │   │   ├── inventory
+  │   │   └── inventory.gcp.yml
+  │   └── stage
+  │       ├── group_vars
+  │       │   ├── all
+  │       │   ├── app
+  │       │   └── db
+  │       ├── inventory
+  │       └── inventory.gcp.yml
+  ├── old
+  │   ├── files
+  │   │   └── puma.service
+  │   ├── inventory.json
+  │   ├── inventory.yml
+  │   ├── json2inv.py
+  │   └── templates
+  │       ├── db_config.j2
+  │       └── mongod.conf.j2
+  ├── playbooks
+  │   ├── app.yml
+  │   ├── clone.yml
+  │   ├── db.yml
+  │   ├── deploy.yml
+  │   ├── packer_app.yml
+  │   ├── packer_db.yml
+  │   ├── reddit_app_multiple_plays.yml
+  │   ├── reddit_app_one_play.yml
+  │   └── site.yml
+  ├── requirements.txt
+  └── roles
+      ├── app
+      │   ├── defaults
+      │   │   └── main.yml
+      │   ├── files
+      │   │   └── puma.service
+      │   ├── handlers
+      │   │   └── main.yml
+      │   ├── meta
+      │   │   └── main.yml
+      │   ├── README.md
+      │   ├── tasks
+      │   │   └── main.yml
+      │   ├── templates
+      │   │   └── db_config.j2
+      │   ├── tests
+      │   │   ├── inventory
+      │   │   └── test.yml
+      │   └── vars
+      │       └── main.yml
+      └── db
+          ├── defaults
+          │   └── main.yml
+          ├── files
+          ├── handlers
+          │   └── main.yml
+          ├── meta
+          │   └── main.yml
+          ├── README.md
+          ├── tasks
+          │   └── main.yml
+          ├── templates
+          │   └── mongod.conf.j2
+          ├── tests
+          │   ├── inventory
+          │   └── test.yml
+          └── vars
+              └── main.yml
+
+  28 directories, 46 files
+  ```
+  <details>
+* Улучшен конфиг [ansible/ansible.cfg](ansible/ansible.cfg)
+  * Явно указан путь к ролям
+    ```ini
+    roles_path = ./roles
+    ```
+  * Включен обязательный вывод diff при наличии изменений и вывод 5 строк контекста
+    ```ini
+    [diff]
+    always = True
+    context = 5
+    ```
+  * Добавлены комментарии
+
+#### Проверка
+* Уничтожено окружение `stage`
+  ```shell
+  make ENV=stage terraform_destroy
+  ```
+* Создано окружение `prod`
+  ```shell
+  make ENV=prod terraform_apply
+  ```
+* Развёрнут сайт
+  ```shell
+  make ENV=prod ansible_site_apply
+  ```
+* Проверена работоспособность (в браузере открыт url)
+  ```shell
+  make terraform_url ENV=prod
+  ```
+* Без уничтожения prod-окружения, создано `stage` окружение
+  ```shell
+  make ENV=stage terraform_apply
+  make ENV=stage ansible_site_apply
+  make ENV=stage terraform_url
+  ```
+* При проверкe `stage` окружения, возникла ошибка подключения к БД. Причиной оказалась **ошибка** при назначении переменной
+  ```
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  ```
+  берётся ip-адрес первого хоста в группе `db`, который принадлежит другому окружению и имеет другой ip
+  TODO: продумать решение данной проблемы!
+* Уничтожена инфраструктура окружения `prod`
+  ```shell
+  make ENV=prod terraform_destroy
+  ```
+* Повторно развёрнут сайт на `stage`-окружении
+  ```shell
+  make ENV=stage ansible_site_apply
+  ```
+* При тестировании снова возникла ошибка доступа к БД. В [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) в задачу `Add config for DB connection` добавлено уведомление хендлера, перезапускающего сервис puma: `notify: reload puma`, после чего сервис был вручную перезапущен из консоли
+  ```shell
+  cd ./ansible && ../.venv/bin/ansible -i environments/stage/inventory.gcp.yml app --become -m systemd -a "name=puma state=restarted"
+  ```
+
+#### Работа с Community-ролями
+
+* Создан файл с зависимостями для `prod` [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) и `stage` [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) окружений, содержащий модуль `jdauphant.nginx`
+  ```yaml
+  - src: jdauphant.nginx
+    version: v2.21.1
+  ```
+* Создана цель в [Makefile](Makefile)
+  ```shell
+  ansible_install_requirements:
+  	cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/${ENV}/requirements.yml
+  ```
+* Установлена роль `jdauphant.nginx` с `ansible-galaxy`
+  ```shell
+  make ansible_install_requirements
+  ```
+* Конфигурация для роли добавлена в переменные группы `app` обоих окружений
+  ```yaml
+  nginx_sites:
+  default:
+    - listen 80
+    - server_name "reddit"
+    - location / {
+      proxy_pass http://127.0.0.1:9292;
+      }
+  ```
+* В [terraform/modules/app/main.tf](terraform/modules/app/main.tf) добавлено правило фаервола `modules.app.google_compute_firewall.firewall_http` для пропуска трафика на 80 порт хостов с меткой `reddit-app`
+* В плейбук [ansible/playbooks/app.yml](ansible/playbooks/app.yml) добавлен вызов роли `jdauphant.nginx`
+* В плейбук [ansible/playbooks/deploy.yml](ansible/playbooks/deploy.yml) добавлен вывод url сайта (порт по умолчанию, `80`)
+* Инфраструктура `stage` создана, плейбук `site.yml` выполнен, работоспособность сайта проверена
+  ```shell
+  make terraform_apply ansible_site_apply
+  ```
+
+#### Ansible vault
+
+* Создан файл с ключём вне репозирория. Данный файл прописан в [ansible/ansible.cfg](ansible/ansible.cfg)
+  ```ini
+  vault_password_file = ~/path/to/vault.key
+  ```
+* Создан плейбук [ansible/playbooks/users.yml](ansible/playbooks/users.yml), добавляющий пользователей в систему
+* Созданы файлы с credentials для stage и prod окружений
+  * [ansible/environments/stage/credentials.yml](ansible/environments/stage/credentials.yml)
+  * [ansible/environments/prod/credentials.yml](ansible/environments/prod/credentials.yml
+* Файлы с credentials зашифрованы
+  ```shell
+  cd ansible
+  ansible-vault encrypt environments/stage/credentials.yml
+  ansible-vault encrypt environments/prod/credentials.yml
+  ```
+* Вызов плейбука `users.yml` добавлен в основной плейбук [ansible/playbooks/site.yml](ansible/playbooks/site.yml)
+* Проверена работоспособность `make terraform_apply ansible_site_apply`
+* После включения авторизации в ssh с использованием пароля (а не только ключа), удалось успешно подключиться пользователем `admin`
+
+### Задание со \*: Использование динамического инвернтаря
+
+Уже реальзовано на стадии создания окружений
+
+### Задание с \*\*: Настройка TravisCI
+
+#### Подготовка
+
+* Исправлены пути к провиженерам в
+  * [packer/ubuntu16.json](packer/ubuntu16.json)
+  * [packer/immutable.json](packer/immutable.json)
+* В [Makefile](Makefile) добавлена цель `terraform_validate`, выполняющая `terraform validate` в директориях
+  * [terraform/](terraform/)
+  * [terraform/](terraform/stage)
+  * [terraform/](terraform/prod)
+* В [Makefile](Makefile) добавлена цель `install_terraform`, выполняющая установку `terraform`
+* В [Makefile](Makefile) добавлена цель `install_tflint`, выполняющая установку `tflint`
+* В [Makefile](Makefile) добавлена цель `terraform_tflint`, выполняющая проверку средствами `tflint` следующих директорий
+  * [terraform/](terraform/)
+  * [terraform/stage](terraform/stage)
+  * [terraform/prod](terraform/prod)
+* Создан конфигурационный файл [terraform/.tflint.hcl](terraform/.tflint.hcl) с описанием конфига `tflint`. Ссылка на [документацию](https://github.com/wata727/tflint/blob/master/docs/guides/config.md)
+* В [Makefile](Makefile) добавлена цель `ansible_lint`, выполняющая проверку всех [ansible-плейбуков](ansible/playbooks) средствами `ansible-lint`
+* В [ansible/requirements.txt](ansible/requirements.txt) добавлена зависимость `ansible-lint==4.1.0`
+* Исправлены предупреждения линтера:
+  * В [ansible/.ansible-lint](ansible/.ansible-lint) добавлено исключение директории [ansible/roles_imported/](ansible/roles_imported/) из проверки линтером
+  * Заполнена мета-информация ролей
+    * [ansible/roles/app/meta/main.yml](ansible/roles/app/meta/main.yml)
+    * [ansible/roles/ви/meta/main.yml](ansible/roles/ви/meta/main.yml)
+  * Добавлена версия git-репозитория в [ansible/playbooks/clone.yml](ansible/playbooks/clone.yml)
+* В [Makefile](Makefile) добавлена цель `ansible_syntax`, выполняющая проверку синтаксиса всех [ansible-плейбуков](ansible/playbooks)
+* Настроен [trytravis](https://github.com/sethmlarson/trytravis) в соответствии с [инструкцией](https://medium.com/@Nklya/локальное-тестирование-в-travisci-2b5ef9adb16e)
+* Исправлен путь к ролям в [ansible/ansible.cfg](ansible/ansible.cfg) с  целью прохождения travis-ci тестов. С `roles_path = ./roles_imported:./roles` на `roles_path = ./roles`
+* С той же целью изменён [.gitignore](.gitignore)
+* В [Makefile](Makefile) добавлены две цели
+  ```
+  install: install_packer install_terraform install_tflint install_ansible
+  validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint
+  ```
+* Доработан [Makefile](Makefile). Пути к исполняемым файлам `packer`, `terraform`, `tflint`, `ansible` теперь можно задать через переменные окружения
+* В [Makefile](Makefile) добавлена цель `terraform_init_nobackend` для инициализации terraform без использования remote backends. Необходимо для статической валидации средствами `terraform validate`
+* В [Makefile](Makefile) добавлена цель `install_ansible_virtualenv` для установки ansible в virtualenv-окружение с использованием пакета `virtualenv`
+* В [Makefile](Makefile) добавлено отображение версий используемых программ при вызове линтеров
+* В [Makefile](Makefile) для `ansible_syntax` явно указан inventory-файл [ansible/environments/stage/inventory](ansible/environments/stage/inventory) чтобы избежать предурпеждений во время проверки синтаксиса
+
+#### Trytravis
+
+* В [README.md](README.md) добавлен статус билда, как описано в [документации](https://docs.travis-ci.com/user/status-images)
+* Создан пустой репозиторий [trytravis-otus](https://github.com/vscoder/trytravis-otus), содержащий только `README.md`. Имя репозитория должно содержать `trytravis`
+* В [https://travis-ci.org](https://travis-ci.org) (обязательно **.org**) выполнен вход по учётке github
+* Добавлен созданный репозиторий
+* Для настройки trytravis на локальном хосте выполнена команда `trytravis --repo ssh://git@github.com/vscoder/trytravis-otus.git`, указывающая использовать данный репозиторий для тестирования
+* Для запуска тестирования, необходимо перейти в директорию тестируемого репозитория и запустить `trytravis`
+  ```shell
+  cd vscoder-infra
+  trytravis
+  ```
+
+#### Реализация
+
+* В [.travis.yml](.travis.yml) реализована валидация кода packer и terraform. А именно
+  * Добавлена секция `install` с установкой необходимых бинарников
+    ```yaml
+    install:
+      - make install_packer install_terraform install_tflint
+    ```
+  * Добавлена секция `before_script` с действиями, подготавливающими код к валидации
+    ```yaml
+    before_script:
+      # Создание файлов-заглушек с переменными
+      - cp packer/variables.json.example packer/variables.json
+      - cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+      - cp terraform/stage/terraform.tfvars.example terraform/stage/terraform.tfvars
+      - cp terraform/prod/terraform.tfvars.example terraform/prod/terraform.tfvars
+      # Инициализация terraform для директории terraform/, а так же для stage и prod окружений
+      - make terraform_init_nobackend ENV=""
+      - make terraform_init_nobackend ENV="stage"
+      - make terraform_init_nobackend ENV="prod"
+    ```
+  * Добавлена секция `script`, в которой выполняется валидация
+    ```yaml
+    script:
+      - make packer_validate terraform_validate terraform_tflint
+    ```
+* Создан скрипт-обёртка [packer/scripts/ansible-playbook.sh](packer/scripts/ansible-playbook.sh) для запуска packer-ом провиженера типа ansible
+  В шаблонах packer-а [packer/app.json](packer/app.json) и [packer/db.json](packer/db.json) в провиженер типа ansible добавлен параметр `command`, указывающий на созданный скрипт. Теперь провиженеры выглядят так (пример для [db.json](packer/db.json))
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_db.yml"
+    }
+  ]
+  ```
+* В [.travis.yml](.travis.yml) для ansible-плейбуков добавлена проверка синтаксиса и запуск `ansible-lint`
+  ```yaml
+  script:
+    # ...
+    - make ansible_syntax ansible_lint
+  ```
+
+# Makefile
+
+## Переменные
+
+### Общие
+`BIN_DIR` директория с исполняемыми файлами (или директория для распаковки исполняемых файлов) packer, terraform, tflint. По умолчанию `~/bin`
+`TEMP_DIR` временная директория для загрузки packer, terraform, tflint. По умолчанию `/tmp`
+`ENV` окружение, stage или prod. По умолчанию `stage`
+`INV` имя inventory-файла ansible в директории соответствующего окружения
+
+### Packer
+`PACKER_VERSION` версия packer. По умолчанию `1.4.4`
+`PACKER` путь к исполняемому файлу packer. По умолчанию `${BIN_DIR}/packer`
+
+### Terraform
+`TERRAFORM_VERSION` версия terraform. По умолчанию `0.12.12`
+`TERRAFORM` путь к исполняемому файлу terraform. По умолчанию `${BIN_DIR}/terraform`
+
+### Tflint
+`TFLINT_VERSION` версия tflint. По умолчанию `0.12.1`
+`TFLINT` путь к исполняемому файлу tflint. По умолчанию `${BIN_DIR}/tflint`
+
+### Ansible
+`ANSIBLE` путь к исполняемому файлу ansible относительно директории `./ansible`. По умолчанию `../.venv/bin/ansible`. Для использования system-wide ansible, необходимо присвоить `ANSIBLE=ansible`
+
+## Цели
+
+`debug` вывод на экран значений переменных
+
+### Устанока зависимостей
+`install_packer` скачать и распакова исполняемый файл `packer` в директорию `~/bin/`
+`install_ansible_virtualenv` установить ansible с зависимостями в виртуальное окружение python с использованием `virtualenv`. Подходит для старых дистрибутивов с python2 (протестировано на ubuntu-14.04)
+`install_ansible_venv` установить ansible с зависимостями в виртуальное окружение python с использованием `python3 -m venv`. Подходит для современных дистрибутивов с python3.5+ (протестировано на ubuntu-18.04)
+`install_terraform` скачать и распакова исполняемый файл `terraform` в директорию `~/bin/`
+`install_tflint` скачать и распакова исполняемый файл `tflint` в директорию `~/bin/`
+
+### Packer
+`packer_build_db` собрать packer-образ reddit-db-base
+`packer_build_app` собрать packer-образ reddit-app-base
+`packer_validate` выполнить валидацию шаблонов packer
+
+### Terraform
+`terraform_init ENV=<stage|prod>` выполнить terraform init
+`terraform_init_nobackend ENV=<stage|prod>` выполнить terraform init без проверки remote backends (для последующей валидации кода)
+`terraform_apply ENV=<stage|prod>` выполнить terraform apply
+`terraform_destroy ENV=<stage|prod>` выполнить terraform destroy
+`terraform_url ENV=<stage|prod>` показать url приложения
+
+### Ansible
+`ansible_inventory_list ENV=<stage|prod>` вывести текущий inventory в json
+`ansible_install_requirements ENV=<stage|prod>` установить внешние роли из `environments/${ENV}/requirements.yml`
+`ansible_lint` выполнить `ansible-lint` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
+`ansible_site_check` выполнить `ansible-playbook --syntax-check` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
+`ansible_site_check ENV=<stage|prod>` проверить (`--check`) плейбук [site.yml](ansible/playbooks/site.yml)
+`ansible_site_apply ENV=<stage|prod>` выполнить плейбук [site.yml](ansible/playbooks/site.yml)
+
+### Aliases
+`install`: `install_packer install_terraform install_tflint install_ansible_venv`
+`validate`: `packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint`
+`build`: `packer_build_db packer_build_app`
+`infra`: `terraform_init terraform_apply`
+`site`: `ansible_site_check ansible_site_apply`

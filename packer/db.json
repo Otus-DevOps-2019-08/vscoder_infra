@@ -31,7 +31,8 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "ansible/packer_db.yml"
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_db.yml"
     }
   ]
 }

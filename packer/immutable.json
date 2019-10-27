@@ -28,7 +28,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "scripts/deploy.sh",
+      "script": "packer/scripts/deploy.sh",
       "execute_command": "sudo {{.Path}}"
     }
   ]

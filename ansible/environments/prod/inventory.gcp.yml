@@ -2,7 +2,7 @@ plugin: gcp_compute
 projects:
   - infra-253214
 auth_kind: serviceaccount
-service_account_file: ~/.gce/infra-253214-ansible-1319bf6f5839.json
+service_account_file: ~/.gce/infra-253214-ansible.json
 hostnames:
   # List host by name instead of the default public ip
   - name
@@ -15,3 +15,5 @@ keyed_groups:
   - prefix: ""
     separator: ""
     key: labels['group']
+groups:
+  gcp_prod: yes
