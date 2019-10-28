@@ -1880,6 +1880,43 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 ### Переключение сбора образов пакером на использование ролей
 
+* Документация по конфигурированию ansible через переменные среды [https://docs.ansible.com/ansible/latest/reference_appendices/config.html](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+* При импорте задачь в [/mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/db/tasks/main.yml](/mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/db/tasks/main.yml) добавлены соответствующие теги
+  ```yaml
+  - import_tasks: install_mongodb.yml
+    tags:
+      - db_install_mongodb
+
+  - import_tasks: config_mongodb.yml
+    tags:
+      - db_configure_mongodb
+  ```
+* В [плейбуке](ansible/playbooks/packer_db.yml), используемом при провижениенге пакер-образа db, использована роль вместо списка задач
+  ```yaml
+  ...
+  roles:
+    - db
+  ```
+* В шаблоне пакер-образа [packer/db.json](packer/db.json) в секцию `provisioners` добавлено 2 параметра:
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_db.yml",
+      "ansible_env_vars": [
+        "ANSIBLE_ROLES_PATH=./ansible/roles"
+      ],
+      "extra_arguments": [
+        "--tags",
+        "db_install_mongodb"
+      ]
+    }
+  ]
+  ```
+  * `ansible_env_vars` указан путь к ролям **относительно корня репозитория**
+  * `extra_arguments` плейбуку передаётся агрумент `--tags` с указание обязательных тегов, которые должны присутствовать на задачах
+
 ### Задание со \*: Подключение Travis CI для автоматического прогона тестов
 
 
