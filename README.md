@@ -1869,6 +1869,15 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Проверка выполнения роли [ansible/roles/db/molecule/default/playbook.yml](ansible/roles/db/molecule/default/playbook.yml) `cd ansible/roles/db && molecule converge`
 * Прогон тестов из [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) `cd ansible/roles/db && molecule verify`
 
+* Докупентация по [testinfra](https://testinfra.readthedocs.io/en/latest/modules.html)
+* В тесты [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) добавлена проверка, что MongoDB слушает на порту 27017
+  ```python
+  # check mongod is listening on 0.0.0.0:27017
+  def test_mongo_socket(host):
+      socket = host.socket("tcp://0.0.0.0:27017")
+      assert socket.is_listening
+  ```
+
 ### Переключение сбора образов пакером на использование ролей
 
 ### Задание со \*: Подключение Travis CI для автоматического прогона тестов
