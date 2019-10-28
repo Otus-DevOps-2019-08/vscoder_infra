@@ -1,3 +1,7 @@
 ---
+packages:
+  - ruby-full
+  - ruby-bundler
+  - build-essential
 db_host: 127.0.0.1
 env: local
