@@ -1830,6 +1830,14 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
+* В [ansible/requirements.txt](ansible/requirements.txt) добавлены зависимости от:
+  ```
+  ...
+  molecule>=2.6
+  testinfra>=1.10
+  python-vagrant>=0.5.15
+  ```
+
 ### Переключение сбора образов пакером на использование ролей
 
 ### Задание со \*: Подключение Travis CI для автоматического прогона тестов
