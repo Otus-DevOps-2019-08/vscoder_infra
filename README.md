@@ -1736,6 +1736,12 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * Запущен провиженер `vagrant provision dbserver`
 * Возникла ошибка:
+  ```
+  fatal: [dbserver]: FAILED! => {"changed": false, "msg": "Could not find the requested service mongod: host"}
+  ```
+  Причина -- роль [ansible/roles/db](ansible/roles/db) писалась с учётом базового packer-образа с уже установленной MongoDB
+* В роль [ansible/roles/db](ansible/roles/db) добавлены задачи по установке MongoDB
+* Провиженинг завершён успешно
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
