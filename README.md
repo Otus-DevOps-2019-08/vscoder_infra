@@ -1772,6 +1772,20 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * В шаблоне [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
   * В [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
 * Так же захаржкоженный `appuser` заменён на `{{ deploy_user }}` в [ansible/playbooks/deploy.yml](ansible/playbooks/deploy.yml)
+* В [ansible/Vagrantfile](ansible/Vagrantfile) добавлено переопределение переменных дл япровиженера
+  ```ruby
+  config.vm.define "appserver" do |app|
+    ...
+
+    app.vm.provision "ansible" do |ansible|
+      ...
+      ansible.extra_vars = {
+        "deploy_user" => "ubuntu"
+      }
+    end
+  end
+  ```
+* Запущен провиженер `vagrant provision appserver`. Прошёл успешно
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
