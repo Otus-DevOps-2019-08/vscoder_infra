@@ -1787,6 +1787,15 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * Запущен провиженер `vagrant provision appserver`. Прошёл успешно
 
+* Проверена работа приложения [http://10.10.10.20:9292/](http://10.10.10.20:9292/). Успешно.
+* Конфигурация пересоздана, перепроверена и удалена
+  ```shell
+  vagrant destroy -f
+  vagrant up
+  #open in browser http://10.10.10.20:9292/
+  vagrant destroy -f
+  ```
+
 ### Тестирование ролей при помощи Molecule и Testinfra
 
 ### Переключение сбора образов пакером на использование ролей
