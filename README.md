@@ -1837,6 +1837,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   testinfra>=1.10
   python-vagrant>=0.5.15
   ```
+* Зависимости установлены `make install_ansible_venv`
+* Создание заготовки тестов `cd ansible/roles/db && molecule init scenario --scenario-name default --role-name db --driver-name vagrant`
 
 ### Переключение сбора образов пакером на использование ролей
 
