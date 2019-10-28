@@ -138,6 +138,10 @@ ansible_site_apply:
 	${ANSIBLE}-playbook -i environments/${ENV}/${INV} --diff playbooks/site.yml
 
 
+vagrant_up:
+	cd ./ansible && vagrant up
+
+
 install: install_packer install_terraform install_tflint install_ansible_venv
 
 validate: packer_validate terraform_validate terraform_tflint ansible_syntax ansible_lint

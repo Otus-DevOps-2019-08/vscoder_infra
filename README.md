@@ -73,6 +73,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     - [Packer](#packer-1)
     - [Terraform](#terraform-1)
     - [Ansible](#ansible-1)
+    - [Vagrant](#vagrant)
     - [Aliases](#aliases)
 
 # Домашние задания
@@ -1577,7 +1578,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 #### Установка Vagrant
 
 * Установлен VirtualBox 6.0.14
-* Установлен Vagrant `Vagrant 2.0.2`
+* Установлен Vagrant `Vagrant 2.2.6`
 
 * В [.gitignore](.gitignore) добавлены относящиеся к vagrant и molecule временные файлы
   ```
@@ -1593,6 +1594,128 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 
 * Добавлен [ansible/Vagrantfile](ansible/Vagrantfile) с описанием terraform-инфраструктуры в vagrant (2 ВМ, db и app)
+* Установлен VirtualBox
+* Выполнен `vagrant up`
+  <details><summary>CLICK ME</summary>
+  <p>
+
+  ```
+  Bringing machine 'dbserver' up with 'virtualbox' provider...
+  Bringing machine 'appserver' up with 'virtualbox' provider...
+  ==> dbserver: Box 'ubuntu/xenial64' could not be found. Attempting to find and install...
+      dbserver: Box Provider: virtualbox
+      dbserver: Box Version: >= 0
+  ==> dbserver: Loading metadata for box 'ubuntu/xenial64'
+      dbserver: URL: https://vagrantcloud.com/ubuntu/xenial64
+  ==> dbserver: Adding box 'ubuntu/xenial64' (v20191024.0.0) for provider: virtualbox
+      dbserver: Downloading: https://vagrantcloud.com/ubuntu/boxes/xenial64/versions/20191024.0.0/providers/virtualbox.box
+      dbserver: Download redirected to host: cloud-images.ubuntu.com
+  ==> dbserver: Successfully added box 'ubuntu/xenial64' (v20191024.0.0) for 'virtualbox'!
+  ==> dbserver: Importing base box 'ubuntu/xenial64'...
+  ==> dbserver: Matching MAC address for NAT networking...
+  ==> dbserver: Checking if box 'ubuntu/xenial64' version '20191024.0.0' is up to date...
+  ==> dbserver: Setting the name of the VM: ansible_dbserver_1572247326926_10235
+  Vagrant is currently configured to create VirtualBox synced folders with
+  the `SharedFoldersEnableSymlinksCreate` option enabled. If the Vagrant                                                                                                           
+  guest is not trusted, you may want to disable this option. For more                                                                                                              
+  information on this option, please refer to the VirtualBox manual:                                                                                                               
+
+    https://www.virtualbox.org/manual/ch04.html#sharedfolders                                                                                                                      
+
+  This option can be disabled globally with an environment variable:                                                                                                               
+
+    VAGRANT_DISABLE_VBOXSYMLINKCREATE=1                                                                                                                                            
+
+  or on a per folder basis within the Vagrantfile:                                                                                                                                 
+
+    config.vm.synced_folder '/host/path', '/guest/path', SharedFoldersEnableSymlinksCreate: false                                                                                  
+  ==> dbserver: Clearing any previously set network interfaces...
+  ==> dbserver: Preparing network interfaces based on configuration...
+      dbserver: Adapter 1: nat
+      dbserver: Adapter 2: hostonly
+  ==> dbserver: Forwarding ports...
+      dbserver: 22 (guest) => 2222 (host) (adapter 1)
+  ==> dbserver: Running 'pre-boot' VM customizations...
+  ==> dbserver: Booting VM...
+  ==> dbserver: Waiting for machine to boot. This may take a few minutes...
+      dbserver: SSH address: 127.0.0.1:2222
+      dbserver: SSH username: vagrant
+      dbserver: SSH auth method: private key
+      dbserver: 
+      dbserver: Vagrant insecure key detected. Vagrant will automatically replace
+      dbserver: this with a newly generated keypair for better security.
+      dbserver: 
+      dbserver: Inserting generated public key within guest...
+      dbserver: Removing insecure key from the guest if it's present...
+      dbserver: Key inserted! Disconnecting and reconnecting using new SSH key...
+  ==> dbserver: Machine booted and ready!
+  ==> dbserver: Checking for guest additions in VM...
+      dbserver: The guest additions on this VM do not match the installed version of
+      dbserver: VirtualBox! In most cases this is fine, but in rare cases it can
+      dbserver: prevent things such as shared folders from working properly. If you see
+      dbserver: shared folder errors, please make sure the guest additions within the
+      dbserver: virtual machine match the version of VirtualBox you have installed on
+      dbserver: your host and reload your VM.
+      dbserver: 
+      dbserver: Guest Additions Version: 5.1.38
+      dbserver: VirtualBox Version: 6.0
+  ==> dbserver: Setting hostname...
+  ==> dbserver: Configuring and enabling network interfaces...
+  ==> dbserver: Mounting shared folders...
+      dbserver: /vagrant => /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible
+  ==> appserver: Box 'ubuntu/xenial64' could not be found. Attempting to find and install...
+      appserver: Box Provider: virtualbox
+      appserver: Box Version: >= 0
+  ==> appserver: Loading metadata for box 'ubuntu/xenial64'
+      appserver: URL: https://vagrantcloud.com/ubuntu/xenial64
+  ==> appserver: Adding box 'ubuntu/xenial64' (v20191024.0.0) for provider: virtualbox
+  ==> appserver: Importing base box 'ubuntu/xenial64'...
+  ==> appserver: Matching MAC address for NAT networking...
+  ==> appserver: Checking if box 'ubuntu/xenial64' version '20191024.0.0' is up to date...
+  ==> appserver: Setting the name of the VM: ansible_appserver_1572247362999_16688
+  ==> appserver: Fixed port collision for 22 => 2222. Now on port 2200.
+  ==> appserver: Clearing any previously set network interfaces...
+  ==> appserver: Preparing network interfaces based on configuration...
+      appserver: Adapter 1: nat
+      appserver: Adapter 2: hostonly
+  ==> appserver: Forwarding ports...
+      appserver: 22 (guest) => 2200 (host) (adapter 1)
+  ==> appserver: Running 'pre-boot' VM customizations...
+  ==> appserver: Booting VM...
+  ==> appserver: Waiting for machine to boot. This may take a few minutes...
+      appserver: SSH address: 127.0.0.1:2200
+      appserver: SSH username: vagrant
+      appserver: SSH auth method: private key
+      appserver: 
+      appserver: Vagrant insecure key detected. Vagrant will automatically replace
+      appserver: this with a newly generated keypair for better security.
+      appserver: 
+      appserver: Inserting generated public key within guest...
+      appserver: Removing insecure key from the guest if it's present...
+      appserver: Key inserted! Disconnecting and reconnecting using new SSH key...
+  ==> appserver: Machine booted and ready!
+  ==> appserver: Checking for guest additions in VM...
+      appserver: The guest additions on this VM do not match the installed version of
+      appserver: VirtualBox! In most cases this is fine, but in rare cases it can
+      appserver: prevent things such as shared folders from working properly. If you see
+      appserver: shared folder errors, please make sure the guest additions within the
+      appserver: virtual machine match the version of VirtualBox you have installed on
+      appserver: your host and reload your VM.
+      appserver: 
+      appserver: Guest Additions Version: 5.1.38
+      appserver: VirtualBox Version: 6.0
+  ==> appserver: Setting hostname...
+  ==> appserver: Configuring and enabling network interfaces...
+  ==> appserver: Mounting shared folders...
+      appserver: /vagrant => /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible
+  ```
+
+  </p>
+  </details>
+* Краткий список команд
+  * Проверка что бокс скачан `vagrant box list`
+  * Посмотреть список запущенных ВМ `vagrant status`
+  * Подключиться к ВП по ssh `vagrant ssh VMNAME`
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
@@ -1656,6 +1779,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 `ansible_site_check` выполнить `ansible-playbook --syntax-check` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
 `ansible_site_check ENV=<stage|prod>` проверить (`--check`) плейбук [site.yml](ansible/playbooks/site.yml)
 `ansible_site_apply ENV=<stage|prod>` выполнить плейбук [site.yml](ansible/playbooks/site.yml)
+
+### Vagrant
+`vagrant_up` поднять боксы вагрант из [ansible/Vagrantfile](ansible/Vagrantfile)
 
 ### Aliases
 `install`: `install_packer install_terraform install_tflint install_ansible_venv`
