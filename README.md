@@ -1853,6 +1853,21 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       assert config_file.contains('bindIp: 0.0.0.0')
       assert config_file.is_file
   ```
+* Создана ВМ для проверки роли `cd ansible/roles/db && molecule create`
+* Список созданных инстансов `cd ansible/roles/db && molecule list`
+* Подключиться к инстансу по ssh `cd ansible/roles/db && molecule login -h instance`
+
+* В molecule-плейбук [ansible/roles/db/molecule/default/playbook.yml](ansible/roles/db/molecule/default/playbook.yml) до бавлены `become` и переменные
+  ```yaml
+  ...
+  become: true
+  ...
+  vars:
+    mongo_bind_ip: 0.0.0.0
+  ...
+  ```
+* Проверка выполнения роли [ansible/roles/db/molecule/default/playbook.yml](ansible/roles/db/molecule/default/playbook.yml) `cd ansible/roles/db && molecule converge`
+* Прогон тестов из [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) `cd ansible/roles/db && molecule verify`
 
 ### Переключение сбора образов пакером на использование ролей
 
