@@ -1742,6 +1742,10 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   Причина -- роль [ansible/roles/db](ansible/roles/db) писалась с учётом базового packer-образа с уже установленной MongoDB
 * В роль [ansible/roles/db](ansible/roles/db) добавлены задачи по установке MongoDB
 * Провиженинг завершён успешно
+* Задачи роли [ansible/roles/db](ansible/roles/db) из [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) разнесены по файлам
+  * Задачи по установке MongoDB вынесены в [ansible/roles/db/tasks/install_mongodb.yml](ansible/roles/db/tasks/install_mongodb.yml)
+  * Задачи по настройке MongoDB вынесены в [ansible/roles/db/tasks/config_mongodb.yml](ansible/roles/db/tasks/config_mongodb.yml)
+* Для проверки, повторно выполнен провиженинг. Прошёл успешно 
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
