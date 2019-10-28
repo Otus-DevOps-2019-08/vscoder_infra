@@ -8,4 +8,9 @@
     msg: "This host is in groups: {{ group_names | join(', ') }}."
 
 - import_tasks: ruby.yml
+  tags:
+    - app_ruby
+
 - import_tasks: puma.yml
+  tags:
+    - app_puma

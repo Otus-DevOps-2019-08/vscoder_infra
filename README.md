@@ -65,6 +65,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
         - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-2)
     - [Тестирование ролей при помощи Molecule и Testinfra](#%d0%a2%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-molecule-%d0%b8-testinfra)
     - [Переключение сбора образов пакером на использование ролей](#%d0%9f%d0%b5%d1%80%d0%b5%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d1%81%d0%b1%d0%be%d1%80%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2-%d0%bf%d0%b0%d0%ba%d0%b5%d1%80%d0%be%d0%bc-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
+      - [Провиженинг в db.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-dbjson)
+      - [Провиженинг в app.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-appjson)
     - [Задание со \*: Подключение Travis CI для автоматического прогона тестов](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-travis-ci-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d0%be%d0%bd%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2)
 - [Makefile](#makefile)
   - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
@@ -1881,7 +1883,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 ### Переключение сбора образов пакером на использование ролей
 
 * Документация по конфигурированию ansible через переменные среды [https://docs.ansible.com/ansible/latest/reference_appendices/config.html](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
-* При импорте задачь в [/mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/db/tasks/main.yml](/mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/db/tasks/main.yml) добавлены соответствующие теги
+
+#### Провиженинг в db.json
+* При импорте задачь в [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) добавлены соответствующие теги
   ```yaml
   - import_tasks: install_mongodb.yml
     tags:
@@ -1910,6 +1914,43 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       "extra_arguments": [
         "--tags",
         "db_install_mongodb"
+      ]
+    }
+  ]
+  ```
+  * `ansible_env_vars` указан путь к ролям **относительно корня репозитория**
+  * `extra_arguments` плейбуку передаётся агрумент `--tags` с указание обязательных тегов, которые должны присутствовать на задачах
+
+#### Провиженинг в app.json
+* При импорте задачь в [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) добавлены соответствующие теги
+  ```yaml
+  - import_tasks: ruby.yml
+    tags:
+      - app_ruby
+
+  - import_tasks: puma.yml
+    tags:
+      - app_puma
+  ```
+* В [плейбуке](ansible/playbooks/packer_app.yml), используемом при провижениенге пакер-образа app, использована роль вместо списка задач
+  ```yaml
+  ...
+  roles:
+    - app
+  ```
+* В шаблоне пакер-образа [packer/app.json](packer/app.json) в секцию `provisioners` добавлено 2 параметра:
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_app.yml",
+      "ansible_env_vars": [
+        "ANSIBLE_ROLES_PATH=./ansible/roles"
+      ],
+      "extra_arguments": [
+        "--tags",
+        "app_ruby"
       ]
     }
   ]
