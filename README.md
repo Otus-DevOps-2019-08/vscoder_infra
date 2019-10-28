@@ -1751,6 +1751,21 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 * Задачи роли [ansible/roles/app](ansible/roles/app) из [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) разнесены по файлам
   * Задачи по установке MongoDB вынесены в [ansible/roles/app/tasks/ruby.yml](ansible/roles/app/tasks/ruby.yml)
   * Задачи по настройке MongoDB вынесены в [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml)
+* Добавлен провиженер в [ansible/Vagrantfile](ansible/Vagrantfile) ВМ `app`
+  ```ruby
+  db.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/site.yml"
+    ansible.groups = {
+    "db" => ["appserver"],
+    "app:vars" => { "db_host" => "10.10.10.10"}
+    }
+  end
+  ```
+* Запущен провиженер `vagrant provision appserver`. Возникла ошибка:
+  ```
+  TASK [app : Add config for DB connection] **************************************
+  fatal: [appserver]: FAILED! => {"changed": false, "checksum": "dfbe4b5cf3ec32d91d20045e2ee7f7b26c60ef34", "msg": "Destination directory /home/appuser does not exist"}
+  ```
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
