@@ -1839,6 +1839,20 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```
 * Зависимости установлены `make install_ansible_venv`
 * Создание заготовки тестов `cd ansible/roles/db && molecule init scenario --scenario-name default --role-name db --driver-name vagrant`
+* В [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) добавлены 2 теста
+  ```python
+  # check if MongoDB is enabled and running
+  def test_mongo_running_and_enabled(host):
+      mongo = host.service("mongod")
+      assert mongo.is_running
+      assert mongo.is_enabled
+
+  # check if configuration file contains the required line
+  def test_config_file(host):
+      config_file = host.file('/etc/mongod.conf')
+      assert config_file.contains('bindIp: 0.0.0.0')
+      assert config_file.is_file
+  ```
 
 ### Переключение сбора образов пакером на использование ролей
 
