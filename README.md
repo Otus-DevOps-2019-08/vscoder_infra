@@ -58,6 +58,8 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   - [HomeWork 11: Разработка и тестирование Ansible ролей и плейбуков](#homework-11-%d0%a0%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%b8-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-ansible-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%b8-%d0%bf%d0%bb%d0%b5%d0%b9%d0%b1%d1%83%d0%ba%d0%be%d0%b2)
     - [Локальная разработка при помощи Vagrant, доработка ролей для провижининга в Vagrant](#%d0%9b%d0%be%d0%ba%d0%b0%d0%bb%d1%8c%d0%bd%d0%b0%d1%8f-%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-vagrant-%d0%b4%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%b4%d0%bb%d1%8f-%d0%bf%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b8%d0%bd%d0%b8%d0%bd%d0%b3%d0%b0-%d0%b2-vagrant)
       - [Установка Vagrant](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%ba%d0%b0-vagrant)
+      - [Доработка ролей](#%d0%94%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
+        - [Provisioning](#provisioning)
     - [Тестирование ролей при помощи Molecule и Testinfra](#%d0%a2%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-molecule-%d0%b8-testinfra)
     - [Переключение сбора образов пакером на использование ролей](#%d0%9f%d0%b5%d1%80%d0%b5%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d1%81%d0%b1%d0%be%d1%80%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2-%d0%bf%d0%b0%d0%ba%d0%b5%d1%80%d0%be%d0%bc-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
     - [Задание со \*: Подключение Travis CI для автоматического прогона тестов](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-travis-ci-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d0%be%d0%bd%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2)
@@ -1716,6 +1718,24 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * Проверка что бокс скачан `vagrant box list`
   * Посмотреть список запущенных ВМ `vagrant status`
   * Подключиться к ВП по ssh `vagrant ssh VMNAME`
+  * Запустить провиженер `vagrant provision [VMNAME]`
+
+#### Доработка ролей
+
+##### Provisioning
+
+* Добавлен провиженер в [ansible/Vagrantfile](ansible/Vagrantfile) ВМ `db`
+  ```ruby
+  db.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/site.yml"
+    ansible.groups = {
+    "db" => ["dbserver"],
+    "db:vars" => {"mongo_bind_ip" => "0.0.0.0"}
+    }
+  end
+  ```
+* Запущен провиженер `vagrant provision dbserver`
+* Возникла ошибка:
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
