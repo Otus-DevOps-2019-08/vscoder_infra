@@ -1766,6 +1766,11 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   TASK [app : Add config for DB connection] **************************************
   fatal: [appserver]: FAILED! => {"changed": false, "checksum": "dfbe4b5cf3ec32d91d20045e2ee7f7b26c60ef34", "msg": "Destination directory /home/appuser does not exist"}
   ```
+* Для исправления ошибки, параметризована роль [ansible/roles/app](ansible/roles/app)
+  * В переменные по умолчанию [ansible/roles/app/defaults/main.yml](ansible/roles/app/defaults/main.yml) добавлен `deploy_user: appuser`
+  * [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service) перемещён в [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2)
+  * В шаблоне [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
+  * В [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
