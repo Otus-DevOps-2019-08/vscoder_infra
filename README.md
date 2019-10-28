@@ -60,6 +60,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Установка Vagrant](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%ba%d0%b0-vagrant)
       - [Доработка ролей](#%d0%94%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
         - [Provisioning](#provisioning)
+      - [Задание со \*: Прлксирование средствами nginx](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d1%80%d0%bb%d0%ba%d1%81%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-nginx)
+        - [Исследование](#%d0%98%d1%81%d1%81%d0%bb%d0%b5%d0%b4%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-1)
+        - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-2)
     - [Тестирование ролей при помощи Molecule и Testinfra](#%d0%a2%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-molecule-%d0%b8-testinfra)
     - [Переключение сбора образов пакером на использование ролей](#%d0%9f%d0%b5%d1%80%d0%b5%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d1%81%d0%b1%d0%be%d1%80%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2-%d0%bf%d0%b0%d0%ba%d0%b5%d1%80%d0%be%d0%bc-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
     - [Задание со \*: Подключение Travis CI для автоматического прогона тестов](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-travis-ci-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d0%be%d0%bd%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2)
@@ -1795,6 +1798,35 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   #open in browser http://10.10.10.20:9292/
   vagrant destroy -f
   ```
+
+#### Задание со \*: Прлксирование средствами nginx
+
+##### Исследование
+
+* Диагностика показала, что для nginx отсутствует конфиг, описанный в [ansible/environments/stage/group_vars/app](ansible/environments/stage/group_vars/app) в переменной `nginx_sites`
+* Причина: Vagrant, для прогона плейбуков, использует свой inventory `.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory`, в котором не учитываются значения переменных inventory из репозитория
+* Есть 2 варианта решения проблемы: 
+  * прописать переменные непосредственно в `Vagrantfile`
+  * указать путь к инвентори параметром `ansible.inventory_path`
+
+##### Реализация
+
+* Был выбран первый способ, как наиболее оптимальный по временным затратам
+  ```ruby
+  ansible.extra_vars = {
+    "deploy_user" => "ubuntu",
+    "nginx_sites" => {
+      "default" => [
+        "listen 80",
+        "server_name \"reddit\"",
+        "location / {
+          proxy_pass http://127.0.0.1:9292;
+        }"
+      ]
+    }
+  }
+  ```
+* Результат проверен. Сайт открывается по адресу [http://10.10.10.20](http://10.10.10.20)
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
