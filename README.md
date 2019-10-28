@@ -1771,6 +1771,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service) перемещён в [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2)
   * В шаблоне [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
   * В [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
+* Так же захаржкоженный `appuser` заменён на `{{ deploy_user }}` в [ansible/playbooks/deploy.yml](ansible/playbooks/deploy.yml)
 
 ### Тестирование ролей при помощи Molecule и Testinfra
 
