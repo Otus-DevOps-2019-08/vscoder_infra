@@ -2036,6 +2036,16 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   commit 8c47a5c4764dac915581fcc8363a30ab11309311
 * Развёртывание прошло успешно.
 
+* При попытке собрать packer-образ, возникла ошибка об отсутствии роли `db`
+  Исправил
+  ```yaml
+  - name: Configure MongoDB
+    hosts: all
+    become: true
+    roles:
+      - vscoder.db
+  ```
+
 
 # Makefile
 
