@@ -2022,7 +2022,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - vscoder.db
   ```
 * Выполнено пробное развёртывание stage-окружения
-  При попытке открыть сайт, возникла ошибка подключения к БДю
+  При попытке открыть сайт, возникла ошибка подключения к БД.
   Причина - изменение [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) в commit e8d9303b22b238f78b1ab40f2162ca9166545949
 * Содержимое [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) исправлено на
   ```jinja
