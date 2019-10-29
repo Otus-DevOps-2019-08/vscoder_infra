@@ -4,7 +4,7 @@
   vars:
     app_repo_url: https://github.com/express42/reddit.git
     app_version: monolith
-    app_dest: "/home/{{ deploy_user }}/reddit"
+    app_dest: "/home/{{ deploy_user | default('appuser') }}/reddit"
   tasks:
     - name: Fetch the latest version of application code
       git:

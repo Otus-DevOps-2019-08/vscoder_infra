@@ -68,6 +68,9 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Провиженинг в db.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-dbjson)
       - [Провиженинг в app.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-appjson)
     - [Задание со \*: Подключение Travis CI для автоматического прогона тестов](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-travis-ci-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d0%be%d0%bd%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2)
+      - [Вынесение роли в отдельный репозиторий](#%d0%92%d1%8b%d0%bd%d0%b5%d1%81%d0%b5%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b8-%d0%b2-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b9-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d0%b9)
+        - [Подготовка репозитория](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d1%8f)
+        - [Переход на использование внешней роли](#%d0%9f%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8)
 - [Makefile](#makefile)
   - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
     - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
@@ -1960,6 +1963,78 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   * `extra_arguments` плейбуку передаётся агрумент `--tags` с указание обязательных тегов, которые должны присутствовать на задачах
 
 ### Задание со \*: Подключение Travis CI для автоматического прогона тестов
+
+#### Вынесение роли в отдельный репозиторий
+##### Подготовка репозитория
+* Создан GitHub-репозиторий [ansible-role-db](https://github.com/vscoder/ansible-role-db)
+  **важно**: название должно начинаться с `ansible-role-`, иначе будут сложности с тестированием
+* Созданный пустой репозиторий склонирован в `../ansible-role-db`
+* Созержимое [ansible/roles/db](ansible/roles/db) перенесено в `../ansible-role-db`
+* Заполнен `../ansible-role-db/README.md`
+* Создан `../ansible-role-db/Makefile`
+* При попытке выполнить `molecule converge` не удалось най ти роль `db`.
+  **Исправлена** приведением файла `../ansible-role-db/molecule/default/playbook.yml` к следующему содержимому:
+  ```yaml
+  ---
+  - name: Converge
+    become: true
+    hosts: all
+    vars:
+      mongo_bind_ip: 0.0.0.0
+    roles:
+      - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+  ```
+  Выражение `{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}` позволяет в качестве имени роли использовать basename текущей директории.
+  **ссылки по теме**
+  * [ANSIBLE_RIOLES_PATH](https://github.com/ansible/molecule/blob/fc90dfd6c8a5fd3a3068b9cc8311dc176ab261cd/molecule/provisioner/ansible.py#L203-L208) где molecule ищет роли
+  * [github issue](https://github.com/ansible/molecule/issues/1567#issuecomment-436876722)
+* В `../ansible-role-db/README.md` добавлено описание целей `../ansible-role-db/Makefile`
+* Текущей ревизии назначен тег `git tag v0.1`
+* Выполнен пуш репозитория в GitHub, включая теги `git push --tags`
+
+##### Переход на использование внешней роли
+* В зависимости [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) и [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) добавлена созданная роль
+  ```yaml
+  - name: vscoder.db
+    src: https://github.com/vscoder/ansible-role-db
+    version: v0.1
+  ```
+* Роль добавлена в [.gitignore](.gitignore)
+* Выполнена установка зависимостей
+  ```shell
+  make ansible_install_requirements
+  ```
+  вывод
+  ```
+  cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/stage/requirements.yml
+  - jdauphant.nginx (v2.21.1) is already installed, skipping.
+  - extracting vscoder.db to /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/vscoder.db
+  - vscoder.db (v0.1) was installed successfully
+  ```
+* Плейбук [ansible/playbooks/db.yml](ansible/playbooks/db.yml) переделан на использование новой роли
+  ```yaml
+  - name: Configure MongoDB
+    hosts: db
+    become: true
+    vars:
+      mongo_bind_ip: 0.0.0.0
+    roles:
+      - vscoder.db
+  ```
+* Выполнено пробное развёртывание stage-окружения
+  При попытке открыть сайт, возникла ошибка подключения к БДю
+  Причина - изменение [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) в commit e8d9303b22b238f78b1ab40f2162ca9166545949
+* Содержимое [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) исправлено на
+  ```jinja
+  {% if env == 'local' %}
+  DATABASE_URL={{ db_host }}
+  {% elif env in ['stage', 'prod'] %}
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  {% endif %}
+  ```
+  В случае запуска в локальном окружении, значение переменной перётся из переменной `db_host`. Иначе получается динамически с первого хоста в группе `db`
+  commit 8c47a5c4764dac915581fcc8363a30ab11309311
+* Развёртывание прошло успешно.
 
 
 # Makefile
