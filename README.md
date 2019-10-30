@@ -72,6 +72,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
         - [Подготовка репозитория](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d1%8f)
         - [Переход на использование внешней роли](#%d0%9f%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8)
       - [Автоматизированное тестирование в travic-ci внешней роли db средствами molecule в gce](#%d0%90%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d0%b7%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%bd%d0%be%d0%b5-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2-travic-ci-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8-db-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-molecule-%d0%b2-gce)
+      - [Прочие изменения](#%d0%9f%d1%80%d0%be%d1%87%d0%b8%d0%b5-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f)
 - [Makefile](#makefile)
   - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
     - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
@@ -2109,6 +2110,17 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 
   </details>
 * По окончании всех тестов, отключен вывод отладочной информации при выполнении тестов `molecule`
+* Обновлена версия роли до v0.2
+* Обновлены зависимости stage-окружения [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml). Обновлена версия требуемой роли
+  ```yaml
+  - name: vscoder.db
+    src: https://github.com/vscoder/ansible-role-db
+    version: v0.2
+  ```
+
+#### Прочие изменения
+
+* В [ansible/ansible.cfg](ansible/ansible.cfg) настроена загрузка внешних ролей в [ansible/roles_imported](ansible/roles_imported)
 
 # Makefile
 
