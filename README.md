@@ -71,6 +71,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Вынесение роли в отдельный репозиторий](#%d0%92%d1%8b%d0%bd%d0%b5%d1%81%d0%b5%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b8-%d0%b2-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b9-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d0%b9)
         - [Подготовка репозитория](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d1%8f)
         - [Переход на использование внешней роли](#%d0%9f%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8)
+      - [Автоматизированное тестирование в travic-ci внешней роли db средствами molecule в gce](#%d0%90%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d0%b7%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%bd%d0%be%d0%b5-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2-travic-ci-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8-db-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-molecule-%d0%b2-gce)
 - [Makefile](#makefile)
   - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
     - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
@@ -2046,6 +2047,68 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - vscoder.db
   ```
 
+#### Автоматизированное тестирование в travic-ci внешней роли db средствами molecule в gce
+
+Пример роли https://github.com/Artemmkin/test-ansible-role-with-travis
+
+* Создан ssh-ключ `ssh-keygen -t rsa -f google_compute_engine -C 'travis' -q -N ''`
+* Публичный ключ добавлен в  проект infra в gcp средствами terraform
+  * в файл [terraform/terraform.tfvars](terraform/terraform.tfvars) в список `ssh_keys`
+* Чтобы добавить ключ, применена инфраструктура `cd terraform && terraform apply`
+* Создан сервис-аккаунт (IAM & admin -> Service accounts) `ci-test`
+  * Присвоена роль `Compute Admin`
+  * После <details><summary>ошибки</summary>
+    <p>
+    The user does not have access to service account '973349678085-compute@developer.gserviceaccount.com'.  User: 'travis-ci@infra-253214.iam.gserviceaccount.com'.  Ask a project owner to grant you the iam.serviceAccountUser role on the service account
+    <p>
+    </details>
+    Присвоена роль `Service Account User`
+  * json-ключ сохранён в `../ansible-role-db/credentials.json`
+  * **ВАЖНО** Изменения применяются не сразу, после создания нового аккаунта или изменения списка ролей должно пройти некоторое время (5-10мин, но это не точно)
+* **ПРИМЕЧАНИЕ** Для отключения опции `no_log` при создании инстанса, нужно в плейбуке `molecule/gce/create.yml` добавить переменную `molecule_no_log` в секцию `vars`. При желании, можно реализовать через переменную окружения.
+* **ПРИМЕЧАНИЕ** Все подробности по созданию инстанса можно посмотреть в плейбуке `molecule/gce/create.yml`
+* В `../ansible-role-db/.travis.yml` добавлены переменные окружения в **зашифрованном** виде
+  ```shell
+  travis encrypt GCE_SERVICE_ACCOUNT_EMAIL='travis-ci@infra-253214.iam.gserviceaccount.com' --add
+  travis encrypt GCE_CREDENTIALS_FILE='${PWD}/credentials.json' --add
+  travis encrypt GCE_PROJECT_ID='infra-253214' --add
+  ```
+* Зашифрованы файлы
+  ```shell
+  tar cvf secrets.tar credentials.json google_compute_engine
+  travis login
+  travis encrypt-file secrets.tar --add
+  ```
+* Удалось добиться успешного подключения к GCE во время билда (первая стадия `destroy`), после указания в секретный переменных пути к файлам в текущей директории через `${PWD}`
+* Но возникла ошибка на стадии `create`
+* В `../ansible-role-db/.travis.yml` добавлена переменная `USER`
+* Содержимое `../ansible-role-db/.travis.yml` после всех можификаций (исключены секреты)
+  <details><summary>.travis.yml</summary>
+  
+  ```yaml
+  ...
+  install:
+  - pip install ansible==2.8.6 molecule[gce] apache-libcloud
+  script:
+    - ls -la
+    - molecule --debug test --scenario-name gce
+  after_script:
+    - molecule destroy --scenario-name gce
+  before_install:
+    - openssl aes-256-cbc -K $encrypted_<generate_automatically>_key -iv $encrypted_<generate_automatically>_iv
+      -in secrets.tar.enc -out secrets.tar -d
+    - tar xvf secrets.tar
+    - mv google_compute_engine /home/travis/.ssh/
+    - chmod 0600 /home/travis/.ssh/google_compute_engine
+  env:
+    global:
+      - USER=travis
+      - secure: ...
+      ...
+  ```
+
+  </details>
+* По окончании всех тестов, отключен вывод отладочной информации при выполнении тестов `molecule`
 
 # Makefile
 
