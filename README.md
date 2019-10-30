@@ -60,7 +60,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Установка Vagrant](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%ba%d0%b0-vagrant)
       - [Доработка ролей](#%d0%94%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
         - [Provisioning](#provisioning)
-      - [Задание со \*: Прлксирование средствами nginx](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d1%80%d0%bb%d0%ba%d1%81%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-nginx)
+      - [Задание со \*: Проксирование средствами nginx](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d1%80%d0%be%d0%ba%d1%81%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-nginx)
         - [Исследование](#%d0%98%d1%81%d1%81%d0%bb%d0%b5%d0%b4%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-1)
         - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-2)
     - [Тестирование ролей при помощи Molecule и Testinfra](#%d0%a2%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-molecule-%d0%b8-testinfra)
@@ -85,7 +85,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
     - [Packer](#packer-1)
     - [Terraform](#terraform-1)
     - [Ansible](#ansible-1)
-    - [Vagrant](#vagrant)
     - [Aliases](#aliases)
 
 # Домашние задания
@@ -1807,7 +1806,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   vagrant destroy -f
   ```
 
-#### Задание со \*: Прлксирование средствами nginx
+#### Задание со \*: Проксирование средствами nginx
 
 ##### Исследование
 
@@ -2034,7 +2033,7 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
   {% endif %}
   ```
-  В случае запуска в локальном окружении, значение переменной перётся из переменной `db_host`. Иначе получается динамически с первого хоста в группе `db`
+  В случае запуска в локальном окружении, значение переменной берётся из переменной `db_host`. Иначе получается динамически с первого хоста в группе `db`
   commit 8c47a5c4764dac915581fcc8363a30ab11309311
 * Развёртывание прошло успешно.
 
@@ -2125,13 +2124,13 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   ```yaml
   ...
   before_install:
-    # Temporary workaround for OTUS tests passing
+    # Temporary workaround for OTUS tests passing. This fix don't affect main codebase!
     # to correct, need fix https://github.com/express42/otus-homeworks/blob/2019-08/homeworks/ansible-4/controls/structure.rb
+    # REMOVE after fix
     - mkdir ansible/roles_imported
     - ln -s ../roles_imported/vscoder.db ansible/roles/db
     - ln -s ../roles_imported ansible/playbooks/roles
     - echo "  - ./playbooks/roles" >> ansible/.ansible-lint
-  ...
   ```
 
 # Makefile
@@ -2189,9 +2188,6 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
 `ansible_site_check` выполнить `ansible-playbook --syntax-check` для всех плейбуков в [ansible/playbooks](ansible/playbooks)
 `ansible_site_check ENV=<stage|prod>` проверить (`--check`) плейбук [site.yml](ansible/playbooks/site.yml)
 `ansible_site_apply ENV=<stage|prod>` выполнить плейбук [site.yml](ansible/playbooks/site.yml)
-
-### Vagrant
-`vagrant_up` поднять боксы вагрант из [ansible/Vagrantfile](ansible/Vagrantfile)
 
 ### Aliases
 `install`: `install_packer install_terraform install_tflint install_ansible_venv`

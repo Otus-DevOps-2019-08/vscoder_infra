@@ -2,8 +2,9 @@ dist: trusty
 sudo: required
 language: bash
 before_install:
-  # Temporary workaround for OTUS tests passing
+  # Temporary workaround for OTUS tests passing. This fix don't affect main codebase!
   # to correct, need fix https://github.com/express42/otus-homeworks/blob/2019-08/homeworks/ansible-4/controls/structure.rb
+  # REMOVE after fix
   - mkdir ansible/roles_imported
   - ln -s ../roles_imported/vscoder.db ansible/roles/db
   - ln -s ../roles_imported ansible/playbooks/roles
