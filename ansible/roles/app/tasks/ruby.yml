@@ -1,0 +1,12 @@
+---
+- name: Install packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+
+- name: Check installation
+  command: "{{ item }}"
+  changed_when: false
+  loop:
+    - ruby -v
+    - bundler -v

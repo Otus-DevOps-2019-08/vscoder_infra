@@ -30,3 +30,14 @@ venv
 ansible/roles_imported/*
 # Fix tests passing
 jdauphant.nginx
+vscoder.db
+
+####
+# Vagrant & molecule
+####
+.vagrant/
+*.log
+*.pyc
+.molecule
+.cache
+.pytest_cache

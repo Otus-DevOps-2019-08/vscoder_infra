@@ -55,6 +55,24 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
       - [Подготовка](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0)
       - [Trytravis](#trytravis)
       - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-1)
+  - [HomeWork 11: Разработка и тестирование Ansible ролей и плейбуков](#homework-11-%d0%a0%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%b8-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-ansible-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%b8-%d0%bf%d0%bb%d0%b5%d0%b9%d0%b1%d1%83%d0%ba%d0%be%d0%b2)
+    - [Локальная разработка при помощи Vagrant, доработка ролей для провижининга в Vagrant](#%d0%9b%d0%be%d0%ba%d0%b0%d0%bb%d1%8c%d0%bd%d0%b0%d1%8f-%d1%80%d0%b0%d0%b7%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-vagrant-%d0%b4%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%b4%d0%bb%d1%8f-%d0%bf%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b8%d0%bd%d0%b8%d0%bd%d0%b3%d0%b0-%d0%b2-vagrant)
+      - [Установка Vagrant](#%d0%a3%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%ba%d0%b0-vagrant)
+      - [Доработка ролей](#%d0%94%d0%be%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%ba%d0%b0-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
+        - [Provisioning](#provisioning)
+      - [Задание со \*: Проксирование средствами nginx](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d1%80%d0%be%d0%ba%d1%81%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-nginx)
+        - [Исследование](#%d0%98%d1%81%d1%81%d0%bb%d0%b5%d0%b4%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-1)
+        - [Реализация](#%d0%a0%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d1%8f-2)
+    - [Тестирование ролей при помощи Molecule и Testinfra](#%d0%a2%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9-%d0%bf%d1%80%d0%b8-%d0%bf%d0%be%d0%bc%d0%be%d1%89%d0%b8-molecule-%d0%b8-testinfra)
+    - [Переключение сбора образов пакером на использование ролей](#%d0%9f%d0%b5%d1%80%d0%b5%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d1%81%d0%b1%d0%be%d1%80%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2-%d0%bf%d0%b0%d0%ba%d0%b5%d1%80%d0%be%d0%bc-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b5%d0%b9)
+      - [Провиженинг в db.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-dbjson)
+      - [Провиженинг в app.json](#%d0%9f%d1%80%d0%be%d0%b2%d0%b8%d0%b6%d0%b5%d0%bd%d0%b8%d0%bd%d0%b3-%d0%b2-appjson)
+    - [Задание со \*: Подключение Travis CI для автоматического прогона тестов](#%d0%97%d0%b0%d0%b4%d0%b0%d0%bd%d0%b8%d0%b5-%d1%81%d0%be--%d0%9f%d0%be%d0%b4%d0%ba%d0%bb%d1%8e%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-travis-ci-%d0%b4%d0%bb%d1%8f-%d0%b0%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%b5%d1%81%d0%ba%d0%be%d0%b3%d0%be-%d0%bf%d1%80%d0%be%d0%b3%d0%be%d0%bd%d0%b0-%d1%82%d0%b5%d1%81%d1%82%d0%be%d0%b2)
+      - [Вынесение роли в отдельный репозиторий](#%d0%92%d1%8b%d0%bd%d0%b5%d1%81%d0%b5%d0%bd%d0%b8%d0%b5-%d1%80%d0%be%d0%bb%d0%b8-%d0%b2-%d0%be%d1%82%d0%b4%d0%b5%d0%bb%d1%8c%d0%bd%d1%8b%d0%b9-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d0%b9)
+        - [Подготовка репозитория](#%d0%9f%d0%be%d0%b4%d0%b3%d0%be%d1%82%d0%be%d0%b2%d0%ba%d0%b0-%d1%80%d0%b5%d0%bf%d0%be%d0%b7%d0%b8%d1%82%d0%be%d1%80%d0%b8%d1%8f)
+        - [Переход на использование внешней роли](#%d0%9f%d0%b5%d1%80%d0%b5%d1%85%d0%be%d0%b4-%d0%bd%d0%b0-%d0%b8%d1%81%d0%bf%d0%be%d0%bb%d1%8c%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8)
+      - [Автоматизированное тестирование в travic-ci внешней роли db средствами molecule в gce](#%d0%90%d0%b2%d1%82%d0%be%d0%bc%d0%b0%d1%82%d0%b8%d0%b7%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%bd%d0%be%d0%b5-%d1%82%d0%b5%d1%81%d1%82%d0%b8%d1%80%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5-%d0%b2-travic-ci-%d0%b2%d0%bd%d0%b5%d1%88%d0%bd%d0%b5%d0%b9-%d1%80%d0%be%d0%bb%d0%b8-db-%d1%81%d1%80%d0%b5%d0%b4%d1%81%d1%82%d0%b2%d0%b0%d0%bc%d0%b8-molecule-%d0%b2-gce)
+      - [Прочие изменения](#%d0%9f%d1%80%d0%be%d1%87%d0%b8%d0%b5-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b5%d0%bd%d0%b8%d1%8f)
 - [Makefile](#makefile)
   - [Переменные](#%d0%9f%d0%b5%d1%80%d0%b5%d0%bc%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5)
     - [Общие](#%d0%9e%d0%b1%d1%89%d0%b8%d0%b5)
@@ -1561,6 +1579,558 @@ Aleksey Koloskov OTUS-DevOps-2019-08 Infra repository
   script:
     # ...
     - make ansible_syntax ansible_lint
+  ```
+
+
+## HomeWork 11: Разработка и тестирование Ansible ролей и плейбуков
+
+### Локальная разработка при помощи Vagrant, доработка ролей для провижининга в Vagrant
+
+#### Установка Vagrant
+
+* Установлен VirtualBox 6.0.14
+* Установлен Vagrant `Vagrant 2.2.6`
+
+* В [.gitignore](.gitignore) добавлены относящиеся к vagrant и molecule временные файлы
+  ```
+  ####
+  # Vagrant & molecule
+  ####
+  .vagrant/
+  *.log
+  *.pyc
+  .molecule
+  .cache
+  .pytest_cache
+  ```
+
+* Добавлен [ansible/Vagrantfile](ansible/Vagrantfile) с описанием terraform-инфраструктуры в vagrant (2 ВМ, db и app)
+* Установлен VirtualBox
+* Выполнен `vagrant up`
+  <details><summary>CLICK ME</summary>
+  <p>
+
+  ```
+  Bringing machine 'dbserver' up with 'virtualbox' provider...
+  Bringing machine 'appserver' up with 'virtualbox' provider...
+  ==> dbserver: Box 'ubuntu/xenial64' could not be found. Attempting to find and install...
+      dbserver: Box Provider: virtualbox
+      dbserver: Box Version: >= 0
+  ==> dbserver: Loading metadata for box 'ubuntu/xenial64'
+      dbserver: URL: https://vagrantcloud.com/ubuntu/xenial64
+  ==> dbserver: Adding box 'ubuntu/xenial64' (v20191024.0.0) for provider: virtualbox
+      dbserver: Downloading: https://vagrantcloud.com/ubuntu/boxes/xenial64/versions/20191024.0.0/providers/virtualbox.box
+      dbserver: Download redirected to host: cloud-images.ubuntu.com
+  ==> dbserver: Successfully added box 'ubuntu/xenial64' (v20191024.0.0) for 'virtualbox'!
+  ==> dbserver: Importing base box 'ubuntu/xenial64'...
+  ==> dbserver: Matching MAC address for NAT networking...
+  ==> dbserver: Checking if box 'ubuntu/xenial64' version '20191024.0.0' is up to date...
+  ==> dbserver: Setting the name of the VM: ansible_dbserver_1572247326926_10235
+  Vagrant is currently configured to create VirtualBox synced folders with
+  the `SharedFoldersEnableSymlinksCreate` option enabled. If the Vagrant                                                                                                           
+  guest is not trusted, you may want to disable this option. For more                                                                                                              
+  information on this option, please refer to the VirtualBox manual:                                                                                                               
+
+    https://www.virtualbox.org/manual/ch04.html#sharedfolders                                                                                                                      
+
+  This option can be disabled globally with an environment variable:                                                                                                               
+
+    VAGRANT_DISABLE_VBOXSYMLINKCREATE=1                                                                                                                                            
+
+  or on a per folder basis within the Vagrantfile:                                                                                                                                 
+
+    config.vm.synced_folder '/host/path', '/guest/path', SharedFoldersEnableSymlinksCreate: false                                                                                  
+  ==> dbserver: Clearing any previously set network interfaces...
+  ==> dbserver: Preparing network interfaces based on configuration...
+      dbserver: Adapter 1: nat
+      dbserver: Adapter 2: hostonly
+  ==> dbserver: Forwarding ports...
+      dbserver: 22 (guest) => 2222 (host) (adapter 1)
+  ==> dbserver: Running 'pre-boot' VM customizations...
+  ==> dbserver: Booting VM...
+  ==> dbserver: Waiting for machine to boot. This may take a few minutes...
+      dbserver: SSH address: 127.0.0.1:2222
+      dbserver: SSH username: vagrant
+      dbserver: SSH auth method: private key
+      dbserver: 
+      dbserver: Vagrant insecure key detected. Vagrant will automatically replace
+      dbserver: this with a newly generated keypair for better security.
+      dbserver: 
+      dbserver: Inserting generated public key within guest...
+      dbserver: Removing insecure key from the guest if it's present...
+      dbserver: Key inserted! Disconnecting and reconnecting using new SSH key...
+  ==> dbserver: Machine booted and ready!
+  ==> dbserver: Checking for guest additions in VM...
+      dbserver: The guest additions on this VM do not match the installed version of
+      dbserver: VirtualBox! In most cases this is fine, but in rare cases it can
+      dbserver: prevent things such as shared folders from working properly. If you see
+      dbserver: shared folder errors, please make sure the guest additions within the
+      dbserver: virtual machine match the version of VirtualBox you have installed on
+      dbserver: your host and reload your VM.
+      dbserver: 
+      dbserver: Guest Additions Version: 5.1.38
+      dbserver: VirtualBox Version: 6.0
+  ==> dbserver: Setting hostname...
+  ==> dbserver: Configuring and enabling network interfaces...
+  ==> dbserver: Mounting shared folders...
+      dbserver: /vagrant => /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible
+  ==> appserver: Box 'ubuntu/xenial64' could not be found. Attempting to find and install...
+      appserver: Box Provider: virtualbox
+      appserver: Box Version: >= 0
+  ==> appserver: Loading metadata for box 'ubuntu/xenial64'
+      appserver: URL: https://vagrantcloud.com/ubuntu/xenial64
+  ==> appserver: Adding box 'ubuntu/xenial64' (v20191024.0.0) for provider: virtualbox
+  ==> appserver: Importing base box 'ubuntu/xenial64'...
+  ==> appserver: Matching MAC address for NAT networking...
+  ==> appserver: Checking if box 'ubuntu/xenial64' version '20191024.0.0' is up to date...
+  ==> appserver: Setting the name of the VM: ansible_appserver_1572247362999_16688
+  ==> appserver: Fixed port collision for 22 => 2222. Now on port 2200.
+  ==> appserver: Clearing any previously set network interfaces...
+  ==> appserver: Preparing network interfaces based on configuration...
+      appserver: Adapter 1: nat
+      appserver: Adapter 2: hostonly
+  ==> appserver: Forwarding ports...
+      appserver: 22 (guest) => 2200 (host) (adapter 1)
+  ==> appserver: Running 'pre-boot' VM customizations...
+  ==> appserver: Booting VM...
+  ==> appserver: Waiting for machine to boot. This may take a few minutes...
+      appserver: SSH address: 127.0.0.1:2200
+      appserver: SSH username: vagrant
+      appserver: SSH auth method: private key
+      appserver: 
+      appserver: Vagrant insecure key detected. Vagrant will automatically replace
+      appserver: this with a newly generated keypair for better security.
+      appserver: 
+      appserver: Inserting generated public key within guest...
+      appserver: Removing insecure key from the guest if it's present...
+      appserver: Key inserted! Disconnecting and reconnecting using new SSH key...
+  ==> appserver: Machine booted and ready!
+  ==> appserver: Checking for guest additions in VM...
+      appserver: The guest additions on this VM do not match the installed version of
+      appserver: VirtualBox! In most cases this is fine, but in rare cases it can
+      appserver: prevent things such as shared folders from working properly. If you see
+      appserver: shared folder errors, please make sure the guest additions within the
+      appserver: virtual machine match the version of VirtualBox you have installed on
+      appserver: your host and reload your VM.
+      appserver: 
+      appserver: Guest Additions Version: 5.1.38
+      appserver: VirtualBox Version: 6.0
+  ==> appserver: Setting hostname...
+  ==> appserver: Configuring and enabling network interfaces...
+  ==> appserver: Mounting shared folders...
+      appserver: /vagrant => /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible
+  ```
+
+  </p>
+  </details>
+* Краткий список команд
+  * Проверка что бокс скачан `vagrant box list`
+  * Посмотреть список запущенных ВМ `vagrant status`
+  * Подключиться к ВП по ssh `vagrant ssh VMNAME`
+  * Запустить провиженер `vagrant provision [VMNAME]`
+
+#### Доработка ролей
+
+##### Provisioning
+
+* Добавлен провиженер в [ansible/Vagrantfile](ansible/Vagrantfile) ВМ `db`
+  ```ruby
+  db.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/site.yml"
+    ansible.groups = {
+    "db" => ["dbserver"],
+    "db:vars" => {"mongo_bind_ip" => "0.0.0.0"}
+    }
+  end
+  ```
+* Запущен провиженер `vagrant provision dbserver`
+* Возникла ошибка:
+  ```
+  fatal: [dbserver]: FAILED! => {"changed": false, "msg": "Could not find the requested service mongod: host"}
+  ```
+  Причина -- роль [ansible/roles/db](ansible/roles/db) писалась с учётом базового packer-образа с уже установленной MongoDB
+* В роль [ansible/roles/db](ansible/roles/db) добавлены задачи по установке MongoDB
+* Провиженинг завершён успешно
+* Добавлен плейбук [ansible/playbooks/base.yml](ansible/playbooks/base.yml) для установки python если он не установлен. Ошибки не было, но того требуют автоматизированные тесты
+
+* Задачи роли [ansible/roles/db](ansible/roles/db) из [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) разнесены по файлам
+  * Задачи по установке MongoDB вынесены в [ansible/roles/db/tasks/install_mongodb.yml](ansible/roles/db/tasks/install_mongodb.yml)
+  * Задачи по настройке MongoDB вынесены в [ansible/roles/db/tasks/config_mongodb.yml](ansible/roles/db/tasks/config_mongodb.yml)
+* Для проверки, повторно выполнен провиженинг. Прошёл успешно
+  
+* Задачи роли [ansible/roles/app](ansible/roles/app) из [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) разнесены по файлам
+  * Задачи по установке MongoDB вынесены в [ansible/roles/app/tasks/ruby.yml](ansible/roles/app/tasks/ruby.yml)
+  * Задачи по настройке MongoDB вынесены в [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml)
+* Добавлен провиженер в [ansible/Vagrantfile](ansible/Vagrantfile) ВМ `app`
+  ```ruby
+  db.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/site.yml"
+    ansible.groups = {
+    "db" => ["appserver"],
+    "app:vars" => { "db_host" => "10.10.10.10"}
+    }
+  end
+  ```
+* Запущен провиженер `vagrant provision appserver`. Возникла ошибка:
+  ```
+  TASK [app : Add config for DB connection] **************************************
+  fatal: [appserver]: FAILED! => {"changed": false, "checksum": "dfbe4b5cf3ec32d91d20045e2ee7f7b26c60ef34", "msg": "Destination directory /home/appuser does not exist"}
+  ```
+* Для исправления ошибки, параметризована роль [ansible/roles/app](ansible/roles/app)
+  * В переменные по умолчанию [ansible/roles/app/defaults/main.yml](ansible/roles/app/defaults/main.yml) добавлен `deploy_user: appuser`
+  * [ansible/roles/app/files/puma.service](ansible/roles/app/files/puma.service) перемещён в [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2)
+  * В шаблоне [ansible/roles/app/templates/puma.service.j2](ansible/roles/app/templates/puma.service.j2) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
+  * В [ansible/roles/app/tasks/puma.yml](ansible/roles/app/tasks/puma.yml) все упоминания пользователя `appuser` заменены на переменную `{{ deploy_user }}`
+* Так же захаржкоженный `appuser` заменён на `{{ deploy_user }}` в [ansible/playbooks/deploy.yml](ansible/playbooks/deploy.yml)
+* В [ansible/Vagrantfile](ansible/Vagrantfile) добавлено переопределение переменных дл япровиженера
+  ```ruby
+  config.vm.define "appserver" do |app|
+    ...
+
+    app.vm.provision "ansible" do |ansible|
+      ...
+      ansible.extra_vars = {
+        "deploy_user" => "ubuntu"
+      }
+    end
+  end
+  ```
+* Запущен провиженер `vagrant provision appserver`. Прошёл успешно
+
+* Проверена работа приложения [http://10.10.10.20:9292/](http://10.10.10.20:9292/). Успешно.
+* Конфигурация пересоздана, перепроверена и удалена
+  ```shell
+  vagrant destroy -f
+  vagrant up
+  #open in browser http://10.10.10.20:9292/
+  vagrant destroy -f
+  ```
+
+#### Задание со \*: Проксирование средствами nginx
+
+##### Исследование
+
+* Диагностика показала, что для nginx отсутствует конфиг, описанный в [ansible/environments/stage/group_vars/app](ansible/environments/stage/group_vars/app) в переменной `nginx_sites`
+* Причина: Vagrant, для прогона плейбуков, использует свой inventory `.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory`, в котором не учитываются значения переменных inventory из репозитория
+* Есть 2 варианта решения проблемы: 
+  * прописать переменные непосредственно в `Vagrantfile`
+  * указать путь к инвентори параметром `ansible.inventory_path`
+
+##### Реализация
+
+* Был выбран первый способ, как наиболее оптимальный по временным затратам
+  ```ruby
+  ansible.extra_vars = {
+    "deploy_user" => "ubuntu",
+    "nginx_sites" => {
+      "default" => [
+        "listen 80",
+        "server_name \"reddit\"",
+        "location / {
+          proxy_pass http://127.0.0.1:9292;
+        }"
+      ]
+    }
+  }
+  ```
+* Результат проверен. Сайт открывается по адресу [http://10.10.10.20](http://10.10.10.20)
+
+### Тестирование ролей при помощи Molecule и Testinfra
+
+* В [ansible/requirements.txt](ansible/requirements.txt) добавлены зависимости от:
+  ```
+  ...
+  molecule>=2.6
+  testinfra>=1.10
+  python-vagrant>=0.5.15
+  ```
+* Зависимости установлены `make install_ansible_venv`
+* Создание заготовки тестов `cd ansible/roles/db && molecule init scenario --scenario-name default --role-name db --driver-name vagrant`
+* В [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) добавлены 2 теста
+  ```python
+  # check if MongoDB is enabled and running
+  def test_mongo_running_and_enabled(host):
+      mongo = host.service("mongod")
+      assert mongo.is_running
+      assert mongo.is_enabled
+
+  # check if configuration file contains the required line
+  def test_config_file(host):
+      config_file = host.file('/etc/mongod.conf')
+      assert config_file.contains('bindIp: 0.0.0.0')
+      assert config_file.is_file
+  ```
+* Создана ВМ для проверки роли `cd ansible/roles/db && molecule create`
+* Список созданных инстансов `cd ansible/roles/db && molecule list`
+* Подключиться к инстансу по ssh `cd ansible/roles/db && molecule login -h instance`
+
+* В molecule-плейбук [ansible/roles/db/molecule/default/playbook.yml](ansible/roles/db/molecule/default/playbook.yml) до бавлены `become` и переменные
+  ```yaml
+  ...
+  become: true
+  ...
+  vars:
+    mongo_bind_ip: 0.0.0.0
+  ...
+  ```
+* Проверка выполнения роли [ansible/roles/db/molecule/default/playbook.yml](ansible/roles/db/molecule/default/playbook.yml) `cd ansible/roles/db && molecule converge`
+* Прогон тестов из [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) `cd ansible/roles/db && molecule verify`
+
+* Докупентация по [testinfra](https://testinfra.readthedocs.io/en/latest/modules.html)
+* В тесты [ansible/roles/db/molecule/default/tests/test_default.py](ansible/roles/db/molecule/default/tests/test_default.py) добавлена проверка, что MongoDB слушает на порту 27017
+  ```python
+  # check mongod is listening on 0.0.0.0:27017
+  def test_mongo_socket(host):
+      socket = host.socket("tcp://0.0.0.0:27017")
+      assert socket.is_listening
+  ```
+
+### Переключение сбора образов пакером на использование ролей
+
+* Документация по конфигурированию ansible через переменные среды [https://docs.ansible.com/ansible/latest/reference_appendices/config.html](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
+
+#### Провиженинг в db.json
+* При импорте задачь в [ansible/roles/db/tasks/main.yml](ansible/roles/db/tasks/main.yml) добавлены соответствующие теги
+  ```yaml
+  - import_tasks: install_mongodb.yml
+    tags:
+      - db_install_mongodb
+
+  - import_tasks: config_mongodb.yml
+    tags:
+      - db_configure_mongodb
+  ```
+* В [плейбуке](ansible/playbooks/packer_db.yml), используемом при провижениенге пакер-образа db, использована роль вместо списка задач
+  ```yaml
+  ...
+  roles:
+    - db
+  ```
+* В шаблоне пакер-образа [packer/db.json](packer/db.json) в секцию `provisioners` добавлено 2 параметра:
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_db.yml",
+      "ansible_env_vars": [
+        "ANSIBLE_ROLES_PATH=./ansible/roles"
+      ],
+      "extra_arguments": [
+        "--tags",
+        "db_install_mongodb"
+      ]
+    }
+  ]
+  ```
+  * `ansible_env_vars` указан путь к ролям **относительно корня репозитория**
+  * `extra_arguments` плейбуку передаётся агрумент `--tags` с указание обязательных тегов, которые должны присутствовать на задачах
+
+#### Провиженинг в app.json
+* При импорте задачь в [ansible/roles/app/tasks/main.yml](ansible/roles/app/tasks/main.yml) добавлены соответствующие теги
+  ```yaml
+  - import_tasks: ruby.yml
+    tags:
+      - app_ruby
+
+  - import_tasks: puma.yml
+    tags:
+      - app_puma
+  ```
+* В [плейбуке](ansible/playbooks/packer_app.yml), используемом при провижениенге пакер-образа app, использована роль вместо списка задач
+  ```yaml
+  ...
+  roles:
+    - app
+  ```
+* В шаблоне пакер-образа [packer/app.json](packer/app.json) в секцию `provisioners` добавлено 2 параметра:
+  ```json
+  "provisioners": [
+    {
+      "type": "ansible",
+      "command": "packer/scripts/ansible-playbook.sh",
+      "playbook_file": "ansible/playbooks/packer_app.yml",
+      "ansible_env_vars": [
+        "ANSIBLE_ROLES_PATH=./ansible/roles"
+      ],
+      "extra_arguments": [
+        "--tags",
+        "app_ruby"
+      ]
+    }
+  ]
+  ```
+  * `ansible_env_vars` указан путь к ролям **относительно корня репозитория**
+  * `extra_arguments` плейбуку передаётся агрумент `--tags` с указание обязательных тегов, которые должны присутствовать на задачах
+
+### Задание со \*: Подключение Travis CI для автоматического прогона тестов
+
+#### Вынесение роли в отдельный репозиторий
+##### Подготовка репозитория
+* Создан GitHub-репозиторий [ansible-role-db](https://github.com/vscoder/ansible-role-db)
+  **важно**: название должно начинаться с `ansible-role-`, иначе будут сложности с тестированием
+* Созданный пустой репозиторий склонирован в `../ansible-role-db`
+* Созержимое [ansible/roles/db](ansible/roles/db) перенесено в `../ansible-role-db`
+* Заполнен `../ansible-role-db/README.md`
+* Создан `../ansible-role-db/Makefile`
+* При попытке выполнить `molecule converge` не удалось най ти роль `db`.
+  **Исправлена** приведением файла `../ansible-role-db/molecule/default/playbook.yml` к следующему содержимому:
+  ```yaml
+  ---
+  - name: Converge
+    become: true
+    hosts: all
+    vars:
+      mongo_bind_ip: 0.0.0.0
+    roles:
+      - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+  ```
+  Выражение `{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}` позволяет в качестве имени роли использовать basename текущей директории.
+  **ссылки по теме**
+  * [ANSIBLE_RIOLES_PATH](https://github.com/ansible/molecule/blob/fc90dfd6c8a5fd3a3068b9cc8311dc176ab261cd/molecule/provisioner/ansible.py#L203-L208) где molecule ищет роли
+  * [github issue](https://github.com/ansible/molecule/issues/1567#issuecomment-436876722)
+* В `../ansible-role-db/README.md` добавлено описание целей `../ansible-role-db/Makefile`
+* Текущей ревизии назначен тег `git tag v0.1`
+* Выполнен пуш репозитория в GitHub, включая теги `git push --tags`
+
+##### Переход на использование внешней роли
+* В зависимости [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml) и [ansible/environments/prod/requirements.yml](ansible/environments/prod/requirements.yml) добавлена созданная роль
+  ```yaml
+  - name: vscoder.db
+    src: https://github.com/vscoder/ansible-role-db
+    version: v0.1
+  ```
+* Роль добавлена в [.gitignore](.gitignore)
+* Выполнена установка зависимостей
+  ```shell
+  make ansible_install_requirements
+  ```
+  вывод
+  ```
+  cd ./ansible && ../.venv/bin/ansible-galaxy install -r environments/stage/requirements.yml
+  - jdauphant.nginx (v2.21.1) is already installed, skipping.
+  - extracting vscoder.db to /mnt/calculate/home/vscoder/projects/otus/devops201908/vscoder_infra/ansible/roles/vscoder.db
+  - vscoder.db (v0.1) was installed successfully
+  ```
+* Плейбук [ansible/playbooks/db.yml](ansible/playbooks/db.yml) переделан на использование новой роли
+  ```yaml
+  - name: Configure MongoDB
+    hosts: db
+    become: true
+    vars:
+      mongo_bind_ip: 0.0.0.0
+    roles:
+      - vscoder.db
+  ```
+* Выполнено пробное развёртывание stage-окружения
+  При попытке открыть сайт, возникла ошибка подключения к БД.
+  Причина - изменение [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) в commit e8d9303b22b238f78b1ab40f2162ca9166545949
+* Содержимое [ansible/roles/app/templates/db_config.j2](ansible/roles/app/templates/db_config.j2) исправлено на
+  ```jinja
+  {% if env == 'local' %}
+  DATABASE_URL={{ db_host }}
+  {% elif env in ['stage', 'prod'] %}
+  DATABASE_URL={{ hostvars[groups['db'][0]]['ansible_default_ipv4']['address'] }}
+  {% endif %}
+  ```
+  В случае запуска в локальном окружении, значение переменной берётся из переменной `db_host`. Иначе получается динамически с первого хоста в группе `db`
+  commit 8c47a5c4764dac915581fcc8363a30ab11309311
+* Развёртывание прошло успешно.
+
+* При попытке собрать packer-образ, возникла ошибка об отсутствии роли `db`
+  Исправил
+  ```yaml
+  - name: Configure MongoDB
+    hosts: all
+    become: true
+    roles:
+      - vscoder.db
+  ```
+
+#### Автоматизированное тестирование в travic-ci внешней роли db средствами molecule в gce
+
+Пример роли https://github.com/Artemmkin/test-ansible-role-with-travis
+
+* Создан ssh-ключ `ssh-keygen -t rsa -f google_compute_engine -C 'travis' -q -N ''`
+* Публичный ключ добавлен в  проект infra в gcp средствами terraform
+  * в файл [terraform/terraform.tfvars](terraform/terraform.tfvars) в список `ssh_keys`
+* Чтобы добавить ключ, применена инфраструктура `cd terraform && terraform apply`
+* Создан сервис-аккаунт (IAM & admin -> Service accounts) `ci-test`
+  * Присвоена роль `Compute Admin`
+  * После <details><summary>ошибки</summary>
+    <p>
+    The user does not have access to service account '973349678085-compute@developer.gserviceaccount.com'.  User: 'travis-ci@infra-253214.iam.gserviceaccount.com'.  Ask a project owner to grant you the iam.serviceAccountUser role on the service account
+    <p>
+    </details>
+    Присвоена роль `Service Account User`
+  * json-ключ сохранён в `../ansible-role-db/credentials.json`
+  * **ВАЖНО** Изменения применяются не сразу, после создания нового аккаунта или изменения списка ролей должно пройти некоторое время (5-10мин, но это не точно)
+* **ПРИМЕЧАНИЕ** Для отключения опции `no_log` при создании инстанса, нужно в плейбуке `molecule/gce/create.yml` добавить переменную `molecule_no_log` в секцию `vars`. При желании, можно реализовать через переменную окружения.
+* **ПРИМЕЧАНИЕ** Все подробности по созданию инстанса можно посмотреть в плейбуке `molecule/gce/create.yml`
+* В `../ansible-role-db/.travis.yml` добавлены переменные окружения в **зашифрованном** виде
+  ```shell
+  travis encrypt GCE_SERVICE_ACCOUNT_EMAIL='travis-ci@infra-253214.iam.gserviceaccount.com' --add
+  travis encrypt GCE_CREDENTIALS_FILE='${PWD}/credentials.json' --add
+  travis encrypt GCE_PROJECT_ID='infra-253214' --add
+  ```
+* Зашифрованы файлы
+  ```shell
+  tar cvf secrets.tar credentials.json google_compute_engine
+  travis login
+  travis encrypt-file secrets.tar --add
+  ```
+* Удалось добиться успешного подключения к GCE во время билда (первая стадия `destroy`), после указания в секретный переменных пути к файлам в текущей директории через `${PWD}`
+* Но возникла ошибка на стадии `create`
+* В `../ansible-role-db/.travis.yml` добавлена переменная `USER`
+* Содержимое `../ansible-role-db/.travis.yml` после всех можификаций (исключены секреты)
+  <details><summary>.travis.yml</summary>
+  
+  ```yaml
+  ...
+  install:
+  - pip install ansible==2.8.6 molecule[gce] apache-libcloud
+  script:
+    - ls -la
+    - molecule --debug test --scenario-name gce
+  after_script:
+    - molecule destroy --scenario-name gce
+  before_install:
+    - openssl aes-256-cbc -K $encrypted_<generate_automatically>_key -iv $encrypted_<generate_automatically>_iv
+      -in secrets.tar.enc -out secrets.tar -d
+    - tar xvf secrets.tar
+    - mv google_compute_engine /home/travis/.ssh/
+    - chmod 0600 /home/travis/.ssh/google_compute_engine
+  env:
+    global:
+      - USER=travis
+      - secure: ...
+      ...
+  ```
+
+  </details>
+* По окончании всех тестов, отключен вывод отладочной информации при выполнении тестов `molecule`
+* Обновлена версия роли до v0.2
+* Обновлены зависимости stage-окружения [ansible/environments/stage/requirements.yml](ansible/environments/stage/requirements.yml). Обновлена версия требуемой роли
+  ```yaml
+  - name: vscoder.db
+    src: https://github.com/vscoder/ansible-role-db
+    version: v0.2
+  ```
+
+#### Прочие изменения
+
+* В [ansible/ansible.cfg](ansible/ansible.cfg) настроена загрузка внешних ролей в [ansible/roles_imported](ansible/roles_imported)
+* В [.travis.yml](.travis.yml) добавлен workaround для корректного прохождения тестов
+  ```yaml
+  ...
+  before_install:
+    # Temporary workaround for OTUS tests passing. This fix don't affect main codebase!
+    # to correct, need fix https://github.com/express42/otus-homeworks/blob/2019-08/homeworks/ansible-4/controls/structure.rb
+    # REMOVE after fix
+    - mkdir ansible/roles_imported
+    - ln -s ../roles_imported/vscoder.db ansible/roles/db
+    - ln -s ../roles_imported ansible/playbooks/roles
+    - echo "  - ./playbooks/roles" >> ansible/.ansible-lint
   ```
 
 # Makefile

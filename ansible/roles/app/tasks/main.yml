@@ -7,21 +7,10 @@
   debug:
     msg: "This host is in groups: {{ group_names | join(', ') }}."
 
-- name: Add unit file for Puma
-  copy:
-    src: puma.service
-    dest: /etc/systemd/system/puma.service
-  notify: reload puma
+- import_tasks: ruby.yml
+  tags:
+    - app_ruby
 
-- name: Add config for DB connection
-  template:
-    src: db_config.j2
-    dest: /home/appuser/db_config
-    owner: appuser
-    group: appuser
-  notify: reload puma
-
-- name: enable puma
-  systemd:
-    name: puma
-    enabled: yes
+- import_tasks: puma.yml
+  tags:
+    - app_puma
